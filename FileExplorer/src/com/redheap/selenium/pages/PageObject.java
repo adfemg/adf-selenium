@@ -48,6 +48,7 @@ public class PageObject implements TakesScreenshot {
 
     @Override
     public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
+        System.out.println("taking screenshot to " + target);
         return ((TakesScreenshot)driver).getScreenshotAs(target);
     }
 
