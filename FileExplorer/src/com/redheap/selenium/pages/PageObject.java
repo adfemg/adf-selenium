@@ -6,9 +6,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PageObject {
-    
+
     WebDriver driver;
-    
+
     public PageObject(WebDriver driver) {
         this.driver = driver;
         waitForPpr();
@@ -19,7 +19,7 @@ public class PageObject {
     }
 
     protected void waitForPpr(int seconds) {
-        new WebDriverWait(driver, seconds).until(AdfConditions.clientSynchedWithServer);
+        new WebDriverWait(driver, seconds).until(AdfConditions.clientSynchedWithServer());
     }
 
 

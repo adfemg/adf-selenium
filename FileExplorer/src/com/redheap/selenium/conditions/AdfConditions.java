@@ -1,11 +1,15 @@
 package com.redheap.selenium.conditions;
 
 
-public class AdfConditions {
+public abstract class AdfConditions {
 
-    public static ClientSynchedWithServer clientSynchedWithServer = new ClientSynchedWithServer();
-    
+    private static final ClientSynchedWithServer CLIENT_SYNCHED_WITH_SERVER = new ClientSynchedWithServer();
+
     private AdfConditions() {
+    }
+
+    public static ClientSynchedWithServer clientSynchedWithServer() {
+        return CLIENT_SYNCHED_WITH_SERVER;
     }
 
 }

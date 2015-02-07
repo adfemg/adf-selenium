@@ -1,42 +1,56 @@
 package com.redheap.selenium;
 
-import com.redheap.selenium.conditions.AdfConditions;
-import com.redheap.selenium.pages.FileExplorer;
+import com.redheap.selenium.output.ScreenshotFile;
 import com.redheap.selenium.pages.RichClientDemo;
 
-import org.junit.After;
+import java.io.File;
+
 import org.junit.AfterClass;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class FileExplorerTest {
 
     private static WebDriver driver;
 
     @BeforeClass
-    public static void setUp() throws Exception {
+    public static void setUpBrowser() throws Exception {
         System.out.println("Starting Firefox...");
         FirefoxProfile profile = new FirefoxProfile();
         profile.setEnableNativeEvents(true); // needed for Mac OSX (default is non-native which doesn't work with ADF)
-        profile.setPreference("app.update.enabled", false);
+        profile.setPreference("app.update.enabled", false); // don't bother updating Firefox (takes too much time)
         driver = new FirefoxDriver(profile);
     }
 
     @AfterClass
-    public static void tearDown() throws Exception {
+    public static void tearDownBrowser() throws Exception {
         System.out.println("Quit firefox...");
-        //driver.quit();
+        driver.quit();
+    }
+
+    @Before
+    public void setupSession() {
+        // clear session cookie before each test so we start with a clean session
+        System.out.println("Clearing session cookie...");
+        driver.manage().deleteCookieNamed("JSESSIONID");
     }
 
     @Test
-    public void testNothing() {
+    public void testNothing() throws Exception {
+        driver.get("http://jdevadf.oracle.com/adf-richclient-demo/faces/index.jspx");
+        new RichClientDemo(driver).clickLayoutTreeNode().clickFileExplorerLink();
+        File file = ((TakesScreenshot) driver).getScreenshotAs(new ScreenshotFile(new File("final-screen.png")));
+        System.out.println("took screenshot " + file.getCanonicalPath());
+    }
+
+    @Test
+    public void testNothingAgain() {
         driver.get("http://jdevadf.oracle.com/adf-richclient-demo/faces/index.jspx");
         new RichClientDemo(driver).clickLayoutTreeNode().clickFileExplorerLink();
     }
