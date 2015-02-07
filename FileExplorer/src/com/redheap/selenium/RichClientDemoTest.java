@@ -6,57 +6,32 @@ import com.redheap.selenium.pages.RichClientDemo;
 
 import java.io.File;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-
-public class RichClientDemoTest {
+public class RichClientDemoTest extends TestCaseBase<RichClientDemo> {
 
     private static final String HOME_PAGE = "http://jdevadf.oracle.com/adf-richclient-demo/faces/index.jspx";
 
-    private static WebDriver driver;
-
-    @BeforeClass
-    public static void setUpBrowser() throws Exception {
-        System.out.println("Starting Firefox...");
-        FirefoxProfile profile = new FirefoxProfile();
-        profile.setEnableNativeEvents(true); // needed for Mac OSX (default is non-native which doesn't work with ADF)
-        profile.setPreference("app.update.enabled", false); // don't bother updating Firefox (takes too much time)
-        driver = new FirefoxDriver(profile);
+    public RichClientDemoTest() {
+        super(HOME_PAGE, RichClientDemo.class);
     }
 
-    @AfterClass
-    public static void tearDownBrowser() throws Exception {
-        System.out.println("Quit firefox...");
-        driver.quit();
-    }
-
-    @Before
-    public void setupSession() {
-        // clear session cookie before each test so we start with a clean session
-        System.out.println("Clearing session cookie...");
-        driver.manage().deleteCookieNamed("JSESSIONID");
-        // start each test at the Rich Client Demo homepage
-        driver.get(HOME_PAGE);
+    @Test
+    public void testHomepageLoad() {
+        RichClientDemo page = getPage();
     }
 
     @Test
     public void testNavigationToFileExplorer() throws Exception {
-        FileExplorer page = new RichClientDemo(driver).clickFileExplorerLink().clickTreeTableTab();
-        File file = ((TakesScreenshot) driver).getScreenshotAs(new ScreenshotFile(new File("explorer-tree-table.png")));
+        FileExplorer page = getPage().clickFileExplorerLink().clickTreeTableTab();
+        File file = page.getScreenshotAs(new ScreenshotFile(new File("explorer-tree-table.png")));
         System.out.println("took screenshot " + file.getCanonicalPath());
     }
 
     @Test
     public void testExpandTagGuideNode() {
-        RichClientDemo page = new RichClientDemo(driver);
+        RichClientDemo page = getPage();
         int expandedNodes = page.getTagGuideTreeExpandedNodeCount();
         page.clickLayoutTreeNode();
         Assert.assertEquals("number of expanded node should increase", expandedNodes + 1,
@@ -68,7 +43,7 @@ public class RichClientDemoTest {
         // test the same as testExpandTagGuideNode to make sure cookies were cleared between tests so tree
         // should start with collapsed nodes again (not clearing cookies retains state and thus collapsed state
         // from testExpandTagGuideNode test)
-        RichClientDemo page = new RichClientDemo(driver);
+        RichClientDemo page = getPage();
         int expandedNodes = page.getTagGuideTreeExpandedNodeCount();
         page.clickLayoutTreeNode();
         Assert.assertEquals("number of expanded node should increase", expandedNodes + 1,

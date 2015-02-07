@@ -3,10 +3,13 @@ package com.redheap.selenium.pages;
 import com.redheap.selenium.conditions.AdfConditions;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class PageObject {
+public class PageObject implements TakesScreenshot {
 
     WebDriver driver;
 
@@ -41,6 +44,11 @@ public class PageObject {
         System.out.println("Executed script returned: " + result +
                            (result == null ? "" : String.format(" (%s)", result.getClass())));
         return result;
+    }
+
+    @Override
+    public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
+        return ((TakesScreenshot)driver).getScreenshotAs(target);
     }
 
 }
