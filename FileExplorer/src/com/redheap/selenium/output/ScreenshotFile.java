@@ -39,4 +39,14 @@ public class ScreenshotFile implements OutputType<File> {
         }
         return file;
     }
+
+
+    @Override
+    public String toString() {
+        try {
+            return ScreenshotFile.class.getSimpleName() + "[" + file.getCanonicalPath() + "]";
+        } catch (IOException e) {
+            return super.toString();
+        }
+    }
 }
