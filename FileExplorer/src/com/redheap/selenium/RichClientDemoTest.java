@@ -19,17 +19,20 @@ public class RichClientDemoTest extends TestCaseBase<RichClientDemo> {
 
     @Test
     public void testHomepageLoad() {
+        System.out.println("***** testHomepageLoad");
         getPage();
     }
 
     @Test
     public void testNavigationToFileExplorer() throws Exception {
+        System.out.println("***** testNavigationToFileExplorer");
         FileExplorer page = getPage().clickFileExplorerLink().clickTreeTableTab();
         page.getScreenshotAs(new ScreenshotFile(new File("explorer-tree-table.png")));
     }
 
     @Test
     public void testExpandTagGuideNodeA() {
+        System.out.println("***** testExpandTagGuideNodeA");
         RichClientDemo page = getPage();
         int expandedNodesBefore = page.getTagGuideTreeExpandedNodeCount();
         page.clickLayoutTreeNode();
@@ -42,6 +45,7 @@ public class RichClientDemoTest extends TestCaseBase<RichClientDemo> {
         // test the same as testExpandTagGuideNode to make sure cookies were cleared between tests so tree
         // should start with collapsed nodes again (not clearing cookies retains state and thus collapsed state
         // from testExpandTagGuideNodeA test)
+        System.out.println("***** testExpandTagGuideNodeB");
         RichClientDemo page = getPage();
         int expandedNodesBefore = page.getTagGuideTreeExpandedNodeCount();
         page.clickLayoutTreeNode();
