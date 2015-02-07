@@ -1,5 +1,7 @@
 package com.redheap.selenium.pages;
 
+import static org.junit.Assert.assertEquals;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -11,10 +13,7 @@ public class FileExplorer extends PageObject {
 
     public FileExplorer(WebDriver driver) {
         super(driver);
-        String pageTitle = driver.getTitle();
-        if (!"File Explorer".equals(pageTitle)) {
-            throw new IllegalStateException("Not on FileExplorer page: " + pageTitle);
-        }
+        assertEquals("File Explorer", driver.getTitle());
     }
 
     public FileExplorer clickTreeTableTab() {

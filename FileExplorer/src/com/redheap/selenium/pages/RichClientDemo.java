@@ -2,6 +2,8 @@ package com.redheap.selenium.pages;
 
 import com.redheap.selenium.finder.AdfFinder;
 
+import static org.junit.Assert.assertEquals;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,10 +21,7 @@ public class RichClientDemo extends PageObject {
 
     public RichClientDemo(WebDriver driver) {
         super(driver);
-        String pageTitle = driver.getTitle();
-        if (!PAGE_TITLE.equals(pageTitle)) {
-            throw new IllegalStateException("Not on RichClientDemo page: " + pageTitle);
-        }
+        assertEquals(PAGE_TITLE, driver.getTitle());
     }
 
     public int getTagGuideTreeExpandedNodeCount() {
