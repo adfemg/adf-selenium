@@ -19,34 +19,33 @@ public class RichClientDemoTest extends TestCaseBase<RichClientDemo> {
 
     @Test
     public void testHomepageLoad() {
-        RichClientDemo page = getPage();
+        getPage();
     }
 
     @Test
     public void testNavigationToFileExplorer() throws Exception {
         FileExplorer page = getPage().clickFileExplorerLink().clickTreeTableTab();
-        File file = page.getScreenshotAs(new ScreenshotFile(new File("explorer-tree-table.png")));
-        System.out.println("took screenshot " + file.getCanonicalPath());
+        page.getScreenshotAs(new ScreenshotFile(new File("explorer-tree-table.png")));
     }
 
     @Test
-    public void testExpandTagGuideNode() {
+    public void testExpandTagGuideNodeA() {
         RichClientDemo page = getPage();
-        int expandedNodes = page.getTagGuideTreeExpandedNodeCount();
+        int expandedNodesBefore = page.getTagGuideTreeExpandedNodeCount();
         page.clickLayoutTreeNode();
-        Assert.assertEquals("number of expanded node should increase", expandedNodes + 1,
+        Assert.assertEquals("number of expanded node should increase", expandedNodesBefore + 1,
                             page.getTagGuideTreeExpandedNodeCount());
     }
 
     @Test
-    public void testExpandTagGuideNodeAgain() {
+    public void testExpandTagGuideNodeB() {
         // test the same as testExpandTagGuideNode to make sure cookies were cleared between tests so tree
         // should start with collapsed nodes again (not clearing cookies retains state and thus collapsed state
-        // from testExpandTagGuideNode test)
+        // from testExpandTagGuideNodeA test)
         RichClientDemo page = getPage();
-        int expandedNodes = page.getTagGuideTreeExpandedNodeCount();
+        int expandedNodesBefore = page.getTagGuideTreeExpandedNodeCount();
         page.clickLayoutTreeNode();
-        Assert.assertEquals("number of expanded node should increase", expandedNodes + 1,
+        Assert.assertEquals("number of expanded node should increase", expandedNodesBefore + 1,
                             page.getTagGuideTreeExpandedNodeCount());
     }
 
