@@ -6,8 +6,10 @@ import com.redheap.selenium.pages.RichClientDemo;
 import java.io.File;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.openqa.selenium.TakesScreenshot;
@@ -16,6 +18,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
 public class FileExplorerTest {
+
+    private static final String HOME_PAGE = "http://jdevadf.oracle.com/adf-richclient-demo/faces/index.jspx";
 
     private static WebDriver driver;
 
@@ -39,20 +43,36 @@ public class FileExplorerTest {
         // clear session cookie before each test so we start with a clean session
         System.out.println("Clearing session cookie...");
         driver.manage().deleteCookieNamed("JSESSIONID");
+        driver.get(HOME_PAGE);
     }
 
     @Test
-    public void testNothing() throws Exception {
-        driver.get("http://jdevadf.oracle.com/adf-richclient-demo/faces/index.jspx");
+    @Ignore
+    public void testNavigationToFileExplorer() throws Exception {
         new RichClientDemo(driver).clickLayoutTreeNode().clickFileExplorerLink();
         File file = ((TakesScreenshot) driver).getScreenshotAs(new ScreenshotFile(new File("final-screen.png")));
         System.out.println("took screenshot " + file.getCanonicalPath());
     }
 
     @Test
-    public void testNothingAgain() {
-        driver.get("http://jdevadf.oracle.com/adf-richclient-demo/faces/index.jspx");
-        new RichClientDemo(driver).clickLayoutTreeNode().clickFileExplorerLink();
+    public void testExpandTagGuideNode() {
+        RichClientDemo page = new RichClientDemo(driver);
+        int expandedNodes = page.getTagGuideTreeExpandedNodeCount();
+        page.clickLayoutTreeNode();
+        Assert.assertEquals("number of expanded node should increase", expandedNodes + 1,
+                            page.getTagGuideTreeExpandedNodeCount());
+    }
+
+    @Test
+    public void testExpandTagGuideNodeAgain() {
+        // test the same as testExpandTagGuideNode to make sure cookies were cleared between tests so tree
+        // should start with collapsed nodes again (not clearing cookies retains state and thus collapsed state
+        // from testExpandTagGuideNode test)
+        RichClientDemo page = new RichClientDemo(driver);
+        int expandedNodes = page.getTagGuideTreeExpandedNodeCount();
+        page.clickLayoutTreeNode();
+        Assert.assertEquals("number of expanded node should increase", expandedNodes + 1,
+                            page.getTagGuideTreeExpandedNodeCount());
     }
 
     public static void main(String[] args) {

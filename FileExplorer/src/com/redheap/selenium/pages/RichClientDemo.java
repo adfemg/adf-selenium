@@ -5,41 +5,45 @@ import com.redheap.selenium.finder.AdfFinder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.pagefactory.ByChained;
 
 public class RichClientDemo extends PageObject {
 
-    //private By layoutTreeNode = By.id("tmplt:accMenu:tagGrouped:tree:4::di");
-    //private By layoutTreeNode = By.xpath("//tr[@_afrrk and .//span[@title='Layout']]//a");
-    private By layoutTreeNode = AdfFinder.treeNodeByLabel("Lay'out");
+    private By tagGuideTree = By.id("tmplt:accMenu:tagGrouped:tree");
+    private By layoutTreeNode = AdfFinder.treeNodeByLabel("Layout");
+    private By tagGuideLayoutTreeNode = new ByChained(tagGuideTree, layoutTreeNode);
+
     private By fileExplorerLink = By.linkText("File Explorer");
+
+    private static final String PAGE_TITLE = "ADF Faces Rich Client Demos";
 
     public RichClientDemo(WebDriver driver) {
         super(driver);
         String pageTitle = driver.getTitle();
-        if (!"ADF Faces Rich Client Demos".equals(pageTitle)) {
+        if (!PAGE_TITLE.equals(pageTitle)) {
             throw new IllegalStateException("Not on RichClientDemo page: " + pageTitle);
         }
     }
 
+    public int getTagGuideTreeExpandedNodeCount() {
+        WebElement tree = driver.findElement(tagGuideTree);
+        String js =
+            String.format("return Object.keys(AdfPage.PAGE.findComponentByAbsoluteId('%s').getDisclosedRowKeys()).length",
+                          tree.getAttribute("id"));
+        return ((Number) executeScript(js)).intValue();
+    }
+
     public RichClientDemo clickLayoutTreeNode() {
         System.out.println("Clicking Layout node in the Tag Guide component tree");
-        //WebElement treeNode = driver.findElement(layoutTreeNode);
-        //WebElement treeNodeLink = treeNode.findElement(AdfFinder.treeNodeByLabel("dummy"));
-        //treeNodeLink.click();
-        driver.findElement(layoutTreeNode).findElement(By.tagName("a")).click();
+        driver.findElement(tagGuideLayoutTreeNode).findElement(By.tagName("a")).click();
         waitForPpr();
-        System.out.println("done");
         return this;
     }
 
     public FileExplorer clickFileExplorerLink() {
         System.out.println("Clicking File Explorer link...");
-        WebElement link = driver.findElement(fileExplorerLink);
-        System.out.println(link);
-        System.out.println(link.getClass());
-        link.click();
-        System.out.println("clicked link");
-        return new FileExplorer(driver);
+        driver.findElement(fileExplorerLink).click();
+        return new FileExplorer(driver); // navigation to new page
     }
 
 }
