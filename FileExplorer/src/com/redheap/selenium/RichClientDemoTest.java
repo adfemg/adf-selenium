@@ -1,6 +1,7 @@
 package com.redheap.selenium;
 
 import com.redheap.selenium.output.ScreenshotFile;
+import com.redheap.selenium.pages.FileExplorer;
 import com.redheap.selenium.pages.RichClientDemo;
 
 import java.io.File;
@@ -9,7 +10,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.openqa.selenium.TakesScreenshot;
@@ -17,7 +17,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
-public class FileExplorerTest {
+public class RichClientDemoTest {
 
     private static final String HOME_PAGE = "http://jdevadf.oracle.com/adf-richclient-demo/faces/index.jspx";
 
@@ -43,14 +43,14 @@ public class FileExplorerTest {
         // clear session cookie before each test so we start with a clean session
         System.out.println("Clearing session cookie...");
         driver.manage().deleteCookieNamed("JSESSIONID");
+        // start each test at the Rich Client Demo homepage
         driver.get(HOME_PAGE);
     }
 
     @Test
-    @Ignore
     public void testNavigationToFileExplorer() throws Exception {
-        new RichClientDemo(driver).clickLayoutTreeNode().clickFileExplorerLink();
-        File file = ((TakesScreenshot) driver).getScreenshotAs(new ScreenshotFile(new File("final-screen.png")));
+        FileExplorer page = new RichClientDemo(driver).clickFileExplorerLink().clickTreeTableTab();
+        File file = ((TakesScreenshot) driver).getScreenshotAs(new ScreenshotFile(new File("explorer-tree-table.png")));
         System.out.println("took screenshot " + file.getCanonicalPath());
     }
 
@@ -76,7 +76,7 @@ public class FileExplorerTest {
     }
 
     public static void main(String[] args) {
-        String[] args2 = { FileExplorerTest.class.getName() };
+        String[] args2 = { RichClientDemoTest.class.getName() };
         org.junit.runner.JUnitCore.main(args2);
     }
 
