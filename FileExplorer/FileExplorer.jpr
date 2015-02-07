@@ -185,6 +185,9 @@
                </list>
                <value n="description" v="Selenium"/>
                <value n="id" v="Selenium"/>
+               <list n="sourcePath">
+                  <url path="libs/selenium-2.44.0/selenium-java-2.44.0-srcs.jar" jar-entry=""/>
+               </list>
             </hash>
          </list>
       </hash>
