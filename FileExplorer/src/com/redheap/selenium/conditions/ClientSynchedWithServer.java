@@ -9,10 +9,17 @@ public class ClientSynchedWithServer implements ExpectedCondition<Boolean> {
     // return false if AdfPage object and functions do not exist
     // if they do exist return true if page is fully loaded and ready or reason why this is not completed yet
     String js =
-        "return typeof AdfPage !== 'undefined' && typeof AdfPage.PAGE !== 'undefined' && " +
+        "return typeof AdfPage !== 'undefined' && " +
+        "typeof AdfPage.PAGE !== 'undefined' && " +
         "typeof AdfPage.PAGE.isSynchronizedWithServer === 'function' && " +
-        "(AdfPage.PAGE.isSynchronizedWithServer() || AdfPage.PAGE.whyIsNotSynchronizedWithServer())";
+        "(AdfPage.PAGE.isSynchronizedWithServer() || " +
+        "(typeof AdfPage.PAGE.whyIsNotSynchronizedWithServer === 'function' && " +
+        "AdfPage.PAGE.whyIsNotSynchronizedWithServer()))";
 
+    /**
+     * Package private constructor as we want everybody to get this (and potentially other) ADF conditions
+     * from com.redheap.selenium.conditions.AdfConditions
+     */
     ClientSynchedWithServer() {
     }
 
