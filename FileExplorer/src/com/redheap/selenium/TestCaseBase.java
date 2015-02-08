@@ -25,7 +25,7 @@ public class TestCaseBase<P extends PageObject> {
 
     @BeforeClass
     public static void setUpBrowser() throws Exception {
-        System.out.println("Starting Firefox for...");
+        System.out.println("Starting Firefox...");
         FirefoxProfile profile = new FirefoxProfile();
         profile.setEnableNativeEvents(true); // needed for Mac OSX (default is non-native which doesn't work with ADF)
         profile.setPreference("app.update.enabled", false); // don't bother updating Firefox (takes too much time)
@@ -44,6 +44,7 @@ public class TestCaseBase<P extends PageObject> {
         System.out.println("Clearing session cookie for " + this.getClass() + "...");
         driver.manage().deleteCookieNamed("JSESSIONID");
         // navigate to homepage
+        System.out.println("Navigating to " + url + "...");
         driver.get(url);
     }
 
