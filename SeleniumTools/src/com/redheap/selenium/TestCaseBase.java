@@ -1,6 +1,6 @@
 package com.redheap.selenium;
 
-import com.redheap.selenium.pages.PageObject;
+import com.redheap.selenium.page.PageObject;
 
 import org.junit.AfterClass;
 import org.junit.Before;

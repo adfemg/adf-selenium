@@ -1,8 +1,8 @@
-package com.redheap.selenium.pages;
+package com.redheap.selenium.page;
 
 import com.redheap.selenium.component.AdfComponent;
 import com.redheap.selenium.component.AdfDocument;
-import com.redheap.selenium.conditions.AdfConditions;
+import com.redheap.selenium.AdfConditions;
 
 import static org.junit.Assert.*;
 

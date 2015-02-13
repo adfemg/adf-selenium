@@ -1,4 +1,4 @@
-package com.redheap.selenium;
+package com.redheap.selenium.page;
 
 import java.util.List;
 

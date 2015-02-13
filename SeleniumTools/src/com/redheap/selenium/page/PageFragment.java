@@ -1,9 +1,8 @@
-package com.redheap.selenium.fragments;
+package com.redheap.selenium.page;
 
 import com.redheap.selenium.component.AdfComponent;
 import com.redheap.selenium.component.AdfRegion;
-import com.redheap.selenium.conditions.AdfConditions;
-import com.redheap.selenium.pages.PageObject;
+import com.redheap.selenium.AdfConditions;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
