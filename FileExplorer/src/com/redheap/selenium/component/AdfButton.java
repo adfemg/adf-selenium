@@ -11,8 +11,7 @@ public class AdfButton extends AdfComponent {
 
     @Override
     protected String getExpectedComponentType() {
-        // FIXME: what about oracle.adf.RichButton
-        return "oracle.adf.RichCommandButton";
+        return "oracle.adf.RichButton";
     }
 
 }

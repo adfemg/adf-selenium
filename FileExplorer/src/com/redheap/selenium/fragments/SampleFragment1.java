@@ -1,6 +1,6 @@
 package com.redheap.selenium.fragments;
 
-import com.redheap.selenium.component.AdfButton;
+import com.redheap.selenium.component.AdfCommandButton;
 import com.redheap.selenium.component.AdfRegion;
 
 
@@ -14,7 +14,7 @@ public class SampleFragment1 extends PageFragment {
 
     public SampleFragment2 clickRegion2Button() {
         System.out.println("Clicking 'switch to region 2' button");
-        AdfButton button = findAdfComponent(switchRegion2ButtonId, AdfButton.class);
+        AdfCommandButton button = findAdfComponent(switchRegion2ButtonId, AdfCommandButton.class);
         button.click();
         waitForPpr();
         return navigatedTo(SampleFragment2.class);
