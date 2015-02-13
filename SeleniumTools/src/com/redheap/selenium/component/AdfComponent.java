@@ -88,8 +88,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     }
 
     public <T extends AdfComponent> T findAdfComponent(String relativeClientId, Class<? extends T> cls) {
-        String js =
-            String.format("%s.findComponent('%s').getClientId()", scriptFindComponent(), relativeClientId);
+        String js = String.format("%s.findComponent('%s').getClientId()", scriptFindComponent(), relativeClientId);
         String clientid = (String) executeScript(js);
         return AdfComponent.forElement(driver, clientid, cls);
     }
@@ -108,6 +107,12 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         System.out.println("Executed script returned: " + result +
                            (result == null ? "" : String.format(" (%s)", result.getClass())));
         return result;
+    }
+
+    protected WebElement findSubIdElement(String subid) {
+        // component.getPeer().getSubIdDomElement(component, subid)
+        return (WebElement) executeScript(String.format("%s.getSubIdDomElement(%s,'%s')", scriptUnboundPeer(),
+                                                        scriptFindComponent(), subid));
     }
 
     //    protected Collection<String> getDescendantComponents() {
