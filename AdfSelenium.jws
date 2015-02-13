@@ -25,5 +25,6 @@
    </list>
    <list n="listOfChildren">
       <hash><url n="URL" path="FileExplorer/FileExplorer.jpr"/></hash>
+      <hash><url n="URL" path="SeleniumTools/SeleniumTools.jpr"/></hash>
    </list>
 </jws:workspace>
