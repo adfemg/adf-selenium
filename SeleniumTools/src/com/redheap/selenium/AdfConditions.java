@@ -1,4 +1,4 @@
-package com.redheap.selenium.conditions;
+package com.redheap.selenium;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;

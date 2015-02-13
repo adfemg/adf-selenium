@@ -1,4 +1,4 @@
-package com.redheap.selenium.finder;
+package com.redheap.selenium;
 
 import java.util.List;
 
