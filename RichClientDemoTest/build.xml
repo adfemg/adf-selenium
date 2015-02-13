@@ -8,7 +8,7 @@
         <fileset dir="${oracle.home}/..">
             <include name="jdeveloper/jdev/extensions/ooracle.jdeveloper.junit/junit4*/junit-4*.jar"/>
         </fileset>
-        <fileset dir="${basedir}">
+        <fileset dir="${basedir}/..">
             <include name="libs/**/*.jar"/>
         </fileset>
     </path>
@@ -21,7 +21,10 @@
     <target name="compile">
         <mkdir dir="classes"/>
         <javac srcdir="src" destdir="classes" classpathref="classpath" debug="on" deprecation="on"
-               includeantruntime="false"/>
+               includeantruntime="false">
+            <src location="src"/>
+            <src location="../SeleniumTools/src"/>
+        </javac>
     </target>
 
     <target name="junit" depends="clean,compile">

@@ -1,7 +1,5 @@
 package com.redheap.selenium;
 
-import com.redheap.selenium.conditions.AdfConditions;
-
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 

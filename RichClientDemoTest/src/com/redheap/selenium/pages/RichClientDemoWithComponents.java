@@ -1,7 +1,9 @@
 package com.redheap.selenium.pages;
 
 import com.redheap.selenium.component.AdfTree;
-import com.redheap.selenium.finder.AdfFinder;
+import com.redheap.selenium.AdfFinder;
+
+import com.redheap.selenium.page.PageObject;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

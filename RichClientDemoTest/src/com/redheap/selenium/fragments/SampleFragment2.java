@@ -1,6 +1,7 @@
 package com.redheap.selenium.fragments;
 
 import com.redheap.selenium.component.AdfRegion;
+import com.redheap.selenium.page.PageFragment;
 
 import org.openqa.selenium.By;
 

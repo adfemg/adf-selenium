@@ -2,6 +2,7 @@ package com.redheap.selenium.fragments;
 
 import com.redheap.selenium.component.AdfCommandButton;
 import com.redheap.selenium.component.AdfRegion;
+import com.redheap.selenium.page.PageFragment;
 
 
 public class SampleFragment1 extends PageFragment {

@@ -2,8 +2,8 @@ package com.redheap.selenium;
 
 import com.redheap.selenium.fragments.SampleFragment1;
 import com.redheap.selenium.pages.RichClientDemoWithComponents;
-import com.redheap.selenium.rule.SavePageSourceOnFailure;
-import com.redheap.selenium.rule.ScreenshotOnFailure;
+import com.redheap.selenium.junit.SavePageSourceOnFailure;
+import com.redheap.selenium.junit.ScreenshotOnFailure;
 
 import java.io.File;
 

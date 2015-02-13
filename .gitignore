@@ -1,4 +1,9 @@
 .data
 **/classes
-RichClientDemoTest/errors/
 **/deploy/
+
+# JUnit report files
+RichClientDemoTest/reports/
+
+# screenshots and html sources on errors
+RichClientDemoTest/errors/

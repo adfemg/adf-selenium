@@ -1,5 +1,7 @@
 package com.redheap.selenium.pages;
 
+import com.redheap.selenium.page.PageObject;
+
 import org.junit.Assert;
 
 import org.openqa.selenium.By;
