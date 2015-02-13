@@ -24,7 +24,7 @@
       <string v="oracle.jdeveloper.model.PathsConfiguration/ResourceBundlesContentSet"/>
    </list>
    <list n="listOfChildren">
-      <hash><url n="URL" path="FileExplorer/FileExplorer.jpr"/></hash>
+      <hash><url n="URL" path="RichClientDemoTest/RichClientDemoTest.jpr"/></hash>
       <hash><url n="URL" path="SeleniumTools/SeleniumTools.jpr"/></hash>
    </list>
 </jws:workspace>
