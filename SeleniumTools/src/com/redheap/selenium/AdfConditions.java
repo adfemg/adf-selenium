@@ -1,11 +1,16 @@
 package com.redheap.selenium;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 
 public abstract class AdfConditions {
+
+    private static final Logger logger = Logger.getLogger(AdfConditions.class.getName());
 
     private AdfConditions() {
     }
@@ -26,8 +31,10 @@ public abstract class AdfConditions {
             @Override
             public Boolean apply(final WebDriver driver) {
                 JavascriptExecutor jsDriver = (JavascriptExecutor) driver;
-                Object result = jsDriver.executeScript("return " + jsExpression);
-                System.out.println("js result: " + result + " [" + jsExpression + "]");
+                String js = "return " + jsExpression;
+                logger.log(Level.FINER, "executing condition javascript: {0}", js);
+                Object result = jsDriver.executeScript(js);
+                logger.log(Level.FINER, "js result: {0}", result);
                 return Boolean.TRUE.equals(result);
             }
         };
