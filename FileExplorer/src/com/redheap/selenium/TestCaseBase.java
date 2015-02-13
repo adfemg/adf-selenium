@@ -1,12 +1,6 @@
 package com.redheap.selenium;
 
-import com.redheap.selenium.output.ScreenshotFile;
 import com.redheap.selenium.pages.PageObject;
-
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -63,22 +57,8 @@ public class TestCaseBase<P extends PageObject> {
         }
     }
 
-    protected RemoteWebDriver getDriver() {
+    protected static RemoteWebDriver getDriver() {
         return driver;
-    }
-
-    protected void dumpError(String name) {
-        try {
-            File shotFile = new File(name + "-fail.png");
-            System.out.println("dumping error screenshot " + shotFile.getCanonicalPath());
-            getDriver().getScreenshotAs(new ScreenshotFile(shotFile));
-            File srcFile = new File(name + "-fail.txt");
-            System.out.println("dumping error page source " + srcFile.getCanonicalPath());
-            FileUtils.write(srcFile, getDriver().getPageSource());
-        } catch (IOException e) {
-            // suppress
-        }
-
     }
 
 }

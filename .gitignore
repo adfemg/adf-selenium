@@ -1,3 +1,4 @@
 .data
 **/classes
 FileExplorer/reports
+FileExplorer/errors/
