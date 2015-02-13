@@ -1,6 +1,6 @@
-package com.redheap.selenium.rule;
+package com.redheap.selenium.junit;
 
-import com.redheap.selenium.output.ScreenshotFile;
+import com.redheap.selenium.output.FileOutputType;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class ScreenshotOnFailure extends TestWatcher {
                 file.getCanonicalFile().getParentFile().mkdirs();
                 System.out.println("dumping error screenshot " + file.getCanonicalPath());
                 driver.switchTo().window(guid);
-                ((TakesScreenshot) driver).getScreenshotAs(new ScreenshotFile(file));
+                ((TakesScreenshot) driver).getScreenshotAs(new FileOutputType(file));
             }
         } catch (IOException e) {
             e.printStackTrace();

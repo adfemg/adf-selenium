@@ -1,4 +1,4 @@
-package com.redheap.selenium.rule;
+package com.redheap.selenium.junit;
 
 import java.io.File;
 import java.io.IOException;
