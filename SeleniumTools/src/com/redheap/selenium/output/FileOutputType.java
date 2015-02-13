@@ -11,11 +11,11 @@ import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriverException;
 
-public class ScreenshotFile implements OutputType<File> {
+public class FileOutputType implements OutputType<File> {
 
     private File file;
 
-    public ScreenshotFile(File file) {
+    public FileOutputType(File file) {
         this.file = file;
     }
 
@@ -44,7 +44,7 @@ public class ScreenshotFile implements OutputType<File> {
     @Override
     public String toString() {
         try {
-            return ScreenshotFile.class.getSimpleName() + "[" + file.getCanonicalPath() + "]";
+            return FileOutputType.class.getSimpleName() + "[" + file.getCanonicalPath() + "]";
         } catch (IOException e) {
             return super.toString();
         }
