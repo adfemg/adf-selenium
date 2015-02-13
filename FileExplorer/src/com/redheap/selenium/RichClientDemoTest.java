@@ -1,10 +1,7 @@
 package com.redheap.selenium;
 
-import com.redheap.selenium.output.ScreenshotFile;
 import com.redheap.selenium.pages.FileExplorer;
 import com.redheap.selenium.pages.RichClientDemo;
-
-import java.io.File;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,7 +24,7 @@ public class RichClientDemoTest extends TestCaseBase<RichClientDemo> {
     public void testNavigationToFileExplorer() throws Exception {
         System.out.println("***** testNavigationToFileExplorer");
         FileExplorer page = getPage().clickFileExplorerLink().clickTreeTableTab();
-        page.getScreenshotAs(new ScreenshotFile(new File("explorer-tree-table.png")));
+        //page.getScreenshotAs(new ScreenshotFile(new File("explorer-tree-table.png")));
     }
 
     @Test
@@ -59,3 +56,4 @@ public class RichClientDemoTest extends TestCaseBase<RichClientDemo> {
     }
 
 }
+

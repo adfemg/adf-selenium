@@ -1,6 +1,6 @@
 package com.redheap.selenium.pages;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,12 +13,17 @@ public class FileExplorer extends PageObject {
 
     public FileExplorer(WebDriver driver) {
         super(driver);
-        assertEquals("File Explorer", driver.getTitle());
+    }
+
+    @Override
+    protected String getExpectedTitle() {
+        return "File Explorer";
     }
 
     public FileExplorer clickTreeTableTab() {
         System.out.println("Clicking TreeTable tab in content view panelTabbed");
-        driver.findElement(treeTableTab).findElement(By.tagName("a")).click();
+        Assert.fail();
+        //findElement(treeTableTab).findElement(By.tagName("a")).click();
         waitForPpr();
         return this;
     }

@@ -28,7 +28,9 @@ public class TreeNodeByLabel extends By {
         }
         // start from . for instances where we are searching within a scoped element
         // tr elements having a _afrrk (rowkey) attribute are considered tree nodes
-        return ((FindsByXPath) searchContext).findElementsByXPath(".//tr[@_afrrk and .//span[@title=" + safeLabel + "]]");
+        String xpath = ".//tr[@_afrrk and .//span[text()=" + safeLabel + "]]";
+        System.out.println("using xpath " + xpath);
+        return ((FindsByXPath) searchContext).findElementsByXPath(xpath);
     }
 
 
