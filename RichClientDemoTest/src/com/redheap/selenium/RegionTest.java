@@ -1,7 +1,7 @@
 package com.redheap.selenium;
 
 import com.redheap.selenium.fragments.SampleFragment1;
-import com.redheap.selenium.pages.RichClientDemoWithComponents;
+import com.redheap.selenium.pages.RichClientDemo;
 import com.redheap.selenium.junit.SavePageSourceOnFailure;
 import com.redheap.selenium.junit.ScreenshotOnFailure;
 
@@ -15,7 +15,7 @@ import org.junit.rules.TestWatcher;
 /**
  * Test interaction with an af:region, especially navigation between page fragments.
  */
-public class RegionTest extends TestCaseBase<RichClientDemoWithComponents> {
+public class RegionTest extends TestCaseBase<RichClientDemo> {
 
     private static final String HOME_PAGE = "http://jdevadf.oracle.com/adf-richclient-demo";
 
@@ -25,13 +25,13 @@ public class RegionTest extends TestCaseBase<RichClientDemoWithComponents> {
     public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(getDriver(), new File("errors"));
 
     public RegionTest() {
-        super(HOME_PAGE, RichClientDemoWithComponents.class);
+        super(HOME_PAGE, RichClientDemo.class);
     }
 
     @Test
     public void expandTreeNode() {
         System.out.println("***** expandTreeNode");
-        RichClientDemoWithComponents homePage = getPage();
+        RichClientDemo homePage = getPage();
         int expandedCount = homePage.getTagGuideTreeExpandedNodeCount();
         homePage.clickMiscellaneousTreeNode();
         Assert.assertEquals("number of expanded tree nodes should have increased", expandedCount + 1,
@@ -41,7 +41,7 @@ public class RegionTest extends TestCaseBase<RichClientDemoWithComponents> {
     @Test
     public void expandNestedTreeNode() {
         System.out.println("***** expandNestedTreeNode");
-        RichClientDemoWithComponents homePage = getPage();
+        RichClientDemo homePage = getPage();
         int expandedCount = homePage.getTagGuideTreeExpandedNodeCount();
         homePage.clickMiscellaneousTreeNode();
         Assert.assertEquals("number of expanded tree nodes should have increased", expandedCount + 1,

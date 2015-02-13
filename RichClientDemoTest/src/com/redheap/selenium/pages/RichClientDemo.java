@@ -1,19 +1,21 @@
 package com.redheap.selenium.pages;
 
 import com.redheap.selenium.AdfFinder;
+import com.redheap.selenium.component.AdfCommandLink;
+import com.redheap.selenium.component.AdfTree;
 import com.redheap.selenium.page.PageObject;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.pagefactory.ByChained;
 
 public class RichClientDemo extends PageObject {
 
-    private By tagGuideTree = By.id("tmplt:accMenu:tagGrouped:tree");
-    private By layoutTreeNode = AdfFinder.treeNodeByLabel("Layout");
-    private By tagGuideLayoutTreeNode = new ByChained(tagGuideTree, layoutTreeNode);
+    private final String treeId = "tmplt:accMenu:tagGrouped:tree";
+    private final String fileExplorerLink = "tmplt:fileExplorer";
 
-    private By fileExplorerLink = By.linkText("File Explorer");
+    private final By miscellaneousTreeNode = AdfFinder.treeNodeByLabel("Miscellaneous");
+    private final By layoutTreeNode = AdfFinder.treeNodeByLabel("Layout");
+    private final By regionTreeNode = AdfFinder.treeNodeByLabel("Region");
 
     public RichClientDemo(WebDriver driver) {
         super(driver);
@@ -24,28 +26,44 @@ public class RichClientDemo extends PageObject {
         return "ADF Faces Rich Client Demos";
     }
 
+    private AdfTree findTagGuideTree() {
+        return findDocument().findAdfComponent(treeId, AdfTree.class);
+    }
+
+    private AdfCommandLink findFileExplorerLink() {
+        return findDocument().findAdfComponent(fileExplorerLink, AdfCommandLink.class);
+    }
+
     public int getTagGuideTreeExpandedNodeCount() {
-        return 0;
-//        WebElement tree = findElement(tagGuideTree);
-//        String js =
-//            String.format("return Object.keys(AdfPage.PAGE.findComponentByAbsoluteId('%s').getDisclosedRowKeys()).length",
-//                          tree.getAttribute("id"));
-//        return ((Number) executeScript(js)).intValue();
+        return findTagGuideTree().getExpandedNodeCount();
+    }
+
+    public RichClientDemo clickMiscellaneousTreeNode() {
+        System.out.println("Clicking Miscellaneous node in the Tag Guide component tree");
+        findTagGuideTree().clickNode(miscellaneousTreeNode);
+        waitForPpr();
+        return this;
     }
 
     public RichClientDemo clickLayoutTreeNode() {
-        return null;
-//        System.out.println("Clicking Layout node in the Tag Guide component tree");
-//        findElement(tagGuideLayoutTreeNode).findElement(By.tagName("a")).click();
-//        waitForPpr();
-//        return this;
+        System.out.println("Clicking Layout node in the Tag Guide component tree");
+        findTagGuideTree().clickNode(layoutTreeNode);
+        waitForPpr();
+        return this;
+    }
+
+    public RegionDemoPage clickRegionTreeNode() {
+        System.out.println("Clicking Region node in the Tag Guide component tree");
+        findTagGuideTree().clickNode(regionTreeNode);
+        waitForPpr();
+        return navigatedTo(RegionDemoPage.class);
     }
 
     public FileExplorer clickFileExplorerLink() {
-        return null;
-//        System.out.println("Clicking File Explorer link...");
-//        findElement(fileExplorerLink).click();
-//        return navigatedTo(FileExplorer.class); // navigation to new page
+        System.out.println("Clicking File Explorer link");
+        findFileExplorerLink().click();
+        waitForPpr();
+        return navigatedTo(FileExplorer.class);
     }
 
 }
