@@ -4,7 +4,7 @@ import com.redheap.selenium.component.AdfComponent;
 import com.redheap.selenium.component.AdfDocument;
 import com.redheap.selenium.conditions.AdfConditions;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -25,7 +25,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public abstract class PageObject /*implements TakesScreenshot*/ {
 
     public static final long DFLT_WAIT_TIMEOUT_SECS = 30;
-    public static final long DFLT_WAIT_INTERVAL_MSECS = 100;
+    public static final long DFLT_WAIT_INTERVAL_MSECS = 500;
 
     private RemoteWebDriver driver;
 
