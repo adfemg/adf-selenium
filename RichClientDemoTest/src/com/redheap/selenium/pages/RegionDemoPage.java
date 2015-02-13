@@ -4,12 +4,11 @@ import com.redheap.selenium.component.AdfRegion;
 import com.redheap.selenium.fragments.SampleFragment1;
 import com.redheap.selenium.page.PageObject;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class RegionDemoPage extends PageObject {
 
-    private By demoRegion = By.id("dmoTpl:region1");
+    private final String regionId = "dmoTpl:region1";
 
     public RegionDemoPage(WebDriver webDriver) {
         super(webDriver);
@@ -21,7 +20,7 @@ public class RegionDemoPage extends PageObject {
     }
 
     protected AdfRegion findDemoRegion() {
-        return findAdfComponent("dmoTpl:region1", AdfRegion.class);
+        return findAdfComponent(regionId, AdfRegion.class);
     }
 
     public SampleFragment1 getRegionContent() {
