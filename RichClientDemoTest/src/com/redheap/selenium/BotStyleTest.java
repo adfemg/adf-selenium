@@ -18,7 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class BotStyleTest {
 
     private static final Logger logger = Logger.getLogger(BotStyleTest.class.getName());
-    
+
     @Test
     public void test() throws Exception {
         FirefoxProfile profile = new FirefoxProfile();

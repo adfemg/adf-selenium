@@ -22,8 +22,7 @@ public class FileOutputType implements OutputType<File> {
     @Override
     public File convertFromBase64Png(String base64Png) {
         try {
-            IOUtils.copy(new Base64InputStream(IOUtils.toInputStream(base64Png)),
-                         new FileOutputStream(file));
+            IOUtils.copy(new Base64InputStream(IOUtils.toInputStream(base64Png)), new FileOutputStream(file));
         } catch (IOException e) {
             throw new WebDriverException(e);
         }

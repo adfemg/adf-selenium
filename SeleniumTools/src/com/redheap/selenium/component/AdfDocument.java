@@ -15,7 +15,7 @@ public class AdfDocument extends AdfComponent {
     }
 
     public void setAnimationEnabled(boolean enabled) {
-        executeScript(String.format("AdfPage.PAGE.setAnimationEnabled(%b)",enabled));
+        executeScript(String.format("AdfPage.PAGE.setAnimationEnabled(%b)", enabled));
     }
 
 }
