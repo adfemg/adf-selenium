@@ -71,15 +71,15 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     }
 
     protected String scriptFindComponent() {
-        return String.format("AdfPage.PAGE.findComponentByAbsoluteLocator('%s')", clientid);
+        return String.format("AdfPage.PAGE.findComponentByAbsoluteId('%s')", clientid);
     }
 
     protected String scriptUnboundPeer() {
-        return String.format("AdfPage.PAGE.findComponentByAbsoluteLocator('%s').getPeer()", clientid);
+        return String.format("AdfPage.PAGE.findComponentByAbsoluteId('%s').getPeer()", clientid);
     }
 
     protected String scriptBoundPeer() {
-        return String.format("(function(){var c=AdfPage.PAGE.findComponentByAbsoluteLocator('%s');var p=c.getPeer();p.bind(c);return p;})()",
+        return String.format("(function(){var c=AdfPage.PAGE.findComponentByAbsoluteId('%s');var p=c.getPeer();p.bind(c);return p;})()",
                              clientid);
     }
 
