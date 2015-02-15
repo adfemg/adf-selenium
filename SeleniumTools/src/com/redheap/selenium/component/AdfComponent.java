@@ -10,6 +10,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.RemoteWebElement;
 
 public abstract class AdfComponent /*extends BaseObject*/ {
 
@@ -48,6 +50,15 @@ public abstract class AdfComponent /*extends BaseObject*/ {
             throw new WebDriverException("unable to instantiate adf component: " + clientid,
                                          e.getCause() != null ? e.getCause() : e);
         }
+    }
+
+    public static <T extends AdfComponent> T forElement(WebElement element, Class<? extends T> cls) {
+        RemoteWebElement rwe = (RemoteWebElement) element;
+        String js =
+            String.format("return AdfRichUIPeer.getFirstAncestorComponent(AdfAgent.AGENT.getElementById('%s')).getClientId()");
+        RemoteWebDriver rwd = (RemoteWebDriver) rwe.getWrappedDriver();
+        String clientid = (String) rwd.executeScript(js);
+        return forClientId(rwd, clientid, cls);
     }
 
     protected String scriptFindComponent() {
