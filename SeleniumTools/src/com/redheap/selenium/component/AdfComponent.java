@@ -1,6 +1,8 @@
 package com.redheap.selenium.component;
 
 import com.redheap.selenium.AdfConditions;
+import com.redheap.selenium.errors.AutomationDisabledException;
+import com.redheap.selenium.errors.SubIdNotFoundException;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -70,6 +72,12 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         this.waiter = waiter;
     }
 
+    protected void requireAutomation() {
+        if (!AdfDocument.forDriver(driver).isAutomationEnabled()) {
+            throw new AutomationDisabledException();
+        }
+    }
+
     protected String scriptFindComponent() {
         return String.format("AdfPage.PAGE.findComponentByAbsoluteId('%s')", clientid);
     }
@@ -127,8 +135,10 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     }
 
     protected Object executeScript(String javascript) {
+        JavascriptExecutor jsrunner = (JavascriptExecutor) getDriver();
         logger.finer("Executing script " + javascript);
-        Object result = ((JavascriptExecutor) getDriver()).executeScript("return " + javascript);
+        // selenium handles that this is wrapped in anonymous closure to prevent variable leakage
+        Object result = jsrunner.executeScript("return " + javascript);
         logger.finer("Executed script returned: " + result +
                      (result == null ? "" : String.format(" (%s)", result.getClass())));
         return result;
@@ -136,8 +146,15 @@ public abstract class AdfComponent /*extends BaseObject*/ {
 
     protected WebElement findSubIdElement(String subid) {
         // component.getPeer().getSubIdDomElement(component, subid)
-        return (WebElement) executeScript(String.format("%s.getSubIdDomElement(%s,'%s')", scriptUnboundPeer(),
-                                                        scriptFindComponent(), subid));
+        requireAutomation();
+        final Object result =
+            executeScript(String.format("%s.getSubIdDomElement(%s,'%s')", scriptUnboundPeer(), scriptFindComponent(),
+                                        subid));
+        if (result instanceof WebElement) {
+            return (WebElement) result;
+        } else {
+            throw new SubIdNotFoundException("could not find subid " + subid + " for " + getElement());
+        }
     }
 
     protected void waitForPpr() {
