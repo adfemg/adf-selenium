@@ -21,6 +21,8 @@ public class RichClientDemoTest extends TestCaseBase<RichClientDemo> {
     @Rule
     public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(getDriver(), new File("errors"));
 
+    //private static final String HOME_PAGE = "http://jdevadf.oracle.com/adf-richclient-demo";
+    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo";
     private static final Logger logger = Logger.getLogger(RichClientDemoTest.class.getName());
 
     public RichClientDemoTest() {
