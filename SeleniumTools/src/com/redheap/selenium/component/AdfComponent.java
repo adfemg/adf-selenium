@@ -40,7 +40,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     //        }
     //    }
 
-    public static <T extends AdfComponent> T forElement(WebDriver driver, String clientid, Class<? extends T> cls) {
+    public static <T extends AdfComponent> T forClientId(WebDriver driver, String clientid, Class<? extends T> cls) {
         // instantiate and return
         try {
             return cls.getConstructor(WebDriver.class, String.class).newInstance(driver, clientid);
@@ -93,7 +93,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     public <T extends AdfComponent> T findAdfComponent(String relativeClientId, Class<? extends T> cls) {
         String js = String.format("%s.findComponent('%s').getClientId()", scriptFindComponent(), relativeClientId);
         String clientid = (String) executeScript(js);
-        return AdfComponent.forElement(driver, clientid, cls);
+        return AdfComponent.forClientId(driver, clientid, cls);
     }
 
     public String getId() {

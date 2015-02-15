@@ -50,7 +50,7 @@ public abstract class PageObject /*implements TakesScreenshot*/ {
     protected AdfDocument findDocument() {
         JavascriptExecutor jsdriver = (JavascriptExecutor) driver;
         String docid = (String) jsdriver.executeScript("return AdfPage.PAGE.getDocumentClientId()");
-        return AdfComponent.forElement(driver, docid, AdfDocument.class);
+        return AdfComponent.forClientId(driver, docid, AdfDocument.class);
     }
 
     protected abstract String getExpectedTitle();
