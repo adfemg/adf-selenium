@@ -1,10 +1,12 @@
 package com.redheap.selenium.page;
 
+import com.redheap.selenium.AdfConditions;
 import com.redheap.selenium.component.AdfComponent;
 import com.redheap.selenium.component.AdfDocument;
-import com.redheap.selenium.AdfConditions;
 
-import static org.junit.Assert.*;
+import java.util.logging.Logger;
+
+import static org.junit.Assert.assertEquals;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -31,6 +33,7 @@ public abstract class PageObject /*implements TakesScreenshot*/ {
 
     private static final String JS_GET_REGIONS =
         "{ids=[]; AdfPage.PAGE.getComponentsByType('oracle.adf.RichRegion').forEach(function(r){ids.push(r.getClientId())}); return ids}";
+    private static final Logger logger = Logger.getLogger(PageObject.class.getName());
 
     public PageObject(WebDriver driver) {
         super();
@@ -82,21 +85,21 @@ public abstract class PageObject /*implements TakesScreenshot*/ {
     }
 
     protected Object executeScript(String javascript) {
-        System.out.println("Executing script " + javascript);
+        logger.finer("Executing script " + javascript);
         Object result = driver.executeScript("return " + javascript);
-        System.out.println("Executed script returned: " + result +
-                           (result == null ? "" : String.format(" (%s)", result.getClass())));
+        logger.finer("Executed script returned: " + result +
+                     (result == null ? "" : String.format(" (%s)", result.getClass())));
         return result;
     }
 
 
-//    protected Collection<AdfRegion> getRegions() {
-//        Collection<String> ids = (Collection<String>) executeScript(JS_GET_REGIONS);
-//        Collection<AdfRegion> retval = new ArrayList<AdfRegion>(ids.size());
-//        for (String id : ids) {
-//            retval.add(findAdfComponent(By.id(id), AdfRegion.class));
-//        }
-//        return retval;
-//    }
+    //    protected Collection<AdfRegion> getRegions() {
+    //        Collection<String> ids = (Collection<String>) executeScript(JS_GET_REGIONS);
+    //        Collection<AdfRegion> retval = new ArrayList<AdfRegion>(ids.size());
+    //        for (String id : ids) {
+    //            retval.add(findAdfComponent(By.id(id), AdfRegion.class));
+    //        }
+    //        return retval;
+    //    }
 
 }

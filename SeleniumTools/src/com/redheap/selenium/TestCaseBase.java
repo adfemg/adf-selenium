@@ -2,6 +2,8 @@ package com.redheap.selenium;
 
 import com.redheap.selenium.page.PageObject;
 
+import java.util.logging.Logger;
+
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,6 +21,8 @@ public class TestCaseBase<P extends PageObject> {
     private String url;
     private Class<? extends P> cls;
 
+    private static final Logger logger = Logger.getLogger(TestCaseBase.class.getName());
+
     public TestCaseBase(String url, Class<? extends P> cls) {
         this.url = url;
         this.cls = cls;
@@ -26,7 +30,7 @@ public class TestCaseBase<P extends PageObject> {
 
     @BeforeClass
     public static void setUpBrowser() throws Exception {
-        System.out.println("Starting Firefox...");
+        logger.fine("Starting Firefox...");
         FirefoxProfile profile = new FirefoxProfile();
         profile.setEnableNativeEvents(true); // needed for Mac OSX (default is non-native which doesn't work with ADF)
         profile.setPreference("app.update.enabled", false); // don't bother updating Firefox (takes too much time)
@@ -35,17 +39,17 @@ public class TestCaseBase<P extends PageObject> {
 
     @AfterClass
     public static void tearDownBrowser() throws Exception {
-        System.out.println("Quit firefox...");
+        logger.fine("Quit firefox...");
         driver.quit();
     }
 
     @Before
     public void setupSession() {
         // clear session cookie before each test so we start with a clean session
-        System.out.println("Clearing session cookie for " + this.getClass() + "...");
+        logger.fine("Clearing session cookie for " + this.getClass() + "...");
         driver.manage().deleteCookieNamed("JSESSIONID");
         // navigate to homepage
-        System.out.println("Navigating to " + url + "...");
+        logger.fine("Navigating to " + url + "...");
         driver.get(url);
     }
 

@@ -5,6 +5,8 @@ import com.redheap.selenium.component.AdfCommandLink;
 import com.redheap.selenium.component.AdfTree;
 import com.redheap.selenium.page.PageObject;
 
+import java.util.logging.Logger;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -16,6 +18,8 @@ public class RichClientDemo extends PageObject {
     private final By miscellaneousTreeNode = AdfFinder.treeNodeByLabel("Miscellaneous");
     private final By layoutTreeNode = AdfFinder.treeNodeByLabel("Layout");
     private final By regionTreeNode = AdfFinder.treeNodeByLabel("Region");
+
+    private static final Logger logger = Logger.getLogger(RichClientDemo.class.getName());
 
     public RichClientDemo(WebDriver driver) {
         super(driver);
@@ -39,28 +43,28 @@ public class RichClientDemo extends PageObject {
     }
 
     public RichClientDemo clickMiscellaneousTreeNode() {
-        System.out.println("Clicking Miscellaneous node in the Tag Guide component tree");
+        logger.fine("Clicking Miscellaneous node in the Tag Guide component tree");
         findTagGuideTree().clickNode(miscellaneousTreeNode);
         waitForPpr();
         return this;
     }
 
     public RichClientDemo clickLayoutTreeNode() {
-        System.out.println("Clicking Layout node in the Tag Guide component tree");
+        logger.fine("Clicking Layout node in the Tag Guide component tree");
         findTagGuideTree().clickNode(layoutTreeNode);
         waitForPpr();
         return this;
     }
 
     public RegionDemoPage clickRegionTreeNode() {
-        System.out.println("Clicking Region node in the Tag Guide component tree");
+        logger.fine("Clicking Region node in the Tag Guide component tree");
         findTagGuideTree().clickNode(regionTreeNode);
         waitForPpr();
         return navigatedTo(RegionDemoPage.class);
     }
 
     public FileExplorer clickFileExplorerLink() {
-        System.out.println("Clicking File Explorer link");
+        logger.fine("Clicking File Explorer link");
         findFileExplorerLink().click();
         waitForPpr();
         return navigatedTo(FileExplorer.class);

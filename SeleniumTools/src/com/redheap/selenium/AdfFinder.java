@@ -1,6 +1,7 @@
 package com.redheap.selenium;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
@@ -9,6 +10,8 @@ import org.openqa.selenium.internal.FindsByXPath;
 
 
 public abstract class AdfFinder {
+
+    private static final Logger logger = Logger.getLogger(AdfFinder.class.getName());
 
     private AdfFinder() {
     }
@@ -27,7 +30,7 @@ public abstract class AdfFinder {
 
         @Override
         public List<WebElement> findElements(SearchContext searchContext) {
-            System.out.println("finding label " + label + " in " + searchContext);
+            logger.finer("finding label " + label + " in " + searchContext);
             String safeLabel;
             if (label.contains("'")) {
                 // replace each ' with ', "'", ' so we can use it in a concat expression
@@ -39,7 +42,7 @@ public abstract class AdfFinder {
             // start from . for instances where we are searching within a scoped element
             // tr elements having a _afrrk (rowkey) attribute are considered tree nodes
             String xpath = ".//tr[@_afrrk and .//span[text()=" + safeLabel + "]]";
-            System.out.println("using xpath " + xpath);
+            logger.finer("using xpath " + xpath);
             return ((FindsByXPath) searchContext).findElementsByXPath(xpath);
         }
 

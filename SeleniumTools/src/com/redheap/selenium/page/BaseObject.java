@@ -1,6 +1,7 @@
 package com.redheap.selenium.page;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -14,6 +15,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 public final class BaseObject implements TakesScreenshot /*implements SearchContext, JavascriptExecutor, TakesScreenshot*/ {
 
     RemoteWebDriver driver;
+
+    private static final Logger logger = Logger.getLogger(BaseObject.class.getName());
 
     public BaseObject(WebDriver driver) {
         // we always run with WebDriver which always uses RemoteWebDriver subclasses which have a number of
@@ -32,9 +35,9 @@ public final class BaseObject implements TakesScreenshot /*implements SearchCont
         return driver;
     }
 
-//    protected <T extends AdfComponent> T findAdfComponent(By by, Class<? extends T> cls) {
-//        return AdfComponent.forElement(findElement(by), cls);
-//    }
+    //    protected <T extends AdfComponent> T findAdfComponent(By by, Class<? extends T> cls) {
+    //        return AdfComponent.forElement(findElement(by), cls);
+    //    }
 
     //@Override
     protected List<WebElement> findElements(By by) {
@@ -49,10 +52,10 @@ public final class BaseObject implements TakesScreenshot /*implements SearchCont
     //@Override
     protected Object executeScript(String javascript, Object... args) {
         JavascriptExecutor jsDriver = getDriver();
-        System.out.println("Executing script " + javascript);
+        logger.finer("Executing script " + javascript);
         Object result = jsDriver.executeScript(javascript);
-        System.out.println("Executed script returned: " + result +
-                           (result == null ? "" : String.format(" (%s)", result.getClass())));
+        logger.finer("Executed script returned: " + result +
+                     (result == null ? "" : String.format(" (%s)", result.getClass())));
         return result;
     }
 

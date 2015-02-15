@@ -1,6 +1,7 @@
 package com.redheap.selenium.component;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.junit.Assert;
 
@@ -15,6 +16,8 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     private final WebDriver driver;
     private final WebElement element;
     private final String clientid;
+
+    private static final Logger logger = Logger.getLogger(AdfComponent.class.getName());
 
     protected AdfComponent(WebDriver driver, String clientid) {
         this.driver = driver;
@@ -102,10 +105,10 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     }
 
     protected Object executeScript(String javascript) {
-        System.out.println("Executing script " + javascript);
+        logger.finer("Executing script " + javascript);
         Object result = ((JavascriptExecutor) getDriver()).executeScript("return " + javascript);
-        System.out.println("Executed script returned: " + result +
-                           (result == null ? "" : String.format(" (%s)", result.getClass())));
+        logger.finer("Executed script returned: " + result +
+                     (result == null ? "" : String.format(" (%s)", result.getClass())));
         return result;
     }
 

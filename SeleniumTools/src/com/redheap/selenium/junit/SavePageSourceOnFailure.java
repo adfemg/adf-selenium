@@ -3,6 +3,8 @@ package com.redheap.selenium.junit;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.logging.Logger;
+
 import org.apache.commons.io.FileUtils;
 
 import org.junit.rules.TestWatcher;
@@ -15,6 +17,8 @@ public class SavePageSourceOnFailure extends TestWatcher {
 
     private final File basedir;
     private final WebDriver driver;
+
+    private static final Logger logger = Logger.getLogger(SavePageSourceOnFailure.class.getName());
 
     public SavePageSourceOnFailure(WebDriver driver) {
         this(driver, new File("."));
@@ -30,7 +34,7 @@ public class SavePageSourceOnFailure extends TestWatcher {
         try {
             File file = new File(basedir, description.getClassName() + "-" + description.getMethodName() + ".txt");
             file.getCanonicalFile().getParentFile().mkdirs();
-            System.out.println("dumping page source " + file.getCanonicalPath());
+            logger.finer("dumping page source " + file.getCanonicalPath());
             FileUtils.write(file, driver.getPageSource());
         } catch (IOException e) {
             e.printStackTrace();

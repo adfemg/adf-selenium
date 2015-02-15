@@ -1,5 +1,7 @@
 package com.redheap.selenium;
 
+import java.util.logging.Logger;
+
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 
@@ -15,19 +17,21 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class BotStyleTest {
 
+    private static final Logger logger = Logger.getLogger(BotStyleTest.class.getName());
+    
     @Test
     public void test() throws Exception {
         FirefoxProfile profile = new FirefoxProfile();
         profile.setEnableNativeEvents(true);
         profile.setPreference("app.update.enabled", false);
         WebDriver driver = new FirefoxDriver(profile);
-        System.out.println("load demo page...");
+        logger.info("load demo page...");
         driver.get("http://jdevadf.oracle.com/adf-richclient-demo");
-        System.out.println("wait for completion...");
+        logger.info("wait for completion...");
         new WebDriverWait(driver, 10).until(AdfConditions.clientSynchedWithServer());
-        System.out.println("click search button...");
+        logger.info("click search button...");
         driver.findElement(By.id("tmplt:gTools:glryFind:doFind")).click();
-        System.out.println("wait for completion...");
+        logger.info("wait for completion...");
         new WebDriverWait(driver, 10).until(AdfConditions.clientSynchedWithServer());
         driver.quit();
     }

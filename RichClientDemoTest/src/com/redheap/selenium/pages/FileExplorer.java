@@ -4,6 +4,8 @@ import com.redheap.selenium.component.AdfPanelTabbed;
 import com.redheap.selenium.component.AdfShowDetailItem;
 import com.redheap.selenium.page.PageObject;
 
+import java.util.logging.Logger;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -15,6 +17,8 @@ public class FileExplorer extends PageObject {
     // TODO: AdfFinder for ADF component ID lookups with knowledge how NamingContainers and pseudo-elements work
     private By contentViewTabs = By.id("fe:contentViews:contentViewTab");
     private By treeTableTab = By.id("fe:contentViews:contentsTreeTable::ti");
+
+    private static final Logger logger = Logger.getLogger(FileExplorer.class.getName());
 
     public FileExplorer(WebDriver driver) {
         super(driver);
@@ -34,7 +38,7 @@ public class FileExplorer extends PageObject {
     }
 
     public FileExplorer clickTreeTableTab() {
-        System.out.println("Clicking TreeTable tab in content view panelTabbed");
+        logger.fine("Clicking TreeTable tab in content view panelTabbed");
         findContentViewTreeTableTab().clickTabLink();
         waitForPpr();
         return this;
