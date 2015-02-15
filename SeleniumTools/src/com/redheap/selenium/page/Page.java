@@ -41,6 +41,9 @@ public abstract class Page /*implements TakesScreenshot*/ {
         // with animation enabled we sometimes try to click on elements still being rendered (like slowly expanding
         // af:tree node)
         findDocument().setAnimationEnabled(false);
+        if (!findDocument().isAutomationEnabled()) {
+            logger.warning("AUTOMATION IS DISABLED! set oracle.adf.view.rich.automation.ENABLED to true for all functions to work!");
+        }
     }
 
     protected AdfDocument findDocument() {
@@ -63,7 +66,6 @@ public abstract class Page /*implements TakesScreenshot*/ {
         return findDocument().findAdfComponent(relativeClientId, cls);
     }
 
-    //@Override
     public <X extends Object> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
         return driver.getScreenshotAs(target);
     }
