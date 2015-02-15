@@ -13,7 +13,6 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Full page running in a unbounded taskflow.
@@ -26,10 +25,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public abstract class PageObject /*implements TakesScreenshot*/ {
 
-    public static final long DFLT_WAIT_TIMEOUT_SECS = 30;
-    public static final long DFLT_WAIT_INTERVAL_MSECS = 500;
-
-    private RemoteWebDriver driver;
+    private final RemoteWebDriver driver;
 
     private static final String JS_GET_REGIONS =
         "{ids=[]; AdfPage.PAGE.getComponentsByType('oracle.adf.RichRegion').forEach(function(r){ids.push(r.getClientId())}); return ids}";
@@ -40,11 +36,11 @@ public abstract class PageObject /*implements TakesScreenshot*/ {
         this.driver = (RemoteWebDriver) driver; // keep handle which we don't expose but only use for navigatedTo
         // this is specific for unbounded taskflow page. Bounded page fragments should be available as the caller
         // already has to wait for its action to complete
-        waitForPpr();
+        AdfConditions.defaultWaiter(driver).until(AdfConditions.clientSynchedWithServer());
         assertEquals(getExpectedTitle(), driver.getTitle());
         // with animation enabled we sometimes try to click on elements still being rendered (like slowly expanding
         // af:tree node)
-        executeScript("AdfPage.PAGE.setAnimationEnabled(false)");
+        findDocument().setAnimationEnabled(false);
     }
 
     protected AdfDocument findDocument() {
@@ -63,18 +59,6 @@ public abstract class PageObject /*implements TakesScreenshot*/ {
         }
     }
 
-    protected void waitForPpr() {
-        waitForPpr(DFLT_WAIT_TIMEOUT_SECS, DFLT_WAIT_INTERVAL_MSECS);
-    }
-
-    protected void waitForPpr(long timeOutInSeconds) {
-        waitForPpr(timeOutInSeconds, DFLT_WAIT_INTERVAL_MSECS);
-    }
-
-    protected void waitForPpr(long timeOutInSeconds, long sleepInMillis) {
-        new WebDriverWait(driver, timeOutInSeconds, sleepInMillis).until(AdfConditions.clientSynchedWithServer());
-    }
-
     protected <T extends AdfComponent> T findAdfComponent(String relativeClientId, Class<? extends T> cls) {
         return findDocument().findAdfComponent(relativeClientId, cls);
     }
@@ -83,23 +67,5 @@ public abstract class PageObject /*implements TakesScreenshot*/ {
     public <X extends Object> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
         return driver.getScreenshotAs(target);
     }
-
-    protected Object executeScript(String javascript) {
-        logger.finer("Executing script " + javascript);
-        Object result = driver.executeScript("return " + javascript);
-        logger.finer("Executed script returned: " + result +
-                     (result == null ? "" : String.format(" (%s)", result.getClass())));
-        return result;
-    }
-
-
-    //    protected Collection<AdfRegion> getRegions() {
-    //        Collection<String> ids = (Collection<String>) executeScript(JS_GET_REGIONS);
-    //        Collection<AdfRegion> retval = new ArrayList<AdfRegion>(ids.size());
-    //        for (String id : ids) {
-    //            retval.add(findAdfComponent(By.id(id), AdfRegion.class));
-    //        }
-    //        return retval;
-    //    }
 
 }

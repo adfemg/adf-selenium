@@ -14,4 +14,8 @@ public class AdfDocument extends AdfComponent {
         return "oracle.adf.RichDocument";
     }
 
+    public void setAnimationEnabled(boolean enabled) {
+        executeScript(String.format("AdfPage.PAGE.setAnimationEnabled(%b)",enabled));
+    }
+
 }

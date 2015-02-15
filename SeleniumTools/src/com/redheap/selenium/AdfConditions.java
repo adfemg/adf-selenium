@@ -6,9 +6,13 @@ import java.util.logging.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 public abstract class AdfConditions {
+
+    public static final long DFLT_WAIT_TIMEOUT_SECS = 30;
+    public static final long DFLT_WAIT_INTERVAL_MSECS = 500;
 
     private static final Logger logger = Logger.getLogger(AdfConditions.class.getName());
 
@@ -38,6 +42,10 @@ public abstract class AdfConditions {
                 return Boolean.TRUE.equals(result);
             }
         };
+    }
+
+    public static WebDriverWait defaultWaiter(WebDriver driver) {
+        return new WebDriverWait(driver, DFLT_WAIT_TIMEOUT_SECS, DFLT_WAIT_INTERVAL_MSECS);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.redheap.selenium.component;
 
+import com.redheap.selenium.AdfConditions;
+
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -12,12 +14,14 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public abstract class AdfComponent /*extends BaseObject*/ {
 
     private final WebDriver driver;
-    private final WebElement element;
     private final String clientid;
+    private final WebElement element;
+    private WebDriverWait waiter;
 
     private static final Logger logger = Logger.getLogger(AdfComponent.class.getName());
 
@@ -25,6 +29,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         this.driver = driver;
         this.clientid = clientid;
         this.element = driver.findElement(By.id(clientid));
+        this.waiter = AdfConditions.defaultWaiter(driver);
         Assert.assertEquals(getExpectedComponentType(),
                             executeScript(String.format("AdfPage.PAGE.findComponentByAbsoluteId('%s').getComponentType()",
                                                         clientid)));
@@ -61,6 +66,10 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         return forClientId(rwd, clientid, cls);
     }
 
+    public void setWaiter(WebDriverWait waiter) {
+        this.waiter = waiter;
+    }
+
     protected String scriptFindComponent() {
         return String.format("AdfPage.PAGE.findComponentByAbsoluteLocator('%s')", clientid);
     }
@@ -74,7 +83,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
                              clientid);
     }
 
-    public Object invokePeerMethod(String methodName) {
+    protected Object invokePeerMethod(String methodName) {
         String js = String.format("%s.%s()", scriptBoundPeer(), methodName);
         return executeScript(js);
     }
@@ -108,11 +117,13 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     }
 
     public String getId() {
+        // simple (local) id
         return getElement().getAttribute("id");
     }
 
     public void click() {
         getElement().click();
+        waitForPpr();
     }
 
     protected Object executeScript(String javascript) {
@@ -127,6 +138,10 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         // component.getPeer().getSubIdDomElement(component, subid)
         return (WebElement) executeScript(String.format("%s.getSubIdDomElement(%s,'%s')", scriptUnboundPeer(),
                                                         scriptFindComponent(), subid));
+    }
+
+    protected void waitForPpr() {
+        waiter.until(AdfConditions.clientSynchedWithServer());
     }
 
     //    protected Collection<String> getDescendantComponents() {

@@ -45,28 +45,24 @@ public class RichClientDemo extends PageObject {
     public RichClientDemo clickMiscellaneousTreeNode() {
         logger.fine("Clicking Miscellaneous node in the Tag Guide component tree");
         findTagGuideTree().clickNode(miscellaneousTreeNode);
-        waitForPpr();
         return this;
     }
 
     public RichClientDemo clickLayoutTreeNode() {
         logger.fine("Clicking Layout node in the Tag Guide component tree");
         findTagGuideTree().clickNode(layoutTreeNode);
-        waitForPpr();
         return this;
     }
 
     public RegionDemoPage clickRegionTreeNode() {
         logger.fine("Clicking Region node in the Tag Guide component tree");
         findTagGuideTree().clickNode(regionTreeNode);
-        waitForPpr();
         return navigatedTo(RegionDemoPage.class);
     }
 
     public FileExplorer clickFileExplorerLink() {
         logger.fine("Clicking File Explorer link");
         findFileExplorerLink().click();
-        waitForPpr();
         return navigatedTo(FileExplorer.class);
     }
 

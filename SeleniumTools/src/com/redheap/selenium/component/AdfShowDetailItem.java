@@ -19,6 +19,7 @@ public class AdfShowDetailItem extends AdfComponent {
 
     public void clickTabLink() {
         findSubIdElement(SUBID_tab_link).click();
+        waitForPpr();
     }
 
 }

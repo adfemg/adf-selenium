@@ -24,6 +24,7 @@ public class AdfTree extends AdfComponent {
 
     public AdfTree clickNode(By locator) {
         findElement(locator).findElement(By.tagName("a")).click();
+        waitForPpr();
         return this;
     }
 

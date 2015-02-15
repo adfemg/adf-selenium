@@ -40,7 +40,6 @@ public class FileExplorer extends PageObject {
     public FileExplorer clickTreeTableTab() {
         logger.fine("Clicking TreeTable tab in content view panelTabbed");
         findContentViewTreeTableTab().clickTabLink();
-        waitForPpr();
         return this;
     }
 
