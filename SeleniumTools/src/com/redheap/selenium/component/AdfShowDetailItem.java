@@ -5,17 +5,8 @@ import org.openqa.selenium.WebDriver;
 public class AdfShowDetailItem extends AdfComponent {
 
     // see javascript AdfDhtmlShowDetailItemPeer.prototype.GetSubIdDomElement
-
-    public enum SubId {
-        panel_text,
-        icon,
-        panel_disclosure_icon,
-        remove_icon_above,
-        remove_icon_below,
-        tab_link,
-        tab_text_above,
-        tab_text_below
-    };
+    // see http://jdevadf.oracle.com/adf-richclient-demo/docs/js-subids.html
+    private static final String SUBID_tab_link = "tab_link";
 
     public AdfShowDetailItem(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
@@ -27,7 +18,7 @@ public class AdfShowDetailItem extends AdfComponent {
     }
 
     public void clickTabLink() {
-        findSubIdElement(SubId.tab_link.toString()).click();
+        findSubIdElement(SUBID_tab_link).click();
     }
 
 }
