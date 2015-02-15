@@ -39,6 +39,7 @@
             <batchtest todir="reports">
                 <fileset dir="src" includes="**/*Test.java"/>
             </batchtest>
+            <sysproperty key="java.util.logging.config.file" file="logging.properties"/>
         </junit>
         <junitreport todir="reports">
             <fileset dir="reports">
