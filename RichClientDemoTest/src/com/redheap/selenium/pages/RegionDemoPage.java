@@ -2,11 +2,11 @@ package com.redheap.selenium.pages;
 
 import com.redheap.selenium.component.AdfRegion;
 import com.redheap.selenium.fragments.SampleFragment1;
-import com.redheap.selenium.page.PageObject;
+import com.redheap.selenium.page.Page;
 
 import org.openqa.selenium.WebDriver;
 
-public class RegionDemoPage extends PageObject {
+public class RegionDemoPage extends Page {
 
     private final String regionId = "dmoTpl:region1";
 

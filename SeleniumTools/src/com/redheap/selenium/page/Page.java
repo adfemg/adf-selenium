@@ -23,15 +23,15 @@ import org.openqa.selenium.remote.RemoteWebDriver;
  * The implementation of these business functions can interact with AdfComponents on the page and should not
  * interact directly with the WebDriver or WebElements.
  */
-public abstract class PageObject /*implements TakesScreenshot*/ {
+public abstract class Page /*implements TakesScreenshot*/ {
 
     private final RemoteWebDriver driver;
 
     private static final String JS_GET_REGIONS =
         "{ids=[]; AdfPage.PAGE.getComponentsByType('oracle.adf.RichRegion').forEach(function(r){ids.push(r.getClientId())}); return ids}";
-    private static final Logger logger = Logger.getLogger(PageObject.class.getName());
+    private static final Logger logger = Logger.getLogger(Page.class.getName());
 
-    public PageObject(WebDriver driver) {
+    public Page(WebDriver driver) {
         super();
         this.driver = (RemoteWebDriver) driver; // keep handle which we don't expose but only use for navigatedTo
         // this is specific for unbounded taskflow page. Bounded page fragments should be available as the caller
@@ -51,7 +51,7 @@ public abstract class PageObject /*implements TakesScreenshot*/ {
 
     protected abstract String getExpectedTitle();
 
-    protected <P extends PageObject> P navigatedTo(Class<? extends P> cls) {
+    protected <P extends Page> P navigatedTo(Class<? extends P> cls) {
         try {
             return cls.getConstructor(WebDriver.class).newInstance(driver);
         } catch (Exception e) {

@@ -2,14 +2,14 @@ package com.redheap.selenium.pages;
 
 import com.redheap.selenium.component.AdfPanelTabbed;
 import com.redheap.selenium.component.AdfShowDetailItem;
-import com.redheap.selenium.page.PageObject;
+import com.redheap.selenium.page.Page;
 
 import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class FileExplorer extends PageObject {
+public class FileExplorer extends Page {
 
     private final String contentViewPannelTabbedId = "fe:contentViews:contentViewTab";
     private final String contentViewTreeTableTabId = "contentsTreeTable";

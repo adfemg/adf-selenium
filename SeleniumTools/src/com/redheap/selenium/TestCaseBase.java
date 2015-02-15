@@ -1,6 +1,6 @@
 package com.redheap.selenium;
 
-import com.redheap.selenium.page.PageObject;
+import com.redheap.selenium.page.Page;
 
 import java.util.logging.Logger;
 
@@ -14,7 +14,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-public class TestCaseBase<P extends PageObject> {
+public class TestCaseBase<P extends Page> {
 
     private static RemoteWebDriver driver;
 

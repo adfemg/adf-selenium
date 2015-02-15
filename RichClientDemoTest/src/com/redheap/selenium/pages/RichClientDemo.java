@@ -3,14 +3,14 @@ package com.redheap.selenium.pages;
 import com.redheap.selenium.AdfFinder;
 import com.redheap.selenium.component.AdfCommandLink;
 import com.redheap.selenium.component.AdfTree;
-import com.redheap.selenium.page.PageObject;
+import com.redheap.selenium.page.Page;
 
 import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class RichClientDemo extends PageObject {
+public class RichClientDemo extends Page {
 
     private final String treeId = "tmplt:accMenu:tagGrouped:tree";
     private final String fileExplorerLink = "tmplt:fileExplorer";
