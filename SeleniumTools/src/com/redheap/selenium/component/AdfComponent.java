@@ -4,6 +4,7 @@ import com.redheap.selenium.AdfConditions;
 import com.redheap.selenium.errors.AutomationDisabledException;
 import com.redheap.selenium.errors.SubIdNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -132,6 +133,54 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     public void click() {
         getElement().click();
         waitForPpr();
+    }
+
+    public List<ComponentReference> getDescendantComponents() {
+        String js =
+            String.format("(function(){var desc=%s.getDescendantComponents(); var retval=[]; desc.forEach(function(comp){retval.push([comp.getClientId(),comp.getComponentType()]);}); return retval;})()",
+                          scriptFindComponent());
+        return buildReferences((List<List<String>>) executeScript(js));
+    }
+
+    public List<ComponentReference> getChildComponents() {
+        String js =
+            String.format("(function(){var retval=[];%s.visitChildren(function(comp){retval.push([comp.getClientId(),comp.getComponentType()]);return 1}); return retval;})()",
+                          scriptFindComponent());
+        return buildReferences((List<List<String>>) executeScript(js));
+    }
+
+    public List<String> getPropertyKeys() {
+        String js = String.format("Object.getOwnPropertyNames(%s.getPropertyKeys())", scriptFindComponent());
+        return (List<String>) executeScript(js);
+    }
+
+    public Object getProperty(String propName) {
+        String js = String.format("%s.getProperty('%s')", scriptFindComponent(), propName);
+        return executeScript(js);
+    }
+
+    public void scrollIntoView(boolean focus, String subTargetId) {
+        executeScript(String.format("%s.scrollIntoView(%b,'%s')", scriptFindComponent(), focus, subTargetId));
+    }
+
+    public void scrollIntoView(boolean focus) {
+        executeScript(String.format("%s.scrollIntoView(%b)", scriptFindComponent(), focus));
+    }
+
+    public void scrollIntoView(String subTargetId) {
+        executeScript(String.format("%s.scrollIntoView(%b,'%s')", scriptFindComponent(), false, subTargetId));
+    }
+
+    public void scrollIntoView() {
+        executeScript(String.format("%s.scrollIntoView()", scriptFindComponent()));
+    }
+
+    protected List<ComponentReference> buildReferences(List<List<String>> jsResult) {
+        List<ComponentReference> retval = new ArrayList<ComponentReference>(jsResult.size());
+        for (List<String> comp : jsResult) {
+            retval.add(new ComponentReference(comp.get(0), comp.get(1)));
+        }
+        return retval;
     }
 
     protected Object executeScript(String javascript) {
