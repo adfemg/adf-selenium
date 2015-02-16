@@ -1,15 +1,18 @@
 package com.redheap.selenium;
 
 import com.redheap.selenium.fragments.SampleFragment1;
-import com.redheap.selenium.pages.RichClientDemo;
+import com.redheap.selenium.junit.PageProvider;
 import com.redheap.selenium.junit.SavePageSourceOnFailure;
 import com.redheap.selenium.junit.ScreenshotOnFailure;
+import com.redheap.selenium.junit.WebDriverResource;
+import com.redheap.selenium.pages.RichClientDemo;
 
 import java.io.File;
 
 import java.util.logging.Logger;
 
 import org.junit.Assert;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -17,24 +20,25 @@ import org.junit.rules.TestWatcher;
 /**
  * Test interaction with an af:region, especially navigation between page fragments.
  */
-public class RegionTest extends TestCaseBase<RichClientDemo> {
+public class RegionTest {
 
+    @ClassRule
+    public static WebDriverResource driver = new WebDriverResource();
     @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(getDriver(), new File("errors"));
+    public PageProvider<RichClientDemo> pages = new PageProvider(RichClientDemo.class, HOME_PAGE, driver.getDriver());
     @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(getDriver(), new File("errors"));
+    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
+    @Rule
+    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
 
-    private static final String HOME_PAGE = "http://jdevadf.oracle.com/adf-richclient-demo";
+    //private static final String HOME_PAGE = "http://jdevadf.oracle.com/adf-richclient-demo";
+    private static final String HOME_PAGE = "http://localhost:7101/RichClientDemo-adf-richclient-demo-context-root";
     private static final Logger logger = Logger.getLogger(RegionTest.class.getName());
-
-    public RegionTest() {
-        super(HOME_PAGE, RichClientDemo.class);
-    }
 
     @Test
     public void expandTreeNode() {
         logger.info("***** expandTreeNode");
-        RichClientDemo homePage = getPage();
+        RichClientDemo homePage = pages.goHome();
         int expandedCount = homePage.getTagGuideTreeExpandedNodeCount();
         homePage.clickMiscellaneousTreeNode();
         Assert.assertEquals("number of expanded tree nodes should have increased", expandedCount + 1,
@@ -44,7 +48,7 @@ public class RegionTest extends TestCaseBase<RichClientDemo> {
     @Test
     public void expandNestedTreeNode() {
         logger.info("***** expandNestedTreeNode");
-        RichClientDemo homePage = getPage();
+        RichClientDemo homePage = pages.goHome();
         int expandedCount = homePage.getTagGuideTreeExpandedNodeCount();
         homePage.clickMiscellaneousTreeNode();
         Assert.assertEquals("number of expanded tree nodes should have increased", expandedCount + 1,
@@ -55,13 +59,14 @@ public class RegionTest extends TestCaseBase<RichClientDemo> {
     @Test
     public void pageNavigation() {
         logger.info("***** pageNavigation");
-        getPage().clickMiscellaneousTreeNode().clickRegionTreeNode();
+        pages.goHome().clickMiscellaneousTreeNode().clickRegionTreeNode();
     }
 
     @Test
     public void regionNavigation() {
         logger.info("***** regionNavigation");
-        SampleFragment1 fragment1 = getPage().clickMiscellaneousTreeNode().clickRegionTreeNode().getRegionContent();
+        SampleFragment1 fragment1 =
+            pages.goHome().clickMiscellaneousTreeNode().clickRegionTreeNode().getRegionContent();
         fragment1.clickRegion2Button();
     }
 
