@@ -10,12 +10,18 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class WebDriverResource extends ExternalResource {
 
-    private static RemoteWebDriver driver;
+    private boolean quit;
+
+    private RemoteWebDriver driver;
 
     private static final Logger logger = Logger.getLogger(WebDriverResource.class.getName());
 
     public WebDriverResource() {
-        super();
+        this(true);
+    }
+
+    public WebDriverResource(boolean quitAtEnd) {
+        this.quit = quitAtEnd;
     }
 
     @Override
@@ -26,8 +32,10 @@ public class WebDriverResource extends ExternalResource {
 
     @Override
     protected void after() {
-        logger.fine("quit firefox...");
-        driver.quit();
+        if (quit) {
+            logger.fine("quit firefox...");
+            driver.quit();
+        }
     }
 
     public RemoteWebDriver getDriver() {
