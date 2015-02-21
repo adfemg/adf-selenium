@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import org.junit.Assert;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -63,7 +66,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     public static <T extends AdfComponent> T forElement(WebElement element, Class<? extends T> cls) {
         RemoteWebElement rwe = (RemoteWebElement) element;
         String js =
-            String.format("return AdfRichUIPeer.getFirstAncestorComponent(AdfAgent.AGENT.getElementById('%s')).getClientId()");
+            String.format("return AdfRichUIPeer.getFirstAncestorComponent(AdfAgent.AGENT.getElementById('%s')).getClientId()", element.getAttribute("id"));
         RemoteWebDriver rwd = (RemoteWebDriver) rwe.getWrappedDriver();
         String clientid = (String) rwd.executeScript(js);
         return forClientId(rwd, clientid, cls);
@@ -92,9 +95,37 @@ public abstract class AdfComponent /*extends BaseObject*/ {
                              clientid);
     }
 
+    protected String scriptDomElement() {
+        return String.format("(function(){return %s.getDomElement();})()", scriptBoundPeer());
+    }
+
+    protected String scriptObjectToArray(String objectScript, String... attrs) {
+        return String.format("(function(){var obj=%s; var retval=[]; %s.forEach(function(key){retval.push(obj[key])}); return retval;})()",
+                             objectScript, jsStringArray(attrs));
+    }
+
     protected Object invokePeerMethod(String methodName) {
         String js = String.format("%s.%s()", scriptBoundPeer(), methodName);
         return executeScript(js);
+    }
+
+    private String jsStringArray(String... strings) {
+        StringBuilder retval = new StringBuilder(5 * strings.length);
+        for (String s : strings) {
+            if (retval.length() > 0) {
+                retval.append(",");
+            }
+            retval.append(jsStringLiteral(s));
+        }
+        retval.insert(0, "[").append("]");
+        return retval.toString();
+    }
+
+    private String jsStringLiteral(String s) {
+        if (!s.contains("'")) {
+            return "'" + s + "'";
+        }
+        throw new UnsupportedOperationException("string literals with ' not yet supported");
     }
 
     /**
@@ -130,8 +161,14 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         return getElement().getAttribute("id");
     }
 
+    public String getClientId() {
+        return clientid;
+    }
+
     public void click() {
-        getElement().click();
+        WebElement element = getElement();
+        logger.fine("clicking " + element);
+        element.click();
         waitForPpr();
     }
 
@@ -193,32 +230,58 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         return result;
     }
 
+    protected WebElement findContentNode() {
+        final Object result =
+            executeScript(String.format("AdfDhtmlEditableValuePeer.GetContentNode(%s, %s)", scriptFindComponent(),
+                                        scriptDomElement()));
+        if (result instanceof WebElement) {
+            return (WebElement) result;
+        } else {
+            throw new SubIdNotFoundException("could not find content node for " + getElement());
+        }
+    }
+
     protected WebElement findSubIdElement(String subid) {
         // component.getPeer().getSubIdDomElement(component, subid)
         requireAutomation();
         final Object result =
-            executeScript(String.format("%s.getSubIdDomElement(%s,'%s')", scriptUnboundPeer(), scriptFindComponent(),
+            executeScript(String.format("%s.getSubIdDomElement(%s,'%s')", scriptBoundPeer(), scriptFindComponent(),
                                         subid));
         if (result instanceof WebElement) {
-            return (WebElement) result;
+        return (WebElement) result;
         } else {
             throw new SubIdNotFoundException("could not find subid " + subid + " for " + getElement());
+    }
+    }
+
+    protected <T extends AdfComponent> T findSubIdComponent(String subid, Class<? extends T> cls) {
+        // component.getPeer().getSubIdDomElement(component, subid)
+        requireAutomation();
+        String js =
+            String.format("(function(){var subelem=%s.getSubIdDomElement(%s,'%s'); if(!subelem){return null;}return AdfRichUIPeer.getFirstAncestorComponent(subelem).getClientId();})()",
+                          scriptBoundPeer(), scriptFindComponent(), subid);
+        final String subClientId = (String) executeScript(js);
+        if (subClientId == null) {
+            return null;
+    }
+        if (getClientId().equals(subClientId)) {
+            throw new SubIdNotFoundException("subid " + subid + " for " + getElement() +
+                                             " does not point to a component");
         }
+        return AdfComponent.forClientId(driver, subClientId, cls);
     }
 
     protected void waitForPpr() {
         waiter.until(AdfConditions.clientSynchedWithServer());
     }
 
-    //    protected Collection<String> getDescendantComponents() {
-    //        String js =
-    //            "{ids=[]; component.getDescendantComponents().forEach(function(r){ids.push(r.getClientId())}); return ids}";
-    //        Collection<String> ids = (Collection<String>) executeScript(js);
-    //        Collection<AdfComponent> retval = new ArrayList<AdfComponent>(ids.size());
-    //        for (String id : ids) {
-    //            retval.add(findAdfComponent(By.id(id), ?.class));
-    //        }
-    //        return retval;
-    //    }
+    protected boolean isPlatform(Platform p) {
+        return ((RemoteWebDriver) driver).getCapabilities().getPlatform().is(p);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("clientid", clientid).build();
+    }
 
 }

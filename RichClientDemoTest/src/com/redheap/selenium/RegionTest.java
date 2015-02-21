@@ -5,6 +5,7 @@ import com.redheap.selenium.junit.PageProvider;
 import com.redheap.selenium.junit.SavePageSourceOnFailure;
 import com.redheap.selenium.junit.ScreenshotOnFailure;
 import com.redheap.selenium.junit.WebDriverResource;
+import com.redheap.selenium.pages.RegionDemoPage;
 import com.redheap.selenium.pages.RichClientDemo;
 
 import java.io.File;
@@ -32,41 +33,45 @@ public class RegionTest {
     public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
 
     //private static final String HOME_PAGE = "http://jdevadf.oracle.com/adf-richclient-demo";
-    private static final String HOME_PAGE = "http://localhost:7101/RichClientDemo-adf-richclient-demo-context-root";
+    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo";
     private static final Logger logger = Logger.getLogger(RegionTest.class.getName());
 
     @Test
     public void expandTreeNode() {
         logger.info("***** expandTreeNode");
         RichClientDemo homePage = pages.goHome();
-        int expandedCount = homePage.getTagGuideTreeExpandedNodeCount();
+        int expandedCount = homePage.findTagGuideTree().getExpandedNodeCount();
         homePage.clickMiscellaneousTreeNode();
         Assert.assertEquals("number of expanded tree nodes should have increased", expandedCount + 1,
-                            homePage.getTagGuideTreeExpandedNodeCount());
+                            homePage.findTagGuideTree().getExpandedNodeCount());
     }
 
     @Test
     public void expandNestedTreeNode() {
         logger.info("***** expandNestedTreeNode");
         RichClientDemo homePage = pages.goHome();
-        int expandedCount = homePage.getTagGuideTreeExpandedNodeCount();
+        int expandedCount = homePage.findTagGuideTree().getExpandedNodeCount();
         homePage.clickMiscellaneousTreeNode();
         Assert.assertEquals("number of expanded tree nodes should have increased", expandedCount + 1,
-                            homePage.getTagGuideTreeExpandedNodeCount());
+                            homePage.findTagGuideTree().getExpandedNodeCount());
         homePage.clickRegionTreeNode(); // navigates to region page
     }
 
     @Test
     public void pageNavigation() {
         logger.info("***** pageNavigation");
-        pages.goHome().clickMiscellaneousTreeNode().clickRegionTreeNode();
+        RichClientDemo homepage = pages.goHome();
+        homepage.clickMiscellaneousTreeNode();
+        homepage.clickRegionTreeNode();
     }
 
     @Test
     public void regionNavigation() {
         logger.info("***** regionNavigation");
-        SampleFragment1 fragment1 =
-            pages.goHome().clickMiscellaneousTreeNode().clickRegionTreeNode().getRegionContent();
+        RichClientDemo homepage = pages.goHome();
+        homepage.clickMiscellaneousTreeNode();
+        RegionDemoPage regionPage = homepage.clickRegionTreeNode();
+        SampleFragment1 fragment1 = regionPage.getRegionContent();
         fragment1.clickRegion2Button();
     }
 

@@ -15,8 +15,6 @@ public class RichClientDemo extends Page {
     private final String treeId = "tmplt:accMenu:tagGrouped:tree";
     private final String fileExplorerLink = "tmplt:fileExplorer";
 
-    private final By miscellaneousTreeNode = AdfFinder.treeNodeByLabel("Miscellaneous");
-    private final By layoutTreeNode = AdfFinder.treeNodeByLabel("Layout");
     private final By regionTreeNode = AdfFinder.treeNodeByLabel("Region");
 
     private static final Logger logger = Logger.getLogger(RichClientDemo.class.getName());
@@ -30,7 +28,7 @@ public class RichClientDemo extends Page {
         return "ADF Faces Rich Client Demos";
     }
 
-    private AdfTree findTagGuideTree() {
+    public AdfTree findTagGuideTree() {
         return findDocument().findAdfComponent(treeId, AdfTree.class);
     }
 
@@ -38,20 +36,14 @@ public class RichClientDemo extends Page {
         return findDocument().findAdfComponent(fileExplorerLink, AdfCommandLink.class);
     }
 
-    public int getTagGuideTreeExpandedNodeCount() {
-        return findTagGuideTree().getExpandedNodeCount();
-    }
-
-    public RichClientDemo clickMiscellaneousTreeNode() {
+    public void clickMiscellaneousTreeNode() {
         logger.fine("Clicking Miscellaneous node in the Tag Guide component tree");
-        findTagGuideTree().clickNode(miscellaneousTreeNode);
-        return this;
+        findTagGuideTree().discloseNode(0,6);
     }
 
-    public RichClientDemo clickLayoutTreeNode() {
+    public void clickLayoutTreeNode() {
         logger.fine("Clicking Layout node in the Tag Guide component tree");
-        findTagGuideTree().clickNode(layoutTreeNode);
-        return this;
+        findTagGuideTree().discloseNode(0,3);
     }
 
     public RegionDemoPage clickRegionTreeNode() {

@@ -17,6 +17,11 @@ public class AdfShowDetailItem extends AdfComponent {
         return "oracle.adf.RichShowDetailItem";
     }
 
+    @Override
+    public void click() {
+        clickTabLink();
+    }
+
     public void clickTabLink() {
         findSubIdElement(SUBID_tab_link).click();
         waitForPpr();

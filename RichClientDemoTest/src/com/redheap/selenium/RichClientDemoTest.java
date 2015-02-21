@@ -4,6 +4,7 @@ import com.redheap.selenium.junit.PageProvider;
 import com.redheap.selenium.junit.SavePageSourceOnFailure;
 import com.redheap.selenium.junit.ScreenshotOnFailure;
 import com.redheap.selenium.junit.WebDriverResource;
+import com.redheap.selenium.pages.FileExplorer;
 import com.redheap.selenium.pages.RichClientDemo;
 
 import java.io.File;
@@ -29,7 +30,7 @@ public class RichClientDemoTest {
 
 
     //private static final String HOME_PAGE = "http://jdevadf.oracle.com/adf-richclient-demo";
-    private static final String HOME_PAGE = "http://localhost:7101/RichClientDemo-adf-richclient-demo-context-root";
+    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo";
     private static final Logger logger = Logger.getLogger(RichClientDemoTest.class.getName());
 
     @Test
@@ -41,18 +42,18 @@ public class RichClientDemoTest {
     @Test
     public void testNavigationToFileExplorer() throws Exception {
         logger.info("***** testNavigationToFileExplorer");
-        pages.goHome().clickFileExplorerLink().clickTreeTableTab();
-        //page.getScreenshotAs(new ScreenshotFile(new File("explorer-tree-table.png")));
+        FileExplorer explorerPage = pages.goHome().clickFileExplorerLink();
+        explorerPage.findContentViewTreeTableTab().click();
     }
 
     @Test
     public void testExpandTagGuideNodeA() {
         logger.info("***** testExpandTagGuideNodeA");
         RichClientDemo page = pages.goHome();
-        int expandedNodesBefore = page.getTagGuideTreeExpandedNodeCount();
+        int expandedNodesBefore = page.findTagGuideTree().getExpandedNodeCount();
         page.clickLayoutTreeNode();
         Assert.assertEquals("number of expanded node should increase", expandedNodesBefore + 1,
-                            page.getTagGuideTreeExpandedNodeCount());
+                            page.findTagGuideTree().getExpandedNodeCount());
     }
 
     @Test
@@ -62,10 +63,10 @@ public class RichClientDemoTest {
         // from testExpandTagGuideNodeA test)
         logger.info("***** testExpandTagGuideNodeB");
         RichClientDemo page = pages.goHome();
-        int expandedNodesBefore = page.getTagGuideTreeExpandedNodeCount();
+        int expandedNodesBefore = page.findTagGuideTree().getExpandedNodeCount();
         page.clickLayoutTreeNode();
         Assert.assertEquals("number of expanded node should increase", expandedNodesBefore + 1,
-                            page.getTagGuideTreeExpandedNodeCount());
+                            page.findTagGuideTree().getExpandedNodeCount());
     }
 
     public static void main(String[] args) {
