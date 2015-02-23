@@ -10,6 +10,9 @@ import com.redheap.selenium.pages.ButtonDemoPage;
 
 import java.io.File;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import oracle.adf.view.rich.automation.selenium.Dialog;
 import oracle.adf.view.rich.automation.selenium.DialogManager;
 
@@ -138,6 +141,36 @@ public class ButtonTest {
         assertFalse(dialog.findSaveButton().isDisabled());
         dialog.close();
         assertEquals(0, dialogManager.totalNumberOfDialogsOpen());
+    }
+
+    @Test
+    public void testTargetFrameBlankButton() {
+        RemoteWebDriver webdriver = driver.getDriver();
+        ButtonDemoPage page = pages.goHome();
+
+        DialogManager dialogManager = driver.getDialogManager();
+        assertEquals(0, dialogManager.totalNumberOfDialogsOpen());
+        assertNull(dialogManager.getCurrentDialog());
+
+        String mainwindow = webdriver.getWindowHandle();
+        // find an click af:button with targetFrame='_blank'
+        page.findTargetFrameBlankButton().click();
+        // verify new browser window has opened
+        assertEquals(2, webdriver.getWindowHandles().size());
+        String newwindow = detectNewWindow(webdriver, mainwindow);
+        webdriver.switchTo().window(newwindow);
+        assertTrue(webdriver.getTitle().startsWith("Oracle"));
+        webdriver.close(); // close current window
+        webdriver.switchTo().window(mainwindow);
+        assertEquals(1, webdriver.getWindowHandles().size());
+        assertEquals(mainwindow, webdriver.getWindowHandle());
+        assertEquals("button Demo", webdriver.getTitle());
+    }
+
+    private String detectNewWindow(RemoteWebDriver webdriver, String mainwindow) {
+        Set<String> handles = new HashSet<String>(webdriver.getWindowHandles());
+        handles.remove(mainwindow);
+        return handles.iterator().next();
     }
 
     public static void main(String[] args) {

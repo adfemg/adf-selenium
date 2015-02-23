@@ -1,5 +1,6 @@
 package com.redheap.selenium.component;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -18,6 +19,18 @@ public class AdfButton extends AdfComponent {
     @Override
     protected String getExpectedComponentType() {
         return "oracle.adf.RichButton";
+    }
+
+    @Override
+    public void click() {
+        // af:button with targetFrame="_blank" and external destination only works when clicking on nested <a>
+        final WebElement link = getElement().findElement(By.tagName("a"));
+        if (link != null) {
+            link.click();
+            waitForPpr();
+        } else {
+            super.click();
+        }
     }
 
     public boolean isDisabled() {
