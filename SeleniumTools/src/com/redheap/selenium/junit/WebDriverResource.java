@@ -2,8 +2,11 @@ package com.redheap.selenium.junit;
 
 import java.util.logging.Logger;
 
+import oracle.adf.view.rich.automation.selenium.DialogManager;
+
 import org.junit.rules.ExternalResource;
 
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -28,6 +31,10 @@ public class WebDriverResource extends ExternalResource {
     protected void before() throws Throwable {
         logger.fine("starting Firefox...");
         driver = new FirefoxDriver(createProfile());
+        if (!Long.valueOf(10).equals(driver.executeScript("return arguments[0]", 10))) {
+            throw new WebDriverException("This browser version is not supported due to Selenium bug 8387. See https://code.google.com/p/selenium/issues/detail?id=8387");
+        }
+        DialogManager.init(driver, 10000); // timeout of 10 seconds
     }
 
     @Override
@@ -40,6 +47,10 @@ public class WebDriverResource extends ExternalResource {
 
     public RemoteWebDriver getDriver() {
         return driver;
+    }
+
+    public DialogManager getDialogManager() {
+        return DialogManager.getInstance();
     }
 
     protected FirefoxProfile createProfile() {

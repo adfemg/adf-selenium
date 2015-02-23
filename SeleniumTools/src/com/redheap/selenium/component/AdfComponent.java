@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import oracle.adf.view.rich.automation.selenium.RichWebDrivers;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import org.junit.Assert;
@@ -65,10 +67,10 @@ public abstract class AdfComponent /*extends BaseObject*/ {
 
     public static <T extends AdfComponent> T forElement(WebElement element, Class<? extends T> cls) {
         RemoteWebElement rwe = (RemoteWebElement) element;
-        String js =
-            String.format("return AdfRichUIPeer.getFirstAncestorComponent(AdfAgent.AGENT.getElementById('%s')).getClientId()", element.getAttribute("id"));
         RemoteWebDriver rwd = (RemoteWebDriver) rwe.getWrappedDriver();
-        String clientid = (String) rwd.executeScript(js);
+        String clientid =
+            (String) rwd.executeScript("return AdfRichUIPeer.getFirstAncestorComponent(arguments[0]).getClientId()",
+                                       element);
         return forClientId(rwd, clientid, cls);
     }
 
@@ -165,11 +167,22 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         return clientid;
     }
 
+    public boolean isDisplayed() {
+        return getElement().isDisplayed();
+    }
+
     public void click() {
         WebElement element = getElement();
         logger.fine("clicking " + element);
         element.click();
         waitForPpr();
+    }
+
+    public void clickWithDialogDetect() {
+        WebElement element = getElement();
+        logger.fine("clicking " + element);
+        element.click();
+        waitForPprWithDialogDetect();
     }
 
     public List<ComponentReference> getDescendantComponents() {
@@ -247,11 +260,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         final Object result =
             executeScript(String.format("%s.getSubIdDomElement(%s,'%s')", scriptBoundPeer(), scriptFindComponent(),
                                         subid));
-        if (result instanceof WebElement) {
         return (WebElement) result;
-        } else {
-            throw new SubIdNotFoundException("could not find subid " + subid + " for " + getElement());
-    }
     }
 
     protected <T extends AdfComponent> T findSubIdComponent(String subid, Class<? extends T> cls) {
@@ -263,7 +272,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         final String subClientId = (String) executeScript(js);
         if (subClientId == null) {
             return null;
-    }
+        }
         if (getClientId().equals(subClientId)) {
             throw new SubIdNotFoundException("subid " + subid + " for " + getElement() +
                                              " does not point to a component");
@@ -273,6 +282,11 @@ public abstract class AdfComponent /*extends BaseObject*/ {
 
     protected void waitForPpr() {
         waiter.until(AdfConditions.clientSynchedWithServer());
+    }
+
+    protected void waitForPprWithDialogDetect() {
+        // TODO timout shouldn't be hardcoded
+        RichWebDrivers.waitForServer(getDriver(), AdfConditions.DFLT_WAIT_TIMEOUT_SECS * 10000, true);
     }
 
     protected boolean isPlatform(Platform p) {

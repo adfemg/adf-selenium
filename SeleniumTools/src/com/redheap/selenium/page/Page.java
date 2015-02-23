@@ -6,6 +6,9 @@ import com.redheap.selenium.component.AdfDocument;
 
 import java.util.logging.Logger;
 
+import oracle.adf.view.rich.automation.selenium.Dialog;
+import oracle.adf.view.rich.automation.selenium.DialogManager;
+
 import static org.junit.Assert.assertEquals;
 
 import org.openqa.selenium.JavascriptExecutor;
@@ -57,6 +60,15 @@ public abstract class Page /*implements TakesScreenshot*/ {
     protected <P extends Page> P navigatedTo(Class<? extends P> cls) {
         try {
             return cls.getConstructor(WebDriver.class).newInstance(driver);
+        } catch (Exception e) {
+            throw new WebDriverException(e.getCause() != null ? e.getCause() : e);
+        }
+    }
+
+    protected <D extends WindowDialog> D openedDialog(Class<? extends D> cls) {
+        try {
+            return cls.getConstructor(WebDriver.class, Dialog.class).newInstance(driver,
+                                                                                 DialogManager.getInstance().getCurrentDialog());
         } catch (Exception e) {
             throw new WebDriverException(e.getCause() != null ? e.getCause() : e);
         }

@@ -12,4 +12,9 @@ public class AdfPopup extends AdfComponent {
     protected String getExpectedComponentType() {
         return "oracle.adf.RichPopup";
     }
+
+    public boolean isPopupVisible() {
+        String js = String.format("%s.isPopupVisible()", scriptFindComponent());
+        return (Boolean) executeScript(js);
+    }
 }
