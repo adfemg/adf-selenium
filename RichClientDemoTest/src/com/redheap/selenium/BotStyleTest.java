@@ -18,7 +18,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Example of a Bot Style test where there is no separation between test classes and page object classes.
@@ -54,11 +53,11 @@ public class BotStyleTest {
         logger.info("load demo page...");
         driver.get(BASE_URL);
         logger.info("wait for completion...");
-        new WebDriverWait(driver, 10).until(AdfConditions.clientSynchedWithServer());
+        RichWebDrivers.waitForServer(driver, TIMEOUT_MSECS);
         logger.info("click search button...");
         driver.findElement(By.id("tmplt:gTools:glryFind:doFind")).click();
         logger.info("wait for completion...");
-        new WebDriverWait(driver, 10).until(AdfConditions.clientSynchedWithServer());
+        RichWebDrivers.waitForServer(driver, TIMEOUT_MSECS);
     }
 
     @Test

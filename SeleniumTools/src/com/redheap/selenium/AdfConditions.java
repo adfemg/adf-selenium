@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 public abstract class AdfConditions {
@@ -19,6 +18,7 @@ public abstract class AdfConditions {
     private AdfConditions() {
     }
 
+    @Deprecated
     public static ExpectedCondition<Boolean> clientSynchedWithServer() {
         // return false if AdfPage object and functions do not exist
         // if they do exist return true if page is fully loaded and ready or reason why this is not completed yet
@@ -42,10 +42,6 @@ public abstract class AdfConditions {
                 return Boolean.TRUE.equals(result);
             }
         };
-    }
-
-    public static WebDriverWait defaultWaiter(WebDriver driver) {
-        return new WebDriverWait(driver, DFLT_WAIT_TIMEOUT_SECS, DFLT_WAIT_INTERVAL_MSECS);
     }
 
 }

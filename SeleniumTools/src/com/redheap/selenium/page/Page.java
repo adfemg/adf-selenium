@@ -1,6 +1,5 @@
 package com.redheap.selenium.page;
 
-import com.redheap.selenium.AdfConditions;
 import com.redheap.selenium.component.AdfComponent;
 import com.redheap.selenium.component.AdfDocument;
 
@@ -8,6 +7,7 @@ import java.util.logging.Logger;
 
 import oracle.adf.view.rich.automation.selenium.Dialog;
 import oracle.adf.view.rich.automation.selenium.DialogManager;
+import oracle.adf.view.rich.automation.selenium.RichWebDrivers;
 
 import static org.junit.Assert.assertEquals;
 
@@ -39,7 +39,7 @@ public abstract class Page /*implements TakesScreenshot*/ {
         this.driver = (RemoteWebDriver) driver; // keep handle which we don't expose but only use for navigatedTo
         // this is specific for unbounded taskflow page. Bounded page fragments should be available as the caller
         // already has to wait for its action to complete
-        AdfConditions.defaultWaiter(driver).until(AdfConditions.clientSynchedWithServer());
+        RichWebDrivers.waitForRichPageToLoad(driver, AdfComponent.DFLT_WAIT_TIMEOUT_MSECS);
         assertEquals(getExpectedTitle(), driver.getTitle());
         // with animation enabled we sometimes try to click on elements still being rendered (like slowly expanding
         // af:tree node)

@@ -1,6 +1,5 @@
 package com.redheap.selenium.component;
 
-import com.redheap.selenium.AdfConditions;
 import com.redheap.selenium.errors.AutomationDisabledException;
 import com.redheap.selenium.errors.SubIdNotFoundException;
 
@@ -22,14 +21,15 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public abstract class AdfComponent /*extends BaseObject*/ {
 
     private final WebDriver driver;
     private final String clientid;
     private final WebElement element;
-    private WebDriverWait waiter;
+    private long timeoutMillisecs = DFLT_WAIT_TIMEOUT_MSECS;
+
+    public static final long DFLT_WAIT_TIMEOUT_MSECS = 30000;
 
     private static final Logger logger = Logger.getLogger(AdfComponent.class.getName());
 
@@ -37,7 +37,6 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         this.driver = driver;
         this.clientid = clientid;
         this.element = driver.findElement(By.id(clientid));
-        this.waiter = AdfConditions.defaultWaiter(driver);
         Assert.assertEquals(getExpectedComponentType(),
                             executeScript(String.format("AdfPage.PAGE.findComponentByAbsoluteId('%s').getComponentType()",
                                                         clientid)));
@@ -74,8 +73,8 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         return forClientId(rwd, clientid, cls);
     }
 
-    public void setWaiter(WebDriverWait waiter) {
-        this.waiter = waiter;
+    public void setTimout(long milliseconds) {
+        this.timeoutMillisecs = milliseconds;
     }
 
     protected void requireAutomation() {
@@ -281,12 +280,11 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     }
 
     protected void waitForPpr() {
-        waiter.until(AdfConditions.clientSynchedWithServer());
+        RichWebDrivers.waitForServer(driver, timeoutMillisecs);
     }
 
     protected void waitForPprWithDialogDetect() {
-        // TODO timout shouldn't be hardcoded
-        RichWebDrivers.waitForServer(getDriver(), AdfConditions.DFLT_WAIT_TIMEOUT_SECS * 10000, true);
+        RichWebDrivers.waitForServer(driver, timeoutMillisecs, true);
     }
 
     protected boolean isPlatform(Platform p) {
