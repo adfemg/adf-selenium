@@ -9,7 +9,7 @@ import oracle.adf.view.rich.automation.selenium.Dialog;
 import oracle.adf.view.rich.automation.selenium.DialogManager;
 import oracle.adf.view.rich.automation.selenium.RichWebDrivers;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -35,12 +35,18 @@ public abstract class Page /*implements TakesScreenshot*/ {
     private static final Logger logger = Logger.getLogger(Page.class.getName());
 
     public Page(WebDriver driver) {
+        this(driver, true);
+    }
+
+    protected Page(WebDriver driver, boolean verifyTitle) {
         super();
         this.driver = (RemoteWebDriver) driver; // keep handle which we don't expose but only use for navigatedTo
         // this is specific for unbounded taskflow page. Bounded page fragments should be available as the caller
         // already has to wait for its action to complete
         RichWebDrivers.waitForRichPageToLoad(driver, AdfComponent.DFLT_WAIT_TIMEOUT_MSECS);
-        assertEquals(getExpectedTitle(), driver.getTitle());
+        if (verifyTitle) {
+            assertEquals(getExpectedTitle(), getTitle());
+        }
         // with animation enabled we sometimes try to click on elements still being rendered (like slowly expanding
         // af:tree node)
         findDocument().setAnimationEnabled(false);
@@ -56,6 +62,10 @@ public abstract class Page /*implements TakesScreenshot*/ {
     }
 
     protected abstract String getExpectedTitle();
+
+    public String getTitle() {
+        return driver.getTitle();
+    }
 
     protected <P extends Page> P navigatedTo(Class<? extends P> cls) {
         try {

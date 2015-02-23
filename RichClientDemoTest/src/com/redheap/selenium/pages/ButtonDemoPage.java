@@ -80,8 +80,9 @@ public class ButtonDemoPage extends Page {
         return openedDialog(NewFileWindowDialog.class);
     }
 
-    public AdfButton findUseWindowInlineDocButton() {
-        return findAdfComponent(useWindowInlineDocButton, AdfButton.class);
+    public NewFileWindowDialog clickUseWindowInlineDocButton() {
+        findAdfComponent(useWindowInlineDocButton, AdfButton.class).clickWithDialogDetect();
+        return openedDialog(NewFileWindowDialog.class);
     }
 
     public AdfButton findTargetFrameBlankButton() {

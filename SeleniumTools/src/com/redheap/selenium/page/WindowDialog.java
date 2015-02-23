@@ -2,7 +2,7 @@ package com.redheap.selenium.page;
 
 import oracle.adf.view.rich.automation.selenium.Dialog;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.openqa.selenium.WebDriver;
 
@@ -13,7 +13,7 @@ public abstract class WindowDialog extends Page {
     private final Dialog dialog;
 
     public WindowDialog(WebDriver driver, Dialog dialog) {
-        super(driver);
+        super(driver, false);
         this.driver = driver;
         this.dialog = dialog;
         assertEquals(getExpectedTitle(), dialog.getTitle(driver));
@@ -21,6 +21,7 @@ public abstract class WindowDialog extends Page {
 
     protected abstract String getExpectedTitle();
 
+    @Override
     public String getTitle() {
         return dialog.getTitle(driver);
     }
