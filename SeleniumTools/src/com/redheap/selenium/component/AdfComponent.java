@@ -185,12 +185,29 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         waitForPprWithDialogDetect();
     }
 
+    public void contextClick() {
+        new Actions(driver).contextClick(getElement()).perform();
+        waitForPpr();
+    }
+
+    public void doubleClick() {
+        new Actions(driver).doubleClick(getElement()).perform();
+        waitForPpr();
+    }
+
+    public void moveMouseTo() {
+        new Actions(driver).moveToElement(getElement()).perform();
+        waitForPpr();
+    }
+
     public void dragAndDropTo(AdfComponent target) {
         dragAndDropTo(target.getElement());
+        waitForPpr();
     }
 
     public void dragAndDropTo(WebElement target) {
         new Actions(driver).clickAndHold(this.getElement()).moveToElement(target).release(target).perform();
+        waitForPpr();
     }
 
     public List<ComponentReference> getDescendantComponents() {
