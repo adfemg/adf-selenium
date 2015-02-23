@@ -40,6 +40,7 @@
          <Item path="selenium-2.44.0/libs/xalan-2.7.1.jar" jar-entry=""/>
          <Item path="selenium-2.44.0/libs/xercesImpl-2.11.0.jar" jar-entry=""/>
          <Item path="selenium-2.44.0/libs/xml-apis-1.4.01.jar" jar-entry=""/>
+         <Item path="adf-richclient-automation-11.jar" jar-entry=""/>
       </entries>
    </classPath>
    <docPath>
