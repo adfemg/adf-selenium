@@ -3,6 +3,7 @@ package com.redheap.selenium.junit;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
@@ -32,10 +33,27 @@ public class SavePageSourceOnFailure extends TestWatcher {
     @Override
     protected void failed(Throwable t, Description description) {
         try {
-            File file = new File(basedir, description.getClassName() + "-" + description.getMethodName() + ".txt");
-            file.getCanonicalFile().getParentFile().mkdirs();
-            logger.finer("dumping page source " + file.getCanonicalPath());
-            FileUtils.write(file, driver.getPageSource());
+
+            Set<String> windows = driver.getWindowHandles();
+            int idx = 0;
+            String baseFileName = description.getClassName() + "-" + description.getMethodName();
+            for (String guid : windows) {
+                StringBuilder fileName = new StringBuilder(baseFileName);
+                if (windows.size() > 1) {
+                    fileName.append("-").append((idx++));
+                }
+                fileName.append(".txt");
+                File file = new File(basedir, fileName.toString());
+                file.getCanonicalFile().getParentFile().mkdirs();
+                logger.finer("dumping page source " + file.getCanonicalPath());
+                try {
+                    driver.switchTo().window(guid);
+                    FileUtils.write(file, driver.getPageSource());
+                } catch (RuntimeException e) {
+                    // ignore and continue with next window
+                    e.printStackTrace();
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new WebDriverException(e);
