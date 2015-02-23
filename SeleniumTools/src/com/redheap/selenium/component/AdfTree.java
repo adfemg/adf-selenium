@@ -66,12 +66,12 @@ public class AdfTree extends AdfComponent {
         return new RowInfo((WebElement) list.get(0), ((Number) list.get(1)).intValue(), (WebElement) list.get(2));
     }
 
-//    public String getRowKeyContainingElement(WebElement element) {
-//        String js = String.format("%s.GetRowKeyAndRow('%s')", scriptBoundPeer(), ??);
-//    }
+    //    public String getRowKeyContainingElement(WebElement element) {
+    //        String js = String.format("%s.GetRowKeyAndRow('%s')", scriptBoundPeer(), ??);
+    //    }
 
     public String getRowKeyByIndexPath(int... indexpath) {
-        StringBuilder path = new StringBuilder(indexpath.length*2);
+        StringBuilder path = new StringBuilder(indexpath.length * 2);
         for (int i : indexpath) {
             if (path.length() > 0) {
                 path.append("_");

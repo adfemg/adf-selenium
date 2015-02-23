@@ -38,12 +38,12 @@ public class RichClientDemo extends Page {
 
     public void clickMiscellaneousTreeNode() {
         logger.fine("Clicking Miscellaneous node in the Tag Guide component tree");
-        findTagGuideTree().discloseNode(0,6);
+        findTagGuideTree().discloseNode(0, 6);
     }
 
     public void clickLayoutTreeNode() {
         logger.fine("Clicking Layout node in the Tag Guide component tree");
-        findTagGuideTree().discloseNode(0,3);
+        findTagGuideTree().discloseNode(0, 3);
     }
 
     public RegionDemoPage clickRegionTreeNode() {
