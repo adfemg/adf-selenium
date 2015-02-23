@@ -47,8 +47,14 @@ public class ScreenshotOnFailure extends TestWatcher {
                 File file = new File(basedir, fileName.toString());
                 file.getCanonicalFile().getParentFile().mkdirs();
                 logger.finer("dumping error screenshot " + file.getCanonicalPath());
-                driver.switchTo().window(guid);
-                ((TakesScreenshot) driver).getScreenshotAs(new FileOutputType(file));
+                try {
+                    driver.switchTo().window(guid);
+                    ((TakesScreenshot) driver).getScreenshotAs(new FileOutputType(file));
+                } catch (RuntimeException e) {
+                    // ignore and continue with next window
+                    e.printStackTrace();
+                }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
