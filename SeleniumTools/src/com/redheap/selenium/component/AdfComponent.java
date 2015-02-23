@@ -19,6 +19,7 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 
@@ -182,6 +183,14 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         logger.fine("clicking " + element);
         element.click();
         waitForPprWithDialogDetect();
+    }
+
+    public void dragAndDropTo(AdfComponent target) {
+        dragAndDropTo(target.getElement());
+    }
+
+    public void dragAndDropTo(WebElement target) {
+        new Actions(driver).clickAndHold(this.getElement()).moveToElement(target).release(target).perform();
     }
 
     public List<ComponentReference> getDescendantComponents() {
