@@ -8,7 +8,7 @@ import oracle.adf.view.rich.automation.selenium.DialogManager;
 import oracle.adf.view.rich.automation.selenium.RichWebDrivers;
 
 import org.junit.After;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
@@ -77,14 +77,13 @@ public class BotStyleTest {
 
         driver.get(BASE_URL + "/faces/components/button.jspx");
         RichWebDrivers.waitForRichPageToLoad(driver, TIMEOUT_MSECS);
-        Assert.assertTrue("oracle.adf.view.rich.automation.ENABLED must be true and adf-richclient-automation-11.jar must be on classpath",
-                          (Boolean) driver.executeScript("return AdfPage.PAGE.isAutomationEnabled()"));
+        assertTrue("oracle.adf.view.rich.automation.ENABLED must be true and adf-richclient-automation-11.jar must be on classpath",
+                   (Boolean) driver.executeScript("return AdfPage.PAGE.isAutomationEnabled()"));
 
         // assert browser and dialog state before we get started
-        Assert.assertEquals("initially ADF dialogManager should find zero dialogs", 0,
-                            dialogManager.totalNumberOfDialogsOpen());
-        Assert.assertNull("initially ADF dialogManager should report no current dialog",
-                          dialogManager.getCurrentDialog());
+        assertEquals("initially ADF dialogManager should find zero dialogs", 0,
+                     dialogManager.totalNumberOfDialogsOpen());
+        assertNull("initially ADF dialogManager should report no current dialog", dialogManager.getCurrentDialog());
 
         // click button with useWindow="true" and action="dialog:createNewFile"
         final WebElement launchDialogButton = driver.findElement(ByRich.locator("rich=dmoTpl:usewindowButton"));
@@ -92,71 +91,66 @@ public class BotStyleTest {
         RichWebDrivers.waitForServer(driver, TIMEOUT_MSECS, /*useAutomaticDialogDetection*/true);
 
         // verify new dialog is opened and active
-        Assert.assertEquals("after launching first dialog, ADF dialogManager should find single dialog", 1,
-                            dialogManager.totalNumberOfDialogsOpen());
+        assertEquals("after launching first dialog, ADF dialogManager should find single dialog", 1,
+                     dialogManager.totalNumberOfDialogsOpen());
         final Dialog firstDialog = dialogManager.getCurrentDialog();
-        Assert.assertNotNull("after launching first dialog, ADF dialogManager should detect dialog having focus",
-                             firstDialog);
-        Assert.assertEquals("title of dialog should be 'New File'", "New File", firstDialog.getTitle(driver));
-        Assert.assertTrue("firstDialog starts out being alive", firstDialog.isAlive());
+        assertNotNull("after launching first dialog, ADF dialogManager should detect dialog having focus", firstDialog);
+        assertEquals("title of dialog should be 'New File'", "New File", firstDialog.getTitle(driver));
+        assertTrue("firstDialog starts out being alive", firstDialog.isAlive());
 
         // demonstrate we can also locate new dialog by title and launching component id
-        Assert.assertEquals("locating dialog by its title should find it", firstDialog,
-                            dialogManager.getDialogBy(driver, DialogManager.SelectDialogBy.TITLE, "New File"));
-        Assert.assertEquals("locating dialog by its launching component id should find it", firstDialog,
-                            dialogManager.getDialogBy(driver, DialogManager.SelectDialogBy.LAUNCH_SOURCE_ID,
-                                                      "dmoTpl:usewindowButton"));
+        assertEquals("locating dialog by its title should find it", firstDialog,
+                     dialogManager.getDialogBy(driver, DialogManager.SelectDialogBy.TITLE, "New File"));
+        assertEquals("locating dialog by its launching component id should find it", firstDialog,
+                     dialogManager.getDialogBy(driver, DialogManager.SelectDialogBy.LAUNCH_SOURCE_ID,
+                                               "dmoTpl:usewindowButton"));
 
         // switch back to main window (but keep popup window open)
         dialogManager.selectMainWindow(driver);
-        Assert.assertEquals("dialog remains running after switching back to main window", 1,
-                            dialogManager.totalNumberOfDialogsOpen());
-        Assert.assertNull("dialog no longer reported as current after switching back to main window",
-                          dialogManager.getCurrentDialog());
+        assertEquals("dialog remains running after switching back to main window", 1,
+                     dialogManager.totalNumberOfDialogsOpen());
+        assertNull("dialog no longer reported as current after switching back to main window",
+                   dialogManager.getCurrentDialog());
 
         // click button again to open a second popup
         launchDialogButton.click();
         RichWebDrivers.waitForServer(driver, TIMEOUT_MSECS, /*useAutomaticDialogDetection*/true);
 
         // verify new dialog is opened and active
-        Assert.assertEquals("two dialogs after clicking button for second time", 2,
-                            dialogManager.totalNumberOfDialogsOpen());
+        assertEquals("two dialogs after clicking button for second time", 2, dialogManager.totalNumberOfDialogsOpen());
         Dialog secondDialog = dialogManager.getCurrentDialog();
-        Assert.assertEquals("second dialog also has 'New File' title", "New File", secondDialog.getTitle(driver));
-        Assert.assertNotEquals("second dialog has different handle than first dialog", firstDialog, secondDialog);
+        assertEquals("second dialog also has 'New File' title", "New File", secondDialog.getTitle(driver));
+        assertNotEquals("second dialog has different handle than first dialog", firstDialog, secondDialog);
         // note: dialogManager.getDialogBy results are now uncertain as both dialogs have same title
         // and launching component
 
         // close first dialog (which is not the current dialog).
         // DialogManager also resets active window to main window when detecting closed dialogs
         firstDialog.close(driver); // includes RichWebDrivers.waitForServer(..,..,true)
-        Assert.assertEquals("one dialog remaining after closing first dialog", 1,
-                            dialogManager.totalNumberOfDialogsOpen());
-        Assert.assertEquals("main browser window active after closing first dialog", null,
-                            dialogManager.getCurrentDialog());
-        Assert.assertFalse("first dialog handle should be marked dead", firstDialog.isAlive());
+        assertEquals("one dialog remaining after closing first dialog", 1, dialogManager.totalNumberOfDialogsOpen());
+        assertEquals("main browser window active after closing first dialog", null, dialogManager.getCurrentDialog());
+        assertFalse("first dialog handle should be marked dead", firstDialog.isAlive());
 
         // make second dialog current and show we can close current dialog
         secondDialog.focus(driver);
-        Assert.assertEquals("second dialog window active after switching to it", secondDialog,
-                            dialogManager.getCurrentDialog());
+        assertEquals("second dialog window active after switching to it", secondDialog,
+                     dialogManager.getCurrentDialog());
         secondDialog.close(driver); // includes RichWebDrivers.waitForServer(..,..,true)
-        Assert.assertEquals("no dialogs open after closing second dialog", 0, dialogManager.totalNumberOfDialogsOpen());
-        Assert.assertNull("main browser window active after closing second dialog", dialogManager.getCurrentDialog());
-        Assert.assertFalse("first dialog handle still marked dead after closing second dialog", firstDialog.isAlive());
-        Assert.assertFalse("second dialog handle marked dead after closing", secondDialog.isAlive());
+        assertEquals("no dialogs open after closing second dialog", 0, dialogManager.totalNumberOfDialogsOpen());
+        assertNull("main browser window active after closing second dialog", dialogManager.getCurrentDialog());
+        assertFalse("first dialog handle still marked dead after closing second dialog", firstDialog.isAlive());
+        assertFalse("second dialog handle marked dead after closing", secondDialog.isAlive());
 
         // click button once more to open new popup, but this time close with save button in popup
         launchDialogButton.click();
         RichWebDrivers.waitForServer(driver, TIMEOUT_MSECS, /*useAutomaticDialogDetection*/true);
-        Assert.assertEquals("one dialog running for final test", 1, dialogManager.totalNumberOfDialogsOpen());
-        Assert.assertNotNull("dialog active after launching for final test", dialogManager.getCurrentDialog());
+        assertEquals("one dialog running for final test", 1, dialogManager.totalNumberOfDialogsOpen());
+        assertNotNull("dialog active after launching for final test", dialogManager.getCurrentDialog());
         driver.findElement(ByRich.locator("rich=saveNewFile")).click();
         RichWebDrivers.waitForServer(driver, TIMEOUT_MSECS, /*useAutomaticDialogDetection*/true);
-        Assert.assertEquals("no dialogs running after pressing Save button in dialog", 0,
-                            dialogManager.totalNumberOfDialogsOpen());
-        Assert.assertNull("main browser window active afer pressing Save button in dialog",
-                          dialogManager.getCurrentDialog());
+        assertEquals("no dialogs running after pressing Save button in dialog", 0,
+                     dialogManager.totalNumberOfDialogsOpen());
+        assertNull("main browser window active afer pressing Save button in dialog", dialogManager.getCurrentDialog());
     }
 
     public static void main(String[] args) {

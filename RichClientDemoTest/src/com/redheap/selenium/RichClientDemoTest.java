@@ -11,7 +11,7 @@ import java.io.File;
 
 import java.util.logging.Logger;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,8 +52,8 @@ public class RichClientDemoTest {
         RichClientDemo page = pages.goHome();
         int expandedNodesBefore = page.findTagGuideTree().getExpandedNodeCount();
         page.clickLayoutTreeNode();
-        Assert.assertEquals("number of expanded node should increase", expandedNodesBefore + 1,
-                            page.findTagGuideTree().getExpandedNodeCount());
+        assertEquals("number of expanded node should increase", expandedNodesBefore + 1,
+                     page.findTagGuideTree().getExpandedNodeCount());
     }
 
     @Test
@@ -65,8 +65,8 @@ public class RichClientDemoTest {
         RichClientDemo page = pages.goHome();
         int expandedNodesBefore = page.findTagGuideTree().getExpandedNodeCount();
         page.clickLayoutTreeNode();
-        Assert.assertEquals("number of expanded node should increase", expandedNodesBefore + 1,
-                            page.findTagGuideTree().getExpandedNodeCount());
+        assertEquals("number of expanded node should increase", expandedNodesBefore + 1,
+                     page.findTagGuideTree().getExpandedNodeCount());
     }
 
     public static void main(String[] args) {

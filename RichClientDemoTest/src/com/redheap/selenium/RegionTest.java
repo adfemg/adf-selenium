@@ -12,7 +12,7 @@ import java.io.File;
 
 import java.util.logging.Logger;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,8 +42,8 @@ public class RegionTest {
         RichClientDemo homePage = pages.goHome();
         int expandedCount = homePage.findTagGuideTree().getExpandedNodeCount();
         homePage.clickMiscellaneousTreeNode();
-        Assert.assertEquals("number of expanded tree nodes should have increased", expandedCount + 1,
-                            homePage.findTagGuideTree().getExpandedNodeCount());
+        assertEquals("number of expanded tree nodes should have increased", expandedCount + 1,
+                     homePage.findTagGuideTree().getExpandedNodeCount());
     }
 
     @Test
@@ -52,8 +52,8 @@ public class RegionTest {
         RichClientDemo homePage = pages.goHome();
         int expandedCount = homePage.findTagGuideTree().getExpandedNodeCount();
         homePage.clickMiscellaneousTreeNode();
-        Assert.assertEquals("number of expanded tree nodes should have increased", expandedCount + 1,
-                            homePage.findTagGuideTree().getExpandedNodeCount());
+        assertEquals("number of expanded tree nodes should have increased", expandedCount + 1,
+                     homePage.findTagGuideTree().getExpandedNodeCount());
         homePage.clickRegionTreeNode(); // navigates to region page
     }
 

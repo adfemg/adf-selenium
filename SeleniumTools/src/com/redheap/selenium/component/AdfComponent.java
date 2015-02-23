@@ -11,7 +11,7 @@ import oracle.adf.view.rich.automation.selenium.RichWebDrivers;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -37,9 +37,9 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         this.driver = driver;
         this.clientid = clientid;
         this.element = driver.findElement(By.id(clientid));
-        Assert.assertEquals(getExpectedComponentType(),
-                            executeScript(String.format("AdfPage.PAGE.findComponentByAbsoluteId('%s').getComponentType()",
-                                                        clientid)));
+        assertEquals(getExpectedComponentType(),
+                     executeScript(String.format("AdfPage.PAGE.findComponentByAbsoluteId('%s').getComponentType()",
+                                                 clientid)));
     }
 
     protected abstract String getExpectedComponentType();
