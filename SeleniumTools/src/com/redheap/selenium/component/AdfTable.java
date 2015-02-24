@@ -4,6 +4,16 @@ import org.openqa.selenium.WebDriver;
 
 public class AdfTable extends AdfComponent {
 
+    private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWKEY =
+        JS_FIND_COMPONENT + "return comp.findComponent(arguments[1],arguments[2]).getClientId()";
+    private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWINDEX =
+        JS_FIND_PEER + "return comp.findComponent(arguments[1],peer.getRowKey(arguments[2])).getClientId()";
+    private static final String JS_IS_ROW_DISCLOSED = JS_FIND_COMPONENT + "comp.isDisclosed(arguments[1])";
+    private static final String JS_SCROLLTO_ROWINDEX = JS_FIND_COMPONENT + "comp.scrollToRowIndex(arguments[1])";
+    private static final String JS_GET_FOCUSED_ROWKEY = JS_FIND_PEER + "return peer.GetFocusedRowKey()";
+    private static final String JS_GET_ROWKEY = JS_FIND_PEER + "return peer.getRowKey(arguments[1])";
+    private static final String JS_GET_ROWINDEX = JS_FIND_PEER + "return peer.getRowIndex(arguments[1])";
+
     public AdfTable(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
     }
@@ -14,19 +24,16 @@ public class AdfTable extends AdfComponent {
     }
 
     public <T extends AdfComponent> T findAdfComponent(String relativeClientId, String rowKey, Class<? extends T> cls) {
-        String js =
-            String.format("%s.findComponent('%s', '%s').getClientId()", scriptFindComponent(), relativeClientId,
-                          rowKey);
-        String clientid = (String) executeScript(js);
+        String clientid =
+            (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWKEY, getClientId(), relativeClientId, rowKey);
         return AdfComponent.forClientId(getDriver(), clientid, cls);
     }
 
     public <T extends AdfComponent> T findAdfComponent(String relativeClientId, int rowIndex, Class<? extends T> cls) {
         scrollToRowIndex(rowIndex); // scroll to row (and possibly fetch additional data)
-        String js =
-            String.format("%s.findComponent('%s', %s.getRowKey(%d)).getClientId()", scriptFindComponent(),
-                          relativeClientId, scriptBoundPeer(), rowIndex);
-        String clientid = (String) executeScript(js);
+        String clientid =
+            (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWINDEX, getClientId(), relativeClientId,
+                                   rowIndex);
         T retval = AdfComponent.forClientId(getDriver(), clientid, cls);
         // TODO; would be niced to use TablePeer.scrollColumnIntoView but we haven't figured out a way to
         // determine column index for a component
@@ -47,20 +54,17 @@ public class AdfTable extends AdfComponent {
     //    }
 
     public boolean isRowDisclosed(String rowKey) {
-        String js = String.format("%s.isDisclosed('%s')", scriptFindComponent(), rowKey);
-        return (Boolean) executeScript(js);
+        return (Boolean) executeScript(JS_IS_ROW_DISCLOSED, getClientId(), rowKey);
     }
 
     public void scrollToRowIndex(int rowIndex) {
         // could also accept a callback function
-        String js = String.format("%s.scrollToRowIndex(%d)", scriptFindComponent(), rowIndex);
-        executeScript(js);
+        executeScript(JS_SCROLLTO_ROWINDEX, getClientId(), rowIndex);
         waitForPpr();
     }
 
     public String getFocusedRowKey() {
-        String js = String.format("%s.GetFocusedRowKey()", scriptBoundPeer());
-        return (String) executeScript(js);
+        return (String) executeScript(JS_GET_FOCUSED_ROWKEY, getClientId());
     }
 
     /**
@@ -72,8 +76,7 @@ public class AdfTable extends AdfComponent {
      * @return the rowKey to identify a row if found otherwise null
      */
     public String getRowKey(int index) {
-        String js = String.format("%s.getRowKey(%d)", scriptBoundPeer(), index);
-        return (String) executeScript(js);
+        return (String) executeScript(JS_GET_ROWKEY, getClientId(), index);
     }
 
     /**
@@ -85,8 +88,7 @@ public class AdfTable extends AdfComponent {
      * @return the index of a row for a row key if it is found otherwise -1
      */
     public int getRowIndex(String rowKey) {
-        String js = String.format("%s.getRowIndex('%s')", scriptBoundPeer(), rowKey);
-        return ((Number) executeScript(js)).intValue();
+        return ((Number) executeScript(JS_GET_ROWINDEX, getClientId(), rowKey)).intValue();
     }
 
 }

@@ -1,9 +1,9 @@
 package com.redheap.selenium.component;
 
-import com.redheap.selenium.errors.AutomationDisabledException;
 import com.redheap.selenium.errors.SubIdNotFoundException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -34,26 +34,47 @@ public abstract class AdfComponent /*extends BaseObject*/ {
 
     private static final Logger logger = Logger.getLogger(AdfComponent.class.getName());
 
+    protected static final String JS_FIND_COMPONENT = "var comp=AdfPage.PAGE.findComponentByAbsoluteId(arguments[0]);";
+    protected static final String JS_FIND_PEER = JS_FIND_COMPONENT + "var peer=comp.getPeer(); peer.bind(comp);";
+    protected static final String JS_FIND_ELEMENT = JS_FIND_PEER + "var elem=peer.getDomElement();";
+
+    private static final String JS_GET_COMPONENT_TYPE = JS_FIND_COMPONENT + "return comp.getComponentType()";
+    private static final String JS_FIND_ANCESTOR_COMPONENT =
+        "return AdfRichUIPeer.getFirstAncestorComponent(arguments[0]).getClientId();";
+    private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID =
+        JS_FIND_COMPONENT + "return comp.findComponent(arguments[1]).getClientId()";
+    private static final String JS_GET_DESCENDANT_COMPONENTS =
+        JS_FIND_COMPONENT + "var desc=comp.getDescendantComponents();" + "var retval=[];" +
+        "desc.forEach(function(comp){retval.push([comp.getClientId(),comp.getComponentType()]);});" + "return retval;";
+    private static final String JS_FIND_CHILD_COMPONENTS =
+        JS_FIND_COMPONENT + "var retval=[];" +
+        "comp.visitChildren(function(comp){retval.push([comp.getClientId(),comp.getComponentType()]);return 1});" +
+        "return retval;";
+    private static final String JS_GET_PROPERTY_KEYS =
+        "return Object.getOwnPropertyNames(" + JS_FIND_COMPONENT + "return comp.getPropertyKeys());";
+    private static final String JS_GET_PROPERTY = JS_FIND_COMPONENT + "return comp.getProperty(arguments[1])";
+    private static final String JS_SCROLLINTOVIEW_FOCUS_SUBTARGET =
+        JS_FIND_COMPONENT + "comp.scrollIntoView(arguments[1], arguments[2])";
+    private static final String JS_SCROLLINTOVIEW_FOCUS = JS_FIND_COMPONENT + "comp.scrollIntoView(arguments[1]);";
+    private static final String JS_SCROLLINTOVIEW_SUBTARGET = JS_FIND_COMPONENT + "comp.scrollIntoView(arguments[1]);";
+    private static final String JS_SCROLLINTOVIEW = JS_FIND_COMPONENT + "comp.scrollIntoView();";
+    private static final String JS_FIND_CONTENT_NODE =
+        JS_FIND_ELEMENT + "return AdfDhtmlEditableValuePeer.GetContentNode(comp, elem);";
+    private static final String JS_FIND_SUBID_ELEMENT =
+        JS_FIND_PEER + "return peer.getSubIdDomElement(comp,arguments[1]);";
+    private static final String JS_FIND_SUBID_CLIENTID =
+        JS_FIND_PEER +
+        "var subelem=peer.getSubIdDomElement(comp,arguments[1]); if(!subelem){return null;}return AdfRichUIPeer.getFirstAncestorComponent(subelem).getClientId();";
+
+
     protected AdfComponent(WebDriver driver, String clientid) {
         this.driver = driver;
         this.clientid = clientid;
         this.element = driver.findElement(By.id(clientid));
-        assertEquals(getExpectedComponentType(),
-                     executeScript(String.format("AdfPage.PAGE.findComponentByAbsoluteId('%s').getComponentType()",
-                                                 clientid)));
+        assertEquals(getExpectedComponentType(), executeScript(JS_GET_COMPONENT_TYPE, clientid));
     }
 
     protected abstract String getExpectedComponentType();
-
-    //    public static <T extends AdfComponent> T forElement(WebElement element, Class<? extends T> cls) {
-    //        // instantiate and return
-    //        try {
-    //            return cls.getConstructor(WebElement.class).newInstance(element);
-    //        } catch (Exception e) {
-    //            throw new WebDriverException("unable to instantiate adf component: " + element,
-    //                                         e.getCause() != null ? e.getCause() : e);
-    //        }
-    //    }
 
     public static <T extends AdfComponent> T forClientId(WebDriver driver, String clientid, Class<? extends T> cls) {
         // instantiate and return
@@ -68,9 +89,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     public static <T extends AdfComponent> T forElement(WebElement element, Class<? extends T> cls) {
         RemoteWebElement rwe = (RemoteWebElement) element;
         RemoteWebDriver rwd = (RemoteWebDriver) rwe.getWrappedDriver();
-        String clientid =
-            (String) rwd.executeScript("return AdfRichUIPeer.getFirstAncestorComponent(arguments[0]).getClientId()",
-                                       element);
+        String clientid = (String) rwd.executeScript(JS_FIND_ANCESTOR_COMPONENT, element);
         return forClientId(rwd, clientid, cls);
     }
 
@@ -78,56 +97,13 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         this.timeoutMillisecs = milliseconds;
     }
 
-    protected void requireAutomation() {
-        if (!AdfDocument.forDriver(driver).isAutomationEnabled()) {
-            throw new AutomationDisabledException();
-        }
-    }
-
-    protected String scriptFindComponent() {
-        return String.format("AdfPage.PAGE.findComponentByAbsoluteId('%s')", clientid);
-    }
-
-    protected String scriptUnboundPeer() {
-        return String.format("AdfPage.PAGE.findComponentByAbsoluteId('%s').getPeer()", clientid);
-    }
-
-    protected String scriptBoundPeer() {
-        return String.format("(function(){var c=AdfPage.PAGE.findComponentByAbsoluteId('%s');var p=c.getPeer();p.bind(c);return p;})()",
-                             clientid);
-    }
-
-    protected String scriptDomElement() {
-        return String.format("(function(){return %s.getDomElement();})()", scriptBoundPeer());
-    }
-
-    protected String scriptObjectToArray(String objectScript, String... attrs) {
-        return String.format("(function(){var obj=%s; var retval=[]; %s.forEach(function(key){retval.push(obj[key])}); return retval;})()",
-                             objectScript, jsStringArray(attrs));
-    }
-
-    protected Object invokePeerMethod(String methodName) {
-        String js = String.format("%s.%s()", scriptBoundPeer(), methodName);
-        return executeScript(js);
-    }
-
-    private String jsStringArray(String... strings) {
-        StringBuilder retval = new StringBuilder(5 * strings.length);
-        for (String s : strings) {
-            if (retval.length() > 0) {
-                retval.append(",");
-            }
-            retval.append(jsStringLiteral(s));
-        }
-        retval.insert(0, "[").append("]");
-        return retval.toString();
-    }
-
-    private String jsStringLiteral(String s) {
-        if (!s.contains("'")) {
-            return "'" + s + "'";
-        }
-        throw new UnsupportedOperationException("string literals with ' not yet supported");
+    protected Object executeScript(CharSequence script, Object... args) {
+        JavascriptExecutor jsrunner = (JavascriptExecutor) driver;
+        logger.finer("executing script '" + script + "' with params " + Arrays.asList(args));
+        Object result = jsrunner.executeScript(script.toString(), args);
+        logger.finer("executed script returned: " + result +
+                     (result == null ? "" : String.format(" (%s)", result.getClass())));
+        return result;
     }
 
     /**
@@ -142,19 +118,8 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         return driver;
     }
 
-    //@Override
-    protected List<WebElement> findElements(By by) {
-        return getElement().findElements(by);
-    }
-
-    //@Override
-    protected WebElement findElement(By by) {
-        return getElement().findElement(by);
-    }
-
     public <T extends AdfComponent> T findAdfComponent(String relativeClientId, Class<? extends T> cls) {
-        String js = String.format("%s.findComponent('%s').getClientId()", scriptFindComponent(), relativeClientId);
-        String clientid = (String) executeScript(js);
+        String clientid = (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID, getClientId(), relativeClientId);
         return AdfComponent.forClientId(driver, clientid, cls);
     }
 
@@ -211,43 +176,35 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     }
 
     public List<ComponentReference> getDescendantComponents() {
-        String js =
-            String.format("(function(){var desc=%s.getDescendantComponents(); var retval=[]; desc.forEach(function(comp){retval.push([comp.getClientId(),comp.getComponentType()]);}); return retval;})()",
-                          scriptFindComponent());
-        return buildReferences((List<List<String>>) executeScript(js));
+        return buildReferences((List<List<String>>) executeScript(JS_GET_DESCENDANT_COMPONENTS, getClientId()));
     }
 
     public List<ComponentReference> getChildComponents() {
-        String js =
-            String.format("(function(){var retval=[];%s.visitChildren(function(comp){retval.push([comp.getClientId(),comp.getComponentType()]);return 1}); return retval;})()",
-                          scriptFindComponent());
-        return buildReferences((List<List<String>>) executeScript(js));
+        return buildReferences((List<List<String>>) executeScript(JS_FIND_CHILD_COMPONENTS, getClientId()));
     }
 
     public List<String> getPropertyKeys() {
-        String js = String.format("Object.getOwnPropertyNames(%s.getPropertyKeys())", scriptFindComponent());
-        return (List<String>) executeScript(js);
+        return (List<String>) executeScript(JS_GET_PROPERTY_KEYS, getClientId());
     }
 
     public Object getProperty(String propName) {
-        String js = String.format("%s.getProperty('%s')", scriptFindComponent(), propName);
-        return executeScript(js);
+        return executeScript(JS_GET_PROPERTY, getClientId(), propName);
     }
 
     public void scrollIntoView(boolean focus, String subTargetId) {
-        executeScript(String.format("%s.scrollIntoView(%b,'%s')", scriptFindComponent(), focus, subTargetId));
+        executeScript(JS_SCROLLINTOVIEW_FOCUS_SUBTARGET, getClientId(), focus, subTargetId);
     }
 
     public void scrollIntoView(boolean focus) {
-        executeScript(String.format("%s.scrollIntoView(%b)", scriptFindComponent(), focus));
+        executeScript(JS_SCROLLINTOVIEW_FOCUS, getClientId(), focus);
     }
 
     public void scrollIntoView(String subTargetId) {
-        executeScript(String.format("%s.scrollIntoView(%b,'%s')", scriptFindComponent(), false, subTargetId));
+        executeScript(JS_SCROLLINTOVIEW_SUBTARGET, getClientId(), subTargetId);
     }
 
     public void scrollIntoView() {
-        executeScript(String.format("%s.scrollIntoView()", scriptFindComponent()));
+        executeScript(JS_SCROLLINTOVIEW, getClientId());
     }
 
     protected List<ComponentReference> buildReferences(List<List<String>> jsResult) {
@@ -258,20 +215,8 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         return retval;
     }
 
-    protected Object executeScript(String javascript) {
-        JavascriptExecutor jsrunner = (JavascriptExecutor) getDriver();
-        logger.finer("Executing script " + javascript);
-        // selenium handles that this is wrapped in anonymous closure to prevent variable leakage
-        Object result = jsrunner.executeScript("return " + javascript);
-        logger.finer("Executed script returned: " + result +
-                     (result == null ? "" : String.format(" (%s)", result.getClass())));
-        return result;
-    }
-
     protected WebElement findContentNode() {
-        final Object result =
-            executeScript(String.format("AdfDhtmlEditableValuePeer.GetContentNode(%s, %s)", scriptFindComponent(),
-                                        scriptDomElement()));
+        final Object result = executeScript(JS_FIND_CONTENT_NODE, getClientId());
         if (result instanceof WebElement) {
             return (WebElement) result;
         } else {
@@ -280,21 +225,11 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     }
 
     protected WebElement findSubIdElement(String subid) {
-        // component.getPeer().getSubIdDomElement(component, subid)
-        requireAutomation();
-        final Object result =
-            executeScript(String.format("%s.getSubIdDomElement(%s,'%s')", scriptBoundPeer(), scriptFindComponent(),
-                                        subid));
-        return (WebElement) result;
+        return (WebElement) executeScript(JS_FIND_SUBID_ELEMENT, getClientId(), subid);
     }
 
     protected <T extends AdfComponent> T findSubIdComponent(String subid, Class<? extends T> cls) {
-        // component.getPeer().getSubIdDomElement(component, subid)
-        requireAutomation();
-        String js =
-            String.format("(function(){var subelem=%s.getSubIdDomElement(%s,'%s'); if(!subelem){return null;}return AdfRichUIPeer.getFirstAncestorComponent(subelem).getClientId();})()",
-                          scriptBoundPeer(), scriptFindComponent(), subid);
-        final String subClientId = (String) executeScript(js);
+        final String subClientId = (String) executeScript(JS_FIND_SUBID_CLIENTID, getClientId(), subid);
         if (subClientId == null) {
             return null;
         }

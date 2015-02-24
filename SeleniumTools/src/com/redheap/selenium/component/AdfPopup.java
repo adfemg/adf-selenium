@@ -4,6 +4,8 @@ import org.openqa.selenium.WebDriver;
 
 public class AdfPopup extends AdfComponent {
 
+    private static final String JS_IS_POPUP_VISIBLE = JS_FIND_COMPONENT + "return comp.isPopupVisible();";
+
     public AdfPopup(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
     }
@@ -14,7 +16,6 @@ public class AdfPopup extends AdfComponent {
     }
 
     public boolean isPopupVisible() {
-        String js = String.format("%s.isPopupVisible()", scriptFindComponent());
-        return (Boolean) executeScript(js);
+        return (Boolean) executeScript(JS_IS_POPUP_VISIBLE, getClientId());
     }
 }

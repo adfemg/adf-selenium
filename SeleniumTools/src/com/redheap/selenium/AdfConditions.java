@@ -30,14 +30,13 @@ public abstract class AdfConditions {
                                         "AdfPage.PAGE.whyIsNotSynchronizedWithServer()))");
     }
 
-    public static ExpectedCondition<Boolean> javascriptExpressionTrue(final String jsExpression) {
+    public static ExpectedCondition<Boolean> javascriptExpressionTrue(final String jsExpression, final Object... args) {
         return new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(final WebDriver driver) {
                 JavascriptExecutor jsDriver = (JavascriptExecutor) driver;
-                String js = "return " + jsExpression;
-                logger.log(Level.FINER, "executing condition javascript: {0}", js);
-                Object result = jsDriver.executeScript(js);
+                logger.log(Level.FINER, "executing condition javascript: {0}", jsExpression);
+                Object result = jsDriver.executeScript(jsExpression, args);
                 logger.log(Level.FINER, "js result: {0}", result);
                 return Boolean.TRUE.equals(result);
             }

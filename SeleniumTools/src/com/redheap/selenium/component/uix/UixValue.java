@@ -6,14 +6,15 @@ import org.openqa.selenium.WebDriver;
 
 public abstract class UixValue extends AdfComponent {
 
+    private static final String JS_GET_VALID = JS_FIND_COMPONENT + "return comp.getValue();";
+
     public UixValue(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
     }
 
     public Object getValue() {
         // returns null when component is not valid
-        String js = String.format("%s.getValue()", scriptFindComponent());
-        return executeScript(js);
+        return executeScript(JS_GET_VALID, getClientId());
     }
 
 }

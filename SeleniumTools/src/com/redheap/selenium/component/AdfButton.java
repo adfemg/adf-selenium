@@ -1,5 +1,7 @@
 package com.redheap.selenium.component;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,6 +13,9 @@ public class AdfButton extends AdfComponent {
     private static final String SUBID_dropdown = "dropdown"; // <a> element
     private static final String SUBID_icon = "icon"; // <img> element
     private static final String SUBID_text = "text"; // <span> element
+
+    private static final String JS_GET_DISABLED = JS_FIND_COMPONENT + "return comp.getDisabled();";
+    private static final String JS_GET_SELECTED = JS_FIND_COMPONENT + "return comp.getSelected();";
 
     public AdfButton(WebDriver driver, String clientid) {
         super(driver, clientid);
@@ -24,9 +29,9 @@ public class AdfButton extends AdfComponent {
     @Override
     public void click() {
         // af:button with targetFrame="_blank" and external destination only works when clicking on nested <a>
-        final WebElement link = getElement().findElement(By.tagName("a"));
-        if (link != null) {
-            link.click();
+        List<WebElement> elements = getElement().findElements(By.tagName("a"));
+        if (!elements.isEmpty()) {
+            elements.get(0).click();
             waitForPpr();
         } else {
             super.click();
@@ -34,11 +39,11 @@ public class AdfButton extends AdfComponent {
     }
 
     public boolean isDisabled() {
-        return (Boolean) executeScript(String.format("%s.getDisabled()", scriptFindComponent()));
+        return (Boolean) executeScript(JS_GET_DISABLED, getClientId());
     }
 
     public boolean isSelected() {
-        return (Boolean) executeScript(String.format("%s.getSelected()", scriptFindComponent()));
+        return (Boolean) executeScript(JS_GET_SELECTED, getClientId());
     }
 
     public void clickDropdownButton() {

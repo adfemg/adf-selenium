@@ -16,6 +16,9 @@ public class AdfSelectOneRadio extends UixValue {
     private static final String SUBID_item = "item"; // <input type='radio'> element
     private static final String SUBID_label = "label"; // <label> element
 
+    private static final String JS_GET_LABEL_ELEMENT =
+        JS_FIND_ELEMENT + "return AdfDomUtils.getDescendentElement(elem, 'label', arguments[1])";
+
     public AdfSelectOneRadio(WebDriver webDriver, String clientId) {
         super(webDriver, clientId);
     }
@@ -39,8 +42,7 @@ public class AdfSelectOneRadio extends UixValue {
     }
 
     public String getItemLabel(int index) {
-        String js = String.format("AdfDomUtils.getDescendentElement(%s, 'label', %d)", scriptDomElement(), index);
-        WebElement label = (WebElement) executeScript(js);
+        WebElement label = (WebElement) executeScript(JS_GET_LABEL_ELEMENT, getClientId(), index);
         return label.getText();
     }
 

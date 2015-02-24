@@ -32,6 +32,7 @@ public abstract class Page /*implements TakesScreenshot*/ {
 
     private static final String JS_GET_REGIONS =
         "{ids=[]; AdfPage.PAGE.getComponentsByType('oracle.adf.RichRegion').forEach(function(r){ids.push(r.getClientId())}); return ids}";
+    private static final String JS_GET_DOCID = "return AdfPage.PAGE.getDocumentClientId()";
     private static final Logger logger = Logger.getLogger(Page.class.getName());
 
     public Page(WebDriver driver) {
@@ -57,7 +58,7 @@ public abstract class Page /*implements TakesScreenshot*/ {
 
     protected AdfDocument findDocument() {
         JavascriptExecutor jsdriver = (JavascriptExecutor) driver;
-        String docid = (String) jsdriver.executeScript("return AdfPage.PAGE.getDocumentClientId()");
+        String docid = (String) jsdriver.executeScript(JS_GET_DOCID);
         return AdfComponent.forClientId(driver, docid, AdfDocument.class);
     }
 

@@ -11,6 +11,21 @@ public class AdfTree extends AdfComponent {
     // see http://jdevadf.oracle.com/adf-richclient-demo/docs/js-subids.html
     private static final String SUBID_disclosureID = "disclosureID";
 
+    private static final String JS_EXPANDED_NODE_COUNT =
+        JS_FIND_COMPONENT + "return Object.keys(comp.getDisclosedRowKeys()).length";
+    private static final String JS_GET_FOCUSED_ROWKEY = JS_FIND_PEER + "return peer.GetFocusedRowKey()";
+    private static final String JS_GET_SELECTED_ROWKEYS =
+        JS_FIND_COMPONENT + "return Object.keys(comp.getSelectedRowKeys())";
+    private static final String JS_GET_DISCLOSED_ROWKEYS =
+        JS_FIND_COMPONENT + "return Object.keys(comp.getDisclosedRowKeys())";
+    private static final String JS_GET_DEPTH_ROWKEY = JS_FIND_PEER + "return peer.getDepth(arguments[1])";
+    private static final String JS_ISLEAF_ROWKEY = JS_FIND_PEER + "return peer.isLeaf(arguments[1])";
+    private static final String JS_FIND_ROWKEY_BY_INDEXPATH =
+        JS_FIND_PEER + "peer._findRowKeyByIndexPath(arguments[1])";
+    private static final String JS_GET_ROWINFO =
+        JS_FIND_PEER + "var rowinfo=peer.FindRowByKey(arguments[1]);" +
+        "return [rowinfo.tr,rowinfo.index,rowinfo.block];";
+
     public AdfTree(WebDriver driver, String clientid) {
         super(driver, clientid);
     }
@@ -21,38 +36,32 @@ public class AdfTree extends AdfComponent {
     }
 
     public int getExpandedNodeCount() {
-        String js = String.format("Object.keys(%s.getDisclosedRowKeys()).length", scriptFindComponent());
-        return ((Number) executeScript(js)).intValue();
+        return ((Number) executeScript(JS_EXPANDED_NODE_COUNT, getClientId())).intValue();
     }
 
     public void clickNode(By locator) {
-        findElement(locator).findElement(By.tagName("a")).click();
+        getElement().findElement(locator).findElement(By.tagName("a")).click();
         waitForPpr();
     }
 
     public String getFocusedRowKey() {
-        String js = String.format("%s.GetFocusedRowKey()", scriptBoundPeer());
-        return (String) executeScript(js);
+        return (String) executeScript(JS_GET_FOCUSED_ROWKEY, getClientId());
     }
 
     public List<String> getSelectedRowKeys() {
-        String js = String.format("Object.keys(%s.getSelectedRowKeys())", scriptFindComponent());
-        return (List<String>) executeScript(js);
+        return (List<String>) executeScript(JS_GET_SELECTED_ROWKEYS, getClientId());
     }
 
     public List<String> getDisclosedRowKeys() {
-        String js = String.format("Object.keys(%s.getDisclosedRowKeys())", scriptFindComponent());
-        return (List<String>) executeScript(js);
+        return (List<String>) executeScript(JS_GET_DISCLOSED_ROWKEYS, getClientId());
     }
 
     public int getDepth(String rowKey) {
-        String js = String.format("%s.getDepth('%s')", scriptBoundPeer(), rowKey);
-        return ((Number) executeScript(js)).intValue();
+        return ((Number) executeScript(JS_GET_DEPTH_ROWKEY, getClientId(), rowKey)).intValue();
     }
 
     public boolean isLeaf(String rowKey) {
-        String js = String.format("%s.isLeaf('%s')", scriptBoundPeer(), rowKey);
-        return (Boolean) executeScript(js);
+        return (Boolean) executeScript(JS_ISLEAF_ROWKEY, getClientId(), rowKey);
     }
 
     public RowInfo getRowInfo(String rowKey) {
@@ -60,9 +69,7 @@ public class AdfTree extends AdfComponent {
          * tp.FindRowByKey("14")
          * rowInfo = {tr:tr, index:block.startRow + r, block:block};
          */
-        String rowinfojs = String.format("%s.FindRowByKey('%s')", scriptBoundPeer(), rowKey);
-        String js = scriptObjectToArray(rowinfojs, "tr", "index", "block");
-        List<?> list = (List<?>) executeScript(js);
+        List<?> list = (List<?>) executeScript(JS_GET_ROWINFO, getClientId(), rowKey);
         return new RowInfo((WebElement) list.get(0), ((Number) list.get(1)).intValue(), (WebElement) list.get(2));
     }
 
@@ -78,8 +85,7 @@ public class AdfTree extends AdfComponent {
             }
             path.append(i);
         }
-        String js = String.format("%s._findRowKeyByIndexPath('%s')", scriptBoundPeer(), path.toString());
-        return (String) executeScript(js);
+        return (String) executeScript(JS_FIND_ROWKEY_BY_INDEXPATH, getClientId(), path.toString());
     }
 
     public void discloseNode(int... indexpath) {

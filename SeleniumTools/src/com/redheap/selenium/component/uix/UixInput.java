@@ -6,19 +6,19 @@ import org.openqa.selenium.WebDriver;
 
 public abstract class UixInput extends UixValue {
 
+    private static final String JS_GET_VALID = JS_FIND_COMPONENT + "return comp.getValid();";
+    private static final String JS_GET_SUBMITTED_VALUE = JS_FIND_ELEMENT + "return peer.GetSubmittedValue(comp,elem);";
+
     public UixInput(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
     }
 
     public boolean isValid() {
-        String js = String.format("%s.getValid()", scriptFindComponent());
-        return (Boolean) executeScript(js);
+        return (Boolean) executeScript(JS_GET_VALID, getClientId());
     }
 
     public String getSubmittedValue() {
-        String js =
-            String.format("%s.GetSubmittedValue(%s,%s)", scriptBoundPeer(), scriptFindComponent(), scriptDomElement());
-        return (String) executeScript(js);
+        return (String) executeScript(JS_GET_SUBMITTED_VALUE, getClientId());
     }
 
     public void sendKeys(CharSequence... keys) {
