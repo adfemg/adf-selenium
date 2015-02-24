@@ -35,6 +35,7 @@ public abstract class UixInput extends UixValue {
 
     public void tabNext() {
         findContentNode().sendKeys(Keys.TAB);
+        waitForPpr(); // for when autosubmit=true
     }
 
     public void typeValue(String value) {
