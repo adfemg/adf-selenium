@@ -66,7 +66,6 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         JS_FIND_PEER +
         "var subelem=peer.getSubIdDomElement(comp,arguments[1]); if(!subelem){return null;}return AdfRichUIPeer.getFirstAncestorComponent(subelem).getClientId();";
 
-
     protected AdfComponent(WebDriver driver, String clientid) {
         this.driver = driver;
         this.clientid = clientid;
@@ -234,8 +233,10 @@ public abstract class AdfComponent /*extends BaseObject*/ {
             return null;
         }
         if (getClientId().equals(subClientId)) {
+            WebElement elem = findSubIdElement(subid);
             throw new SubIdNotFoundException("subid " + subid + " for " + getElement() +
-                                             " does not point to a component");
+                                             " does not point to a component but to sub-element " +
+                                             (elem == null ? "unknown" : elem.getTagName()));
         }
         return AdfComponent.forClientId(driver, subClientId, cls);
     }

@@ -39,7 +39,7 @@ public abstract class Page /*implements TakesScreenshot*/ {
         this(driver, true);
     }
 
-    protected Page(WebDriver driver, boolean verifyTitle) {
+    Page(WebDriver driver, boolean verifyTitle) {
         super();
         this.driver = (RemoteWebDriver) driver; // keep handle which we don't expose but only use for navigatedTo
         // this is specific for unbounded taskflow page. Bounded page fragments should be available as the caller

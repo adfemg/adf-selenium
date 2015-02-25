@@ -40,7 +40,7 @@ public abstract class UixInput extends UixValue {
 
     public void typeValue(String value) {
         clear();
-        sendKeys(Keys.BACK_SPACE, value);
+        sendKeys(value);
         tabNext();
     }
 
