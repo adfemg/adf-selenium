@@ -227,6 +227,10 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         return (WebElement) executeScript(JS_FIND_SUBID_ELEMENT, getClientId(), subid);
     }
 
+    protected List<WebElement> findSubIdElements(String subid) {
+        return (List<WebElement>) executeScript(JS_FIND_SUBID_ELEMENT, getClientId(), subid);
+    }
+
     protected <T extends AdfComponent> T findSubIdComponent(String subid, Class<? extends T> cls) {
         final String subClientId = (String) executeScript(JS_FIND_SUBID_CLIENTID, getClientId(), subid);
         if (subClientId == null) {
