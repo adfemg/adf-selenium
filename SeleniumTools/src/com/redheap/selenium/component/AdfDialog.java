@@ -22,29 +22,24 @@ public class AdfDialog extends AdfComponent {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichDialog";
-    }
-
     public String getTitle() {
         return (String) executeScript(JS_GET_TITLE, getClientId());
     }
 
     public AdfButton findOkButton() {
-        return findSubIdComponent(SUBID_ok_button, AdfButton.class);
+        return findSubIdComponent(SUBID_ok_button);
     }
 
     public AdfButton findCancelButton() {
-        return findSubIdComponent(SUBID_cancel_button, AdfButton.class);
+        return findSubIdComponent(SUBID_cancel_button);
     }
 
     public AdfButton findYesButton() {
-        return findSubIdComponent(SUBID_yes_button, AdfButton.class);
+        return findSubIdComponent(SUBID_yes_button);
     }
 
     public AdfButton findNoButton() {
-        return findSubIdComponent(SUBID_no_button, AdfButton.class);
+        return findSubIdComponent(SUBID_no_button);
     }
 
 }

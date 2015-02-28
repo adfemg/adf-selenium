@@ -5,43 +5,36 @@ import org.openqa.selenium.WebDriver;
 public class AdfCarousel extends AdfComponent {
 
     // see http://jdevadf.oracle.com/adf-richclient-demo/docs/js-subids.html
-    private static final String SUBID_itemText   = "itemText"; // af:inputText
-    private static final String SUBID_spinNext   = "spinNext"; // <a> element
-    private static final String SUBID_spinPrevious= "spinPrevious"; // <a> element
+    private static final String SUBID_itemText = "itemText"; // af:inputText
+    private static final String SUBID_spinNext = "spinNext"; // <a> element
+    private static final String SUBID_spinPrevious = "spinPrevious"; // <a> element
 
     private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ITEMKEY =
         JS_FIND_COMPONENT + "return comp.findComponent(arguments[1],arguments[2]).getClientId()";
     private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_CURRENT_ITEM =
         JS_FIND_COMPONENT + "return comp.findComponent(arguments[1],comp.getCurrentItemKey()).getClientId()";
-    private static final String JS_GET_CURRENT_ITEM_KEY =
-        JS_FIND_COMPONENT + "return comp.getCurrentItemKey()";
+    private static final String JS_GET_CURRENT_ITEM_KEY = JS_FIND_COMPONENT + "return comp.getCurrentItemKey()";
     private static final String JS_SET_CURRENT_ITEM_KEY =
         JS_FIND_COMPONENT + "return comp.setCurrentItemKey(arguments[1])";
-    private static final String JS_GET_ITEM_COUNT =
-        JS_FIND_COMPONENT + "return comp.getRows()";
-    private static final String JS_GET_ROW_COUNT =
-        JS_FIND_PEER + "return peer._knownRowCount";
+    private static final String JS_GET_ITEM_COUNT = JS_FIND_COMPONENT + "return comp.getRows()";
+    private static final String JS_GET_ROW_COUNT = JS_FIND_PEER + "return peer._knownRowCount";
 
     public AdfCarousel(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichCarousel";
-    }
-
-    public <T extends AdfComponent> T findAdfComponent(String relativeClientId, String itemKey, Class<? extends T> cls) {
+    public <T extends AdfComponent> T findAdfComponent(String relativeClientId, String itemKey) {
         String clientid =
-            (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_ITEMKEY, getClientId(), relativeClientId, itemKey);
-        return AdfComponent.forClientId(getDriver(), clientid, cls);
+            (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_ITEMKEY, getClientId(), relativeClientId,
+                                   itemKey);
+        return AdfComponent.forClientId(getDriver(), clientid);
     }
 
     @Override
-    public <T extends AdfComponent> T findAdfComponent(String relativeClientId, Class<? extends T> cls) {
+    public <T extends AdfComponent> T findAdfComponent(String relativeClientId) {
         String clientid =
             (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_CURRENT_ITEM, getClientId(), relativeClientId);
-        return AdfComponent.forClientId(getDriver(), clientid, cls);
+        return AdfComponent.forClientId(getDriver(), clientid);
     }
 
     public String getItemText() {
@@ -70,11 +63,11 @@ public class AdfCarousel extends AdfComponent {
     }
 
     public int getItemDisplayCount() {
-        return ((Number)executeScript(JS_GET_ITEM_COUNT, getClientId())).intValue();
+        return ((Number) executeScript(JS_GET_ITEM_COUNT, getClientId())).intValue();
     }
 
     public int getRowCount() {
-        return ((Number)executeScript(JS_GET_ROW_COUNT, getClientId())).intValue();
+        return ((Number) executeScript(JS_GET_ROW_COUNT, getClientId())).intValue();
     }
 
 }

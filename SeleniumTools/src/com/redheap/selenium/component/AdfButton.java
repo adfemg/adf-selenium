@@ -22,11 +22,6 @@ public class AdfButton extends AdfComponent {
     }
 
     @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichButton";
-    }
-
-    @Override
     public void click() {
         // af:button with targetFrame="_blank" and external destination only works when clicking on nested <a>
         List<WebElement> elements = getElement().findElements(By.tagName("a"));

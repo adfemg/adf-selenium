@@ -8,9 +8,4 @@ public class AdfTreeTable extends AdfTree {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichTreeTable";
-    }
-
 }

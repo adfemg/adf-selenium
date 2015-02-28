@@ -10,9 +10,4 @@ public class AdfInputText extends UixInput {
         super(webDriver, string);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichInputText";
-    }
-
 }

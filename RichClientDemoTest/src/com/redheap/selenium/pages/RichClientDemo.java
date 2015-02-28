@@ -29,11 +29,11 @@ public class RichClientDemo extends Page {
     }
 
     public AdfTree findTagGuideTree() {
-        return findDocument().findAdfComponent(treeId, AdfTree.class);
+        return findDocument().findAdfComponent(treeId);
     }
 
     private AdfCommandLink findFileExplorerLink() {
-        return findDocument().findAdfComponent(fileExplorerLink, AdfCommandLink.class);
+        return findDocument().findAdfComponent(fileExplorerLink);
     }
 
     public void clickMiscellaneousTreeNode() {

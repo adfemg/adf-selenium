@@ -19,7 +19,7 @@ public class BreadCrumbsDemoPage extends Page {
     }
 
     public AdfBreadCrumbs findBreadCrumbs() {
-        return findAdfComponent(breadCrumbs, AdfBreadCrumbs.class);
+        return findAdfComponent(breadCrumbs);
     }
 
 }

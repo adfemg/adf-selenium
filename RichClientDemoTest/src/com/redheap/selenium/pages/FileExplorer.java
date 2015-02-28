@@ -21,11 +21,11 @@ public class FileExplorer extends Page {
     }
 
     private AdfPanelTabbed findContentViewTabs() {
-        return findDocument().findAdfComponent(contentViewPannelTabbedId, AdfPanelTabbed.class);
+        return findDocument().findAdfComponent(contentViewPannelTabbedId);
     }
 
     public AdfShowDetailItem findContentViewTreeTableTab() {
-        return findContentViewTabs().findAdfComponent(contentViewTreeTableTabId, AdfShowDetailItem.class);
+        return findContentViewTabs().findAdfComponent(contentViewTreeTableTabId);
     }
 
 }

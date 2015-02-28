@@ -20,7 +20,7 @@ public class RegionDemoPage extends Page {
     }
 
     protected AdfRegion findDemoRegion() {
-        return findAdfComponent(regionId, AdfRegion.class);
+        return findAdfComponent(regionId);
     }
 
     public SampleFragment1 getRegionContent() {

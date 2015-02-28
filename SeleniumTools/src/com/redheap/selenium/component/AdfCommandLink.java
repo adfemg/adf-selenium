@@ -8,9 +8,4 @@ public class AdfCommandLink extends AdfLink {
         super(webDriver, clientId);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichCommandLink";
-    }
-
 }

@@ -8,9 +8,4 @@ public class AdfCommandButton extends AdfButton {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichCommandButton";
-    }
-
 }

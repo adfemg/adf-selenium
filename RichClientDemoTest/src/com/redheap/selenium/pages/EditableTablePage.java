@@ -37,44 +37,44 @@ public class EditableTablePage extends Page {
     }
 
     public AdfTable findTable() {
-        AdfTable table = findDocument().findAdfComponent(tableId, AdfTable.class);
+        AdfTable table = findDocument().findAdfComponent(tableId);
         return table;
     }
 
     public AdfCommandButton findPopupButton(int rowIndex) {
-        return findTable().findAdfComponent(popupButtonId, rowIndex, AdfCommandButton.class);
+        return findTable().findAdfComponent(popupButtonId, rowIndex);
     }
 
     public AdfDialog findDialog(int rowIndex) {
-        return findTable().findAdfComponent(dialogId, rowIndex, AdfDialog.class);
+        return findTable().findAdfComponent(dialogId, rowIndex);
     }
 
     public AdfButton findDialogOkButton(int rowIndex) {
-        return findDialog(rowIndex).findAdfComponent(dialogOkButton, AdfButton.class);
+        return findDialog(rowIndex).findAdfComponent(dialogOkButton);
     }
 
     public AdfCommandLink findCommandLink(int rowIndex) {
-        return findTable().findAdfComponent(commandLinkId, rowIndex, AdfCommandLink.class);
+        return findTable().findAdfComponent(commandLinkId, rowIndex);
     }
 
     public AdfOutputText findClickText(int rowIndex) {
-        return findTable().findAdfComponent(clickTextId, rowIndex, AdfOutputText.class);
+        return findTable().findAdfComponent(clickTextId, rowIndex);
     }
 
     public AdfInputText findInputText(int rowIndex) {
-        return findTable().findAdfComponent(inputTextId, rowIndex, AdfInputText.class);
+        return findTable().findAdfComponent(inputTextId, rowIndex);
     }
 
     public AdfInputText findRequiredInputText(int rowIndex) {
-        return findTable().findAdfComponent(requiredInputTextId, rowIndex, AdfInputText.class);
+        return findTable().findAdfComponent(requiredInputTextId, rowIndex);
     }
 
     public AdfInputComboboxListOfValues findCombobox(int rowIndex) {
-        return findTable().findAdfComponent(comboboxId, rowIndex, AdfInputComboboxListOfValues.class);
+        return findTable().findAdfComponent(comboboxId, rowIndex);
     }
 
     public AdfSelectOneRadio findSelectOneRadio(int rowIndex) {
-        return findTable().findAdfComponent(selectOneRadioId, rowIndex, AdfSelectOneRadio.class);
+        return findTable().findAdfComponent(selectOneRadioId, rowIndex);
     }
 
 }

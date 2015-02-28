@@ -21,11 +21,11 @@ public class CarouselDemoPage extends Page {
     }
 
     public AdfCarousel findCarousel() {
-        return findAdfComponent(carousel, AdfCarousel.class);
+        return findAdfComponent(carousel);
     }
 
     public AdfImage findCarouselImage() {
-        return findCarousel().findAdfComponent(carouselImage, AdfImage.class);
+        return findCarousel().findAdfComponent(carouselImage);
     }
 
 }

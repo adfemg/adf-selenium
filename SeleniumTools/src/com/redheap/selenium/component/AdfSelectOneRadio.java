@@ -23,11 +23,6 @@ public class AdfSelectOneRadio extends UixValue {
         super(webDriver, clientId);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichSelectOneRadio";
-    }
-
     public void clickItemByIndex(int index) {
         findItem(index).click();
         waitForPpr();

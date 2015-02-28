@@ -40,11 +40,6 @@ public class AdfCalendar extends AdfComponent {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichCalendar";
-    }
-
     public String getActiveDay() {
         return (String) executeScript(JS_GET_ACTIVE_DAY, getClientId());
     }
@@ -78,31 +73,31 @@ public class AdfCalendar extends AdfComponent {
     }
 
     public AdfButton findDayViewButton() {
-        return findSubIdComponent(SUBID_day_view_button, AdfButton.class);
+        return findSubIdComponent(SUBID_day_view_button);
     }
 
     public AdfButton findWeekViewButton() {
-        return findSubIdComponent(SUBID_week_view_button, AdfButton.class);
+        return findSubIdComponent(SUBID_week_view_button);
     }
 
     public AdfButton findMonthViewButton() {
-        return findSubIdComponent(SUBID_month_view_button, AdfButton.class);
+        return findSubIdComponent(SUBID_month_view_button);
     }
 
     public AdfButton findListViewButton() {
-        return findSubIdComponent(SUBID_list_view_button, AdfButton.class);
+        return findSubIdComponent(SUBID_list_view_button);
     }
 
     public AdfButton findTodayButton() {
-        return findSubIdComponent(SUBID_today_button, AdfButton.class);
+        return findSubIdComponent(SUBID_today_button);
     }
 
     public AdfButton findPreviousButton() {
-        return findSubIdComponent(SUBID_previous_button, AdfButton.class);
+        return findSubIdComponent(SUBID_previous_button);
     }
 
     public AdfButton findNextButton() {
-        return findSubIdComponent(SUBID_next_button, AdfButton.class);
+        return findSubIdComponent(SUBID_next_button);
     }
 
     // raw elements should not be exposed public due to ppr logic that should be part of component

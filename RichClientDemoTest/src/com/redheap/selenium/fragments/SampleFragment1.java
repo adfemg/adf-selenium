@@ -19,7 +19,7 @@ public class SampleFragment1 extends PageFragment {
 
     public SampleFragment2 clickRegion2Button() {
         logger.fine("Clicking 'switch to region 2' button");
-        AdfCommandButton button = findAdfComponent(switchRegion2ButtonId, AdfCommandButton.class);
+        AdfCommandButton button = findAdfComponent(switchRegion2ButtonId);
         button.click();
         return navigatedTo(SampleFragment2.class);
     }

@@ -22,15 +22,15 @@ public class AttributeDragSourcePage extends Page {
     }
 
     public AdfOutputText findOutputTextDragSource() {
-        return findAdfComponent(outputTextDragSource, AdfOutputText.class);
+        return findAdfComponent(outputTextDragSource);
     }
 
     public AdfInputText findInputTextDragSource() {
-        return findAdfComponent(inputTextDragSource, AdfInputText.class);
+        return findAdfComponent(inputTextDragSource);
     }
 
     public AdfOutputText findOutputTextDropTarget() {
-        return findAdfComponent(outputTextDropTarget, AdfOutputText.class);
+        return findAdfComponent(outputTextDropTarget);
     }
 
 }

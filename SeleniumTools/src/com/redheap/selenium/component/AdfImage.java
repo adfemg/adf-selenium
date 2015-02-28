@@ -8,9 +8,4 @@ public class AdfImage extends AdfComponent {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichImage";
-    }
-
 }

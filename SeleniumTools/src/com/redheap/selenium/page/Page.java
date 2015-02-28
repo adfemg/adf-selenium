@@ -59,7 +59,7 @@ public abstract class Page /*implements TakesScreenshot*/ {
     protected AdfDocument findDocument() {
         JavascriptExecutor jsdriver = (JavascriptExecutor) driver;
         String docid = (String) jsdriver.executeScript(JS_GET_DOCID);
-        return AdfComponent.forClientId(driver, docid, AdfDocument.class);
+        return AdfComponent.forClientId(driver, docid);
     }
 
     protected abstract String getExpectedTitle();
@@ -85,8 +85,8 @@ public abstract class Page /*implements TakesScreenshot*/ {
         }
     }
 
-    protected <T extends AdfComponent> T findAdfComponent(String relativeClientId, Class<? extends T> cls) {
-        return findDocument().findAdfComponent(relativeClientId, cls);
+    protected <T extends AdfComponent> T findAdfComponent(String relativeClientId) {
+        return findDocument().findAdfComponent(relativeClientId);
     }
 
     public <X extends Object> X getScreenshotAs(OutputType<X> target) throws WebDriverException {

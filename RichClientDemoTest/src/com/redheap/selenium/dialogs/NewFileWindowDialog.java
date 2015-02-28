@@ -21,7 +21,7 @@ public class NewFileWindowDialog extends WindowDialog {
     }
 
     public AdfCommandButton findSaveButton() {
-        return findAdfComponent(saveButton, AdfCommandButton.class);
+        return findAdfComponent(saveButton);
     }
 
 }

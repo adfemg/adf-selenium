@@ -1,7 +1,7 @@
 package com.redheap.selenium.pages;
 
 import com.redheap.selenium.component.AdfInputText;
-import com.redheap.selenium.component.AdfListOfValues;
+import com.redheap.selenium.component.AdfInputListOfValues;
 import com.redheap.selenium.component.AutoSuggestBehavior;
 import com.redheap.selenium.page.Page;
 
@@ -23,11 +23,11 @@ public class AutoSuggestBehaviorDemoPage extends Page {
     }
 
     public AutoSuggestBehavior<AdfInputText> findInputText() {
-        return new AutoSuggestBehavior<AdfInputText>(findAdfComponent(inputText, AdfInputText.class));
+        return new AutoSuggestBehavior<AdfInputText>(this.<AdfInputText>findAdfComponent(inputText));
     }
 
-    public AutoSuggestBehavior<AdfListOfValues> findListOfValues() {
-        return new AutoSuggestBehavior<AdfListOfValues>(findAdfComponent(inputListOfValues, AdfListOfValues.class));
+    public AutoSuggestBehavior<AdfInputListOfValues> findListOfValues() {
+        return new AutoSuggestBehavior<AdfInputListOfValues>(this.<AdfInputListOfValues>findAdfComponent(inputListOfValues));
     }
 
 }

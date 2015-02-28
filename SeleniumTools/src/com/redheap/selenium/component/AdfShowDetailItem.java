@@ -13,11 +13,6 @@ public class AdfShowDetailItem extends AdfComponent {
     }
 
     @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichShowDetailItem";
-    }
-
-    @Override
     public void click() {
         clickTabLink();
     }

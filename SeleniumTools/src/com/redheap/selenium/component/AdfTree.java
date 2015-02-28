@@ -30,11 +30,6 @@ public class AdfTree extends AdfComponent {
         super(driver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichTree";
-    }
-
     public int getExpandedNodeCount() {
         return ((Number) executeScript(JS_EXPANDED_NODE_COUNT, getClientId())).intValue();
     }

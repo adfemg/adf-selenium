@@ -13,15 +13,10 @@ public class AdfDocument extends AdfComponent {
         super(driver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichDocument";
-    }
-
     public static AdfDocument forDriver(WebDriver driver) {
         JavascriptExecutor jsdriver = (JavascriptExecutor) driver;
         String docid = (String) jsdriver.executeScript("return AdfPage.PAGE.getDocumentClientId()");
-        return AdfComponent.forClientId(driver, docid, AdfDocument.class);
+        return AdfComponent.forClientId(driver, docid);
     }
 
     public void setAnimationEnabled(boolean enabled) {

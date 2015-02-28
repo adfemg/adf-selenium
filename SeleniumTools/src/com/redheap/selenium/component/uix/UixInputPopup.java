@@ -27,23 +27,23 @@ public abstract class UixInputPopup extends UixInput {
     }
 
     public AdfQuery findLovDialogQuery() {
-        return findSubIdComponent(SUBID_lovDialog_query, AdfQuery.class);
+        return findSubIdComponent(SUBID_lovDialog_query);
     }
 
     public AdfTable findLovDialogTable() {
-        return findSubIdComponent(SUBID_lovDialog_table, AdfTable.class);
+        return findSubIdComponent(SUBID_lovDialog_table);
     }
 
     public AdfColumn findLovDialogTableColumn(int colIndex) {
-        return findSubIdComponent(SUBID_lovDialog_table_columnHeader_text + "[" + colIndex + "]", AdfColumn.class);
+        return findSubIdComponent(SUBID_lovDialog_table_columnHeader_text + "[" + colIndex + "]");
     }
 
     public AdfOutputText findLovDialogTableCell(int rowIndex, int colIndex) {
-        return findSubIdComponent(SUBID_lovDialog_table + "[" + rowIndex + "][" + colIndex + "]", AdfOutputText.class);
+        return findSubIdComponent(SUBID_lovDialog_table + "[" + rowIndex + "][" + colIndex + "]");
     }
 
     public AdfDialog findSearchDialog() {
-        return findSubIdComponent(SUBID_search_dialog, AdfDialog.class);
+        return findSubIdComponent(SUBID_search_dialog);
     }
 
     public boolean isPopupVisible() {
@@ -52,7 +52,7 @@ public abstract class UixInputPopup extends UixInput {
     }
 
     public AdfPopup findSearchDialogPopup() {
-        return findSubIdComponent(SUBID_search_dialog_popup, AdfPopup.class);
+        return findSubIdComponent(SUBID_search_dialog_popup);
     }
 
 }

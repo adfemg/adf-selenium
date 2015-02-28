@@ -18,23 +18,18 @@ public class AdfTable extends AdfComponent {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichTable";
-    }
-
-    public <T extends AdfComponent> T findAdfComponent(String relativeClientId, String rowKey, Class<? extends T> cls) {
+    public <T extends AdfComponent> T findAdfComponent(String relativeClientId, String rowKey) {
         String clientid =
             (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWKEY, getClientId(), relativeClientId, rowKey);
-        return AdfComponent.forClientId(getDriver(), clientid, cls);
+        return AdfComponent.forClientId(getDriver(), clientid);
     }
 
-    public <T extends AdfComponent> T findAdfComponent(String relativeClientId, int rowIndex, Class<? extends T> cls) {
+    public <T extends AdfComponent> T findAdfComponent(String relativeClientId, int rowIndex) {
         scrollToRowIndex(rowIndex); // scroll to row (and possibly fetch additional data)
         String clientid =
             (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWINDEX, getClientId(), relativeClientId,
                                    rowIndex);
-        T retval = AdfComponent.forClientId(getDriver(), clientid, cls);
+        T retval = AdfComponent.forClientId(getDriver(), clientid);
         // TODO; would be niced to use TablePeer.scrollColumnIntoView but we haven't figured out a way to
         // determine column index for a component
         retval.scrollIntoView();

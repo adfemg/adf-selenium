@@ -19,7 +19,7 @@ public class CalendarDemoPage extends Page {
     }
 
     public AdfCalendar findCalendar() {
-        return findAdfComponent(calendar, AdfCalendar.class);
+        return findAdfComponent(calendar);
     }
 
 }

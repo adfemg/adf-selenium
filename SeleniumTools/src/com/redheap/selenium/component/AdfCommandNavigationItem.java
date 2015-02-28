@@ -10,9 +10,4 @@ public class AdfCommandNavigationItem extends AdfComponent {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return COMPONENT_TYPE;
-    }
-
 }

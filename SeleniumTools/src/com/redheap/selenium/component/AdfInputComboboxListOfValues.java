@@ -16,23 +16,18 @@ public class AdfInputComboboxListOfValues extends UixInputPopup {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichInputComboboxListOfValues";
-    }
-
     public AdfPopup findDropdownPopup() {
         // always exists
-        return findSubIdComponent(SUBID_dropdownPopup, AdfPopup.class);
+        return findSubIdComponent(SUBID_dropdownPopup);
     }
 
     public AdfTable findDropdownTable() {
         // only exists when combobox dropdown expanded
-        return findSubIdComponent(SUBID_dropdownTable, AdfTable.class);
+        return findSubIdComponent(SUBID_dropdownTable);
     }
 
     public AdfCommandLink findSearchLink() {
-        return findSubIdComponent(SUBID_searchLink, AdfCommandLink.class);
+        return findSubIdComponent(SUBID_searchLink);
     }
 
 }

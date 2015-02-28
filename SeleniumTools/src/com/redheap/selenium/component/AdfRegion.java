@@ -9,9 +9,4 @@ public class AdfRegion extends AdfComponent {
         super(driver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichRegion";
-    }
-
 }

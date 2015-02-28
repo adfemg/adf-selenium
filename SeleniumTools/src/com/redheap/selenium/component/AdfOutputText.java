@@ -10,9 +10,4 @@ public class AdfOutputText extends UixValue {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichOutputText";
-    }
-
 }

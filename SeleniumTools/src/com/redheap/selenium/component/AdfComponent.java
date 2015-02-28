@@ -4,14 +4,16 @@ import com.redheap.selenium.errors.SubIdNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
 import oracle.adf.view.rich.automation.selenium.RichWebDrivers;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import static org.junit.Assert.*;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -23,7 +25,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 
-public abstract class AdfComponent /*extends BaseObject*/ {
+public class AdfComponent /*extends BaseObject*/ {
 
     private final WebDriver driver;
     private final String clientid;
@@ -33,6 +35,9 @@ public abstract class AdfComponent /*extends BaseObject*/ {
     public static final long DFLT_WAIT_TIMEOUT_MSECS = 30000;
 
     private static final Logger logger = Logger.getLogger(AdfComponent.class.getName());
+
+    private static final ServiceLoader<ComponentFactory> factories = ServiceLoader.load(ComponentFactory.class);
+    private static final Map<String, Class<? extends AdfComponent>> defaultComponents = new HashMap<>();
 
     protected static final String JS_FIND_COMPONENT = "var comp=AdfPage.PAGE.findComponentByAbsoluteId(arguments[0]);";
     protected static final String JS_FIND_PEER = JS_FIND_COMPONENT + "var peer=comp.getPeer(); peer.bind(comp);";
@@ -70,13 +75,41 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         this.driver = driver;
         this.clientid = clientid;
         this.element = driver.findElement(By.id(clientid));
-        assertEquals(getExpectedComponentType(), executeScript(JS_GET_COMPONENT_TYPE, clientid));
     }
 
-    protected abstract String getExpectedComponentType();
-
-    public static <T extends AdfComponent> T forClientId(WebDriver driver, String clientid, Class<? extends T> cls) {
-        // instantiate and return
+    public static <C extends AdfComponent> C forClientId(WebDriver driver, String clientid) {
+        // find component type
+        String type = (String) ((JavascriptExecutor) driver).executeScript(JS_GET_COMPONENT_TYPE, clientid);
+        // find root element
+        WebElement element = driver.findElement(By.id(clientid));
+        // instantiate default component or one from ServiceLoader
+        Iterator<ComponentFactory> iter = factories.iterator();
+        while (iter.hasNext()) {
+            ComponentFactory factory = iter.next();
+            final C component = factory.createComponent(driver, type, clientid, element);
+            if (component != null) {
+                return component;
+            }
+        }
+        // none found from serviceloaders so try to use our defaults
+        if (!defaultComponents.containsKey(type)) {
+            // no class loaded yet for this type
+            // determing java class from javascript type:
+            // oracle.adf.RichInputText to com.redheap.selenium.component.AdfInputText
+            String simpleType = type.substring(type.lastIndexOf('.') + ".Rich".length()); // InputText
+            String className = AdfComponent.class.getPackage().getName() + ".Adf" + simpleType;
+            final Class<? extends C> c;
+            try {
+                c = (Class<? extends C>) Thread.currentThread().getContextClassLoader().loadClass(className);
+                defaultComponents.put(type, c); // remember class to prevent class loading each time
+            } catch (ClassNotFoundException e) {
+                defaultComponents.put(type, null); // no class found and remember this
+            }
+        }
+        Class<? extends C> cls = (Class<? extends C>) defaultComponents.get(type);
+        if (cls == null) {
+            throw new UnsupportedOperationException("unknown component type: " + type);
+        }
         try {
             return cls.getConstructor(WebDriver.class, String.class).newInstance(driver, clientid);
         } catch (Exception e) {
@@ -85,11 +118,11 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         }
     }
 
-    public static <T extends AdfComponent> T forElement(WebElement element, Class<? extends T> cls) {
+    public static <T extends AdfComponent> T forElement(WebElement element) {
         RemoteWebElement rwe = (RemoteWebElement) element;
         RemoteWebDriver rwd = (RemoteWebDriver) rwe.getWrappedDriver();
         String clientid = (String) rwd.executeScript(JS_FIND_ANCESTOR_COMPONENT, element);
-        return forClientId(rwd, clientid, cls);
+        return forClientId(rwd, clientid);
     }
 
     public void setTimout(long milliseconds) {
@@ -117,9 +150,9 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         return driver;
     }
 
-    public <T extends AdfComponent> T findAdfComponent(String relativeClientId, Class<? extends T> cls) {
+    public <T extends AdfComponent> T findAdfComponent(String relativeClientId) {
         String clientid = (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID, getClientId(), relativeClientId);
-        return AdfComponent.forClientId(driver, clientid, cls);
+        return AdfComponent.forClientId(driver, clientid);
     }
 
     public String getId() {
@@ -231,7 +264,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
         return (List<WebElement>) executeScript(JS_FIND_SUBID_ELEMENT, getClientId(), subid);
     }
 
-    protected <T extends AdfComponent> T findSubIdComponent(String subid, Class<? extends T> cls) {
+    protected <T extends AdfComponent> T findSubIdComponent(String subid) {
         final String subClientId = (String) executeScript(JS_FIND_SUBID_CLIENTID, getClientId(), subid);
         if (subClientId == null) {
             return null;
@@ -242,7 +275,7 @@ public abstract class AdfComponent /*extends BaseObject*/ {
                                              " does not point to a component but to sub-element " +
                                              (elem == null ? "unknown" : elem.getTagName()));
         }
-        return AdfComponent.forClientId(driver, subClientId, cls);
+        return AdfComponent.forClientId(driver, subClientId);
     }
 
     protected void waitForPpr() {

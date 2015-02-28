@@ -37,57 +37,57 @@ public class ButtonDemoPage extends Page {
     }
 
     public TagGuidePage clickComponentGuideButton() {
-        findAdfComponent(compGuideButton, AdfButton.class).click();
+        findAdfComponent(compGuideButton).click();
         return navigatedTo(TagGuidePage.class);
     }
 
     public AdfButton findDisabledButton() {
-        return findAdfComponent(disabledButton, AdfButton.class);
+        return findAdfComponent(disabledButton);
     }
 
     public AdfButton findNoIconButton() {
-        return findAdfComponent(noIconButton, AdfButton.class);
+        return findAdfComponent(noIconButton);
     }
 
     public AdfButton findBoldButton() {
-        return findAdfComponent(boldButton, AdfButton.class);
+        return findAdfComponent(boldButton);
     }
 
     public AdfButton findArrangeButton() {
-        return findAdfComponent(arrangeButton, AdfButton.class);
+        return findAdfComponent(arrangeButton);
     }
 
     public AdfPanelGroupLayout findArrangeButtonPopupContent() {
         // popup facet of a button doesn't create real Popup component at client side so we look at component
         // within popup
-        return findAdfComponent(arrangeButtonPopupContent, AdfPanelGroupLayout.class);
+        return findAdfComponent(arrangeButtonPopupContent);
     }
 
     public AdfButton findShowPopupButton() {
-        return findAdfComponent(showPopupButton, AdfButton.class);
+        return findAdfComponent(showPopupButton);
     }
 
     public AdfPopup findShowPopupButtonPopup() {
-        return findAdfComponent(showPopupButtonPopup, AdfPopup.class);
+        return findAdfComponent(showPopupButtonPopup);
     }
 
     public AdfCommandMenuItem findShowPopupButtonCopyMenuItem() {
-        return findAdfComponent(showPopupButtonCopyMenuItem, AdfCommandMenuItem.class);
+        return findAdfComponent(showPopupButtonCopyMenuItem);
     }
 
     public NewFileWindowDialog clickUseWindowButton() {
-        findAdfComponent(useWindowButton, AdfButton.class).clickWithDialogDetect();
+        findAdfComponent(useWindowButton).clickWithDialogDetect();
         return openedDialog(NewFileWindowDialog.class);
     }
 
     public NewFileWindowDialog clickUseWindowInlineDocButton() {
-        findAdfComponent(useWindowInlineDocButton, AdfButton.class).clickWithDialogDetect();
+        findAdfComponent(useWindowInlineDocButton).clickWithDialogDetect();
         return openedDialog(NewFileWindowDialog.class);
     }
 
     public AdfButton findTargetFrameBlankButton() {
         WebElement link = findDocument().getElement().findElement(targetFrameBlankButton);
-        return AdfComponent.forElement(link, AdfButton.class);
+        return AdfComponent.forElement(link);
     }
 
 }

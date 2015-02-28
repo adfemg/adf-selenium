@@ -1,7 +1,7 @@
 package com.redheap.selenium.components;
 
 import com.redheap.selenium.component.AdfInputText;
-import com.redheap.selenium.component.AdfListOfValues;
+import com.redheap.selenium.component.AdfInputListOfValues;
 import com.redheap.selenium.component.AutoSuggestBehavior;
 import com.redheap.selenium.junit.PageProvider;
 import com.redheap.selenium.junit.SavePageSourceOnFailure;
@@ -49,7 +49,7 @@ public class AutoSuggestBehaviorTest {
     @Test
     public void testListOfValues() {
         AutoSuggestBehaviorDemoPage page = pages.goHome();
-        AutoSuggestBehavior<AdfListOfValues> lov = page.findListOfValues();
+        AutoSuggestBehavior<AdfInputListOfValues> lov = page.findListOfValues();
         assertFalse(lov.isPopupVisible());
         lov.typeAndWait("Bla");
         assertTrue(lov.isPopupVisible());

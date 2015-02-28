@@ -10,12 +10,8 @@ public class AdfPopup extends AdfComponent {
         super(webDriver, clientid);
     }
 
-    @Override
-    protected String getExpectedComponentType() {
-        return "oracle.adf.RichPopup";
-    }
-
     public boolean isPopupVisible() {
         return (Boolean) executeScript(JS_IS_POPUP_VISIBLE, getClientId());
     }
+
 }

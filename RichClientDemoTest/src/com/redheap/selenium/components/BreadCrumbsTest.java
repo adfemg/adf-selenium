@@ -27,7 +27,8 @@ public class BreadCrumbsTest {
     @Rule
     public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
 
-    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo/faces/components/breadCrumbs.jspx";
+    private static final String HOME_PAGE =
+        "http://localhost:7101/adf-richclient-demo/faces/components/breadCrumbs.jspx";
 
     @Test
     public void testBreadCrumbs() {

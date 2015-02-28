@@ -39,8 +39,8 @@ public class PageFragment /*extends BaseObject*/ {
         return region;
     }
 
-    protected <T extends AdfComponent> T findAdfComponent(String relativeClientId, Class<? extends T> cls) {
-        return region.findAdfComponent(relativeClientId, cls);
+    protected <T extends AdfComponent> T findAdfComponent(String relativeClientId) {
+        return region.findAdfComponent(relativeClientId);
     }
 
 }
