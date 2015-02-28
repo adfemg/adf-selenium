@@ -19,6 +19,8 @@ public class AdfCarousel extends AdfComponent {
         JS_FIND_COMPONENT + "return comp.setCurrentItemKey(arguments[1])";
     private static final String JS_GET_ITEM_COUNT =
         JS_FIND_COMPONENT + "return comp.getRows()";
+    private static final String JS_GET_ROW_COUNT =
+        JS_FIND_PEER + "return peer._knownRowCount";
 
     public AdfCarousel(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
@@ -69,6 +71,10 @@ public class AdfCarousel extends AdfComponent {
 
     public int getItemDisplayCount() {
         return ((Number)executeScript(JS_GET_ITEM_COUNT, getClientId())).intValue();
+    }
+
+    public int getRowCount() {
+        return ((Number)executeScript(JS_GET_ROW_COUNT, getClientId())).intValue();
     }
 
 }

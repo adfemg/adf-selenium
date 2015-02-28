@@ -54,6 +54,7 @@ public class CarouselTest {
     public void testCarouselItemCount() {
         AdfCarousel carousel = pages.goHome().findCarousel();
         assertEquals(25, carousel.getItemDisplayCount());
+        assertEquals(30, carousel.getRowCount());
     }
 
     @Test
