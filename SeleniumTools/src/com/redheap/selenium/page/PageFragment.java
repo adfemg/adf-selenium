@@ -3,10 +3,10 @@ package com.redheap.selenium.page;
 import com.redheap.selenium.component.AdfComponent;
 import com.redheap.selenium.component.AdfRegion;
 
-import oracle.adf.view.rich.automation.selenium.Dialog;
 import oracle.adf.view.rich.automation.selenium.DialogManager;
 
-import org.openqa.selenium.WebDriver;
+import org.apache.commons.lang3.reflect.ConstructorUtils;
+
 import org.openqa.selenium.WebDriverException;
 
 public class PageFragment /*extends BaseObject*/ {
@@ -20,7 +20,7 @@ public class PageFragment /*extends BaseObject*/ {
 
     protected <P extends PageFragment> P navigatedTo(Class<? extends P> cls) {
         try {
-            return cls.getConstructor(AdfRegion.class).newInstance(region);
+            return ConstructorUtils.invokeConstructor(cls, region);
         } catch (Exception e) {
             throw new WebDriverException(e.getCause() != null ? e.getCause() : e);
         }
@@ -28,8 +28,8 @@ public class PageFragment /*extends BaseObject*/ {
 
     protected <D extends WindowDialog> D openedDialog(Class<? extends D> cls) {
         try {
-            return cls.getConstructor(WebDriver.class, Dialog.class).newInstance(findRegion().getDriver(),
-                                                                                 DialogManager.getInstance().getCurrentDialog());
+            return ConstructorUtils.invokeConstructor(cls, findRegion().getDriver(),
+                                                      DialogManager.getInstance().getCurrentDialog());
         } catch (Exception e) {
             throw new WebDriverException(e.getCause() != null ? e.getCause() : e);
         }

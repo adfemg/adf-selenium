@@ -13,7 +13,9 @@ import java.util.logging.Logger;
 
 import oracle.adf.view.rich.automation.selenium.RichWebDrivers;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -100,7 +102,7 @@ public class AdfComponent /*extends BaseObject*/ {
             String className = AdfComponent.class.getPackage().getName() + ".Adf" + simpleType;
             final Class<? extends C> c;
             try {
-                c = (Class<? extends C>) Thread.currentThread().getContextClassLoader().loadClass(className);
+                c = (Class<? extends C>) ClassUtils.getClass(className);
                 defaultComponents.put(type, c); // remember class to prevent class loading each time
             } catch (ClassNotFoundException e) {
                 defaultComponents.put(type, null); // no class found and remember this
@@ -111,7 +113,7 @@ public class AdfComponent /*extends BaseObject*/ {
             throw new UnsupportedOperationException("unknown component type: " + type);
         }
         try {
-            return cls.getConstructor(WebDriver.class, String.class).newInstance(driver, clientid);
+            return ConstructorUtils.invokeConstructor(cls, driver, clientid);
         } catch (Exception e) {
             throw new WebDriverException("unable to instantiate adf component: " + clientid,
                                          e.getCause() != null ? e.getCause() : e);
