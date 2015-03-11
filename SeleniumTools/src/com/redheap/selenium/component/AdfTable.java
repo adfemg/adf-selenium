@@ -1,18 +1,37 @@
 package com.redheap.selenium.component;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 public class AdfTable extends AdfComponent {
+
+    private static final String SUBID_disclosureID = "disclosureID"; // [99]disclosureId returns <a> element
 
     private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWKEY =
         JS_FIND_COMPONENT + "return comp.findComponent(arguments[1],arguments[2]).getClientId()";
     private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWINDEX =
         JS_FIND_PEER + "return comp.findComponent(arguments[1],peer.getRowKey(arguments[2])).getClientId()";
-    private static final String JS_IS_ROW_DISCLOSED = JS_FIND_COMPONENT + "comp.isDisclosed(arguments[1])";
+    private static final String JS_IS_ROW_DISCLOSED =
+        JS_FIND_COMPONENT + "return comp.isDisclosed(arguments[1])===true";
     private static final String JS_SCROLLTO_ROWINDEX = JS_FIND_COMPONENT + "comp.scrollToRowIndex(arguments[1])";
     private static final String JS_GET_FOCUSED_ROWKEY = JS_FIND_PEER + "return peer.GetFocusedRowKey()";
     private static final String JS_GET_ROWKEY = JS_FIND_PEER + "return peer.getRowKey(arguments[1])";
     private static final String JS_GET_ROWINDEX = JS_FIND_PEER + "return peer.getRowIndex(arguments[1])";
+    private static final String JS_SELECTED_ROWS =
+        JS_FIND_PEER +
+        "var keys=Object.keys(comp.getSelectedRowKeys()); var retval=[]; keys.forEach(function(key){retval.push(peer.getRowIndex(key))}); return retval;";
+    private static final String JS_DISCLOSED_ROWS =
+        JS_FIND_PEER +
+        "var keys=Object.keys(comp.getDisclosedRowKeys()); var retval=[]; keys.forEach(function(key){retval.push(peer.getRowIndex(key))}); return retval;";
+    private static final String JS_GET_ROW_BY_INDEX =
+        JS_FIND_PEER +
+        "var rowinfo=peer.FindRowByKey(peer.getRowIndex(arguments[1])); if (rowinfo){return rowinfo.tr}else{return null}";
 
     public AdfTable(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
@@ -36,20 +55,33 @@ public class AdfTable extends AdfComponent {
         return retval;
     }
 
-    //    public ?? getSelectedRowKeys() {
-    //        // TODO: returns something like {0:true} when single row is selected
-    //        String js = String.format("%s.getSelectedRowKeys()", scriptFindComponent());
-    //        return (String) executeScript(js);
-    //    }
+    public List<Integer> getSelectedRows() {
+        return rowIndices((List<Long>) executeScript(JS_SELECTED_ROWS, getClientId()));
+    }
 
-    //    public ?? getDisclosedRowKeys() {
-    //        // TODO: returns something like {0:true} when single row is selected
-    //        String js = String.format("%s.getDisclosedRowKeys()", scriptFindComponent());
-    //        return (String) executeScript(js);
-    //    }
+    public List<Integer> getDisclosedRows() {
+        return rowIndices((List<Long>) executeScript(JS_DISCLOSED_ROWS, getClientId()));
+    }
 
-    public boolean isRowDisclosed(String rowKey) {
-        return (Boolean) executeScript(JS_IS_ROW_DISCLOSED, getClientId(), rowKey);
+    private List<Integer> rowIndices(List<Long> longs) {
+        List<Integer> retval = new ArrayList<Integer>(longs.size());
+        for (Long l : longs) {
+            retval.add(l.intValue());
+        }
+        return retval;
+    }
+
+    public boolean isRowDisclosed(int rowIndex) {
+        scrollToRowIndex(rowIndex);
+        String rowkey = getRowKey(rowIndex);
+        return (Boolean) executeScript(JS_IS_ROW_DISCLOSED, getClientId(), rowkey);
+    }
+
+    public void discloseRowDetail(int rowIndex) {
+        scrollToRowIndex(rowIndex);
+        WebElement link = findDisclosureLink(rowIndex);
+        link.click();
+        waitForPpr();
     }
 
     public void scrollToRowIndex(int rowIndex) {
@@ -84,6 +116,36 @@ public class AdfTable extends AdfComponent {
      */
     public int getRowIndex(String rowKey) {
         return ((Number) executeScript(JS_GET_ROWINDEX, getClientId(), rowKey)).intValue();
+    }
+
+    public void selectRow(int index) {
+        scrollToRowIndex(index);
+        WebElement row = findRow(index);
+        row.click();
+        waitForPpr();
+    }
+
+    public void selectToRow(int index) {
+        scrollToRowIndex(index);
+        WebElement row = findRow(index);
+        new Actions(getDriver()).keyDown(Keys.SHIFT).click(row).keyUp(Keys.SHIFT).perform();
+        waitForPpr();
+    }
+
+    public void selectAdditionalRow(int index) {
+        scrollToRowIndex(index);
+        WebElement row = findRow(index);
+        final Keys key = isPlatform(Platform.MAC) ? Keys.COMMAND : Keys.CONTROL;
+        new Actions(getDriver()).keyDown(key).click(row).keyUp(key).perform();
+        waitForPpr();
+    }
+
+    protected WebElement findDisclosureLink(int index) {
+        return findSubIdElement("[" + index + "]" + SUBID_disclosureID);
+    }
+
+    protected WebElement findRow(int index) {
+        return (WebElement) executeScript(JS_GET_ROW_BY_INDEX, getClientId(), String.valueOf(index));
     }
 
 }
