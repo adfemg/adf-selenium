@@ -62,8 +62,8 @@ public class TableTest {
     @Test
     public void testChildComponent() {
         TableDetailStampDemoPage page = detailStampPage.goHome();
-        assertEquals("foo", page.findName(0).getValue());
         assertEquals("admin.jar", page.findName(2).getValue());
+        assertEquals("database", page.findName(7).getValue());
         page.findTable().discloseRowDetail(9);
         assertEquals("1,290 KB", page.findSizeDetailFacet(9).getValue());
     }
