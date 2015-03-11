@@ -32,8 +32,8 @@ public class SavePageSourceOnFailure extends TestWatcher {
 
     @Override
     protected void failed(Throwable t, Description description) {
+        String oldWindow = driver.getWindowHandle();
         try {
-
             Set<String> windows = driver.getWindowHandles();
             int idx = 0;
             String baseFileName = description.getClassName() + "-" + description.getMethodName();
@@ -57,6 +57,8 @@ public class SavePageSourceOnFailure extends TestWatcher {
         } catch (IOException e) {
             e.printStackTrace();
             throw new WebDriverException(e);
+        } finally {
+            driver.switchTo().window(oldWindow); // restore original active window
         }
     }
 

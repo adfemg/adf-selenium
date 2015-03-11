@@ -60,7 +60,7 @@ public class ScreenshotOnFailure extends TestWatcher {
             e.printStackTrace();
             throw new WebDriverException(e);
         } finally {
-            driver.switchTo().window(oldWindow);
+            driver.switchTo().window(oldWindow); // restore original active window
         }
     }
 
