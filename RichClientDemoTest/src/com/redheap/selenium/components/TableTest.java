@@ -68,6 +68,12 @@ public class TableTest {
         assertEquals("1,290 KB", page.findSizeDetailFacet(9).getValue());
     }
 
+    @Test
+    public void testCount() {
+        TableDetailStampDemoPage page = detailStampPage.goHome();
+        assertEquals(5400, page.findTable().getRowCount());
+    }
+
     public static void main(String[] args) {
         String[] args2 = { TableTest.class.getName() };
         org.junit.runner.JUnitCore.main(args2);

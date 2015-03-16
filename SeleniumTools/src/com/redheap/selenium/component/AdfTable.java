@@ -32,6 +32,7 @@ public class AdfTable extends AdfComponent {
     private static final String JS_GET_ROW_BY_INDEX =
         JS_FIND_PEER +
         "var rowinfo=peer.FindRowByKey(peer.getRowIndex(arguments[1])); if (rowinfo){return rowinfo.tr}else{return null}";
+    private static final String JS_GET_ROW_COUNT = JS_FIND_PEER + "return peer.GetRowCount();";
 
     public AdfTable(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
@@ -116,6 +117,10 @@ public class AdfTable extends AdfComponent {
      */
     public int getRowIndex(String rowKey) {
         return ((Number) executeScript(JS_GET_ROWINDEX, getClientId(), rowKey)).intValue();
+    }
+
+    public long getRowCount() {
+        return ((Number)executeScript(JS_GET_ROW_COUNT, getClientId())).longValue();
     }
 
     public void selectRow(int index) {
