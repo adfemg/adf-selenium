@@ -72,6 +72,7 @@ public class AdfComponent /*extends BaseObject*/ {
     private static final String JS_FIND_SUBID_CLIENTID =
         JS_FIND_PEER +
         "var subelem=peer.getSubIdDomElement(comp,arguments[1]); if(!subelem){return null;}return AdfRichUIPeer.getFirstAncestorComponent(subelem).getClientId();";
+    private static final String JS_GET_DISABLED = JS_FIND_COMPONENT + "return comp.getDisabled();";
 
     protected AdfComponent(WebDriver driver, String clientid) {
         this.driver = driver;
@@ -215,6 +216,10 @@ public class AdfComponent /*extends BaseObject*/ {
 
     public List<ComponentReference> getChildComponents() {
         return buildReferences((List<List<String>>) executeScript(JS_FIND_CHILD_COMPONENTS, getClientId()));
+    }
+
+    public boolean isDisabled() {
+        return (Boolean) executeScript(JS_GET_DISABLED, getClientId());
     }
 
     public List<String> getPropertyKeys() {

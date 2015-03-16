@@ -14,7 +14,6 @@ public class AdfButton extends AdfComponent {
     private static final String SUBID_icon = "icon"; // <img> element
     private static final String SUBID_text = "text"; // <span> element
 
-    private static final String JS_GET_DISABLED = JS_FIND_COMPONENT + "return comp.getDisabled();";
     private static final String JS_GET_SELECTED = JS_FIND_COMPONENT + "return comp.getSelected();";
 
     public AdfButton(WebDriver driver, String clientid) {
@@ -31,10 +30,6 @@ public class AdfButton extends AdfComponent {
         } else {
             super.click();
         }
-    }
-
-    public boolean isDisabled() {
-        return (Boolean) executeScript(JS_GET_DISABLED, getClientId());
     }
 
     public boolean isSelected() {
