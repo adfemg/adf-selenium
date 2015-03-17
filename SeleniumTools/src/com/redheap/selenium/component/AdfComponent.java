@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import oracle.adf.view.rich.automation.selenium.RichWebDrivers;
 
@@ -45,11 +47,14 @@ public class AdfComponent /*extends BaseObject*/ {
     protected static final String JS_FIND_PEER = JS_FIND_COMPONENT + "var peer=comp.getPeer(); peer.bind(comp);";
     protected static final String JS_FIND_ELEMENT = JS_FIND_PEER + "var elem=peer.getDomElement();";
 
+    private static final String JS_GET_ABSOLUTE_LOCATOR = JS_FIND_COMPONENT + "return comp.getAbsoluteLocator()";
     private static final String JS_GET_COMPONENT_TYPE = JS_FIND_COMPONENT + "return comp.getComponentType()";
     private static final String JS_FIND_ANCESTOR_COMPONENT =
         "return AdfRichUIPeer.getFirstAncestorComponent(arguments[0]).getClientId();";
     private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID =
         JS_FIND_COMPONENT + "return comp.findComponent(arguments[1]).getClientId()";
+    private static final String JS_FIND_COMPONENT_BY_LOCATOR =
+        "var comp=AdfPage.PAGE.findComponentByAbsoluteLocator(arguments[0]); return [comp.getComponentType(),comp.getClientId()]";
     private static final String JS_GET_DESCENDANT_COMPONENTS =
         JS_FIND_COMPONENT + "var desc=comp.getDescendantComponents();" + "var retval=[];" +
         "desc.forEach(function(comp){retval.push([comp.getClientId(),comp.getComponentType()]);});" + "return retval;";
@@ -73,45 +78,59 @@ public class AdfComponent /*extends BaseObject*/ {
         JS_FIND_PEER +
         "var subelem=peer.getSubIdDomElement(comp,arguments[1]); if(!subelem){return null;}return AdfRichUIPeer.getFirstAncestorComponent(subelem).getClientId();";
     private static final String JS_GET_DISABLED = JS_FIND_COMPONENT + "return comp.getDisabled();";
+    private static final String JS_IS_NAMINGCONTAINER =
+        JS_FIND_COMPONENT + "return AdfUIComponent.__isNamingContainer(comp.constructor);";
+
+    private static final Pattern RELATIVE_ID = Pattern.compile("(:*)(.+)");
 
     protected AdfComponent(WebDriver driver, String clientid) {
         this.driver = driver;
         this.clientid = clientid;
-        this.element = driver.findElement(By.id(clientid));
+        final List<WebElement> elems = driver.findElements(By.id(clientid));
+        // some components do not have element (like dynamic declarative component)
+        // TODO: why not lazy resolving in getElement?
+        this.element = (elems != null && elems.size() == 1) ? elems.get(0) : null;
     }
 
     public static <C extends AdfComponent> C forClientId(WebDriver driver, String clientid) {
         // find component type
         String type = (String) ((JavascriptExecutor) driver).executeScript(JS_GET_COMPONENT_TYPE, clientid);
-        // find root element
-        WebElement element = driver.findElement(By.id(clientid));
+        return forClientId(driver, type, clientid);
+    }
+
+    private static <C extends AdfComponent> C forClientId(WebDriver driver, String componentType, String clientid) {
         // instantiate default component or one from ServiceLoader
         Iterator<ComponentFactory> iter = factories.iterator();
-        while (iter.hasNext()) {
-            ComponentFactory factory = iter.next();
-            final C component = factory.createComponent(driver, type, clientid, element);
-            if (component != null) {
-                return component;
+        if (iter.hasNext()) {
+            final List<WebElement> elems = driver.findElements(By.id(clientid));
+            // some components do not have element (like dynamic declarative component)
+            WebElement element = (elems != null && elems.size() == 1) ? elems.get(0) : null;
+            while (iter.hasNext()) {
+                ComponentFactory factory = iter.next();
+                final C component = factory.createComponent(driver, componentType, clientid, element);
+                if (component != null) {
+                    return component;
+                }
             }
         }
         // none found from serviceloaders so try to use our defaults
-        if (!defaultComponents.containsKey(type)) {
+        if (!defaultComponents.containsKey(componentType)) {
             // no class loaded yet for this type
             // determing java class from javascript type:
             // oracle.adf.RichInputText to com.redheap.selenium.component.AdfInputText
-            String simpleType = type.substring(type.lastIndexOf('.') + ".Rich".length()); // InputText
+            String simpleType = componentType.substring(componentType.lastIndexOf('.') + ".Rich".length()); // InputText
             String className = AdfComponent.class.getPackage().getName() + ".Adf" + simpleType;
             final Class<? extends C> c;
             try {
                 c = (Class<? extends C>) ClassUtils.getClass(className);
-                defaultComponents.put(type, c); // remember class to prevent class loading each time
+                defaultComponents.put(componentType, c); // remember class to prevent class loading each time
             } catch (ClassNotFoundException e) {
-                defaultComponents.put(type, null); // no class found and remember this
+                defaultComponents.put(componentType, null); // no class found and remember this
             }
         }
-        Class<? extends C> cls = (Class<? extends C>) defaultComponents.get(type);
+        Class<? extends C> cls = (Class<? extends C>) defaultComponents.get(componentType);
         if (cls == null) {
-            throw new UnsupportedOperationException("unknown component type: " + type);
+            throw new UnsupportedOperationException("unknown component type: " + componentType);
         }
         try {
             return ConstructorUtils.invokeConstructor(cls, driver, clientid);
@@ -158,6 +177,57 @@ public class AdfComponent /*extends BaseObject*/ {
         return AdfComponent.forClientId(driver, clientid);
     }
 
+    public <T extends AdfComponent> T findAdfComponentByLocator(String relativeLocator) {
+        // use logic similar to relativeClientId:
+        // - when starting with :, the locator is absolute and starts from root of page
+        // - when starting with multiple :, first traverse up the naming containers
+        // - when not starting with :, traverse up to nearest naming container (which chould be this component itself)
+        // - can use indices with relative lookups:
+        //   * lookup "[3]it2" from an af:table
+        //   * lookup "::[3]it2" from tab1[1]:it2
+        // TODO: refactor or duplicate this to com.redheap.selenium.AdfFinder to implement org.openqa.selenium.By
+        Matcher matcher = RELATIVE_ID.matcher(relativeLocator);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("illegal locator: " + relativeLocator);
+        }
+        int qualifiers = matcher.group(1).length();
+        String searchScopedId = matcher.group(2);
+        boolean relative = (qualifiers == 0 || qualifiers > 1);
+        String absoluteLocator;
+        if (!relative) {
+            absoluteLocator = searchScopedId;
+        } else {
+            String base = getAbsoluteLocator();
+            // traverse up based on number of : prefixes in relative locator
+            int upcount;
+            if (qualifiers > 1) {
+                upcount = qualifiers - 1;
+            } else {
+                // when base is not a NamingContainer we need to go up one first to get to the NamingContainer
+                upcount = isNamingContainer() ? 0 : 1;
+            }
+            while (upcount > 0) {
+                base = base.substring(0, base.lastIndexOf(":"));
+                upcount--;
+            }
+            if (searchScopedId.startsWith("[")) {
+                // indexed locator like [3]it4
+                if (base.endsWith("]")) {
+                    // strip index from base
+                    base = base.substring(0, base.lastIndexOf("["));
+                }
+                absoluteLocator = base + searchScopedId; // no need for : separator
+            } else {
+                absoluteLocator = base + ":" + searchScopedId;
+            }
+        }
+        logger.fine("locating component by absolute locator " + absoluteLocator);
+        List<?> jsresult = (List<?>) executeScript(JS_FIND_COMPONENT_BY_LOCATOR, absoluteLocator);
+        String componentType = (String) jsresult.get(0);
+        String clientid = (String) jsresult.get(1);
+        return AdfComponent.forClientId(driver, componentType, clientid);
+    }
+
     public String getId() {
         // simple (local) id
         return getElement().getAttribute("id");
@@ -167,8 +237,16 @@ public class AdfComponent /*extends BaseObject*/ {
         return clientid;
     }
 
+    public String getAbsoluteLocator() {
+        return (String) executeScript(JS_GET_ABSOLUTE_LOCATOR, getClientId());
+    }
+
     public boolean isDisplayed() {
         return getElement().isDisplayed();
+    }
+
+    private boolean isNamingContainer() {
+        return Boolean.TRUE.equals(executeScript(JS_IS_NAMINGCONTAINER, getClientId()));
     }
 
     public void click() {
