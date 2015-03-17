@@ -8,6 +8,7 @@ public abstract class UixInput extends UixValue {
 
     private static final String JS_GET_VALID = JS_FIND_COMPONENT + "return comp.getValid();";
     private static final String JS_GET_SUBMITTED_VALUE = JS_FIND_ELEMENT + "return peer.GetSubmittedValue(comp,elem);";
+    private static final String JS_GET_LABEL = JS_FIND_COMPONENT + "return comp.getLabel();";
 
     public UixInput(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
@@ -19,6 +20,10 @@ public abstract class UixInput extends UixValue {
 
     public String getSubmittedValue() {
         return (String) executeScript(JS_GET_SUBMITTED_VALUE, getClientId());
+    }
+
+    public String getLabel() {
+        return (String) executeScript(JS_GET_LABEL, getClientId());
     }
 
     public void sendKeys(CharSequence... keys) {

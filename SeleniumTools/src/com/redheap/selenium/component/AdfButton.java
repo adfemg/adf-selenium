@@ -15,6 +15,7 @@ public class AdfButton extends AdfComponent {
     private static final String SUBID_text = "text"; // <span> element
 
     private static final String JS_GET_SELECTED = JS_FIND_COMPONENT + "return comp.getSelected();";
+    private static final String JS_GET_TEXT = JS_FIND_COMPONENT + "return comp.getText();";
 
     public AdfButton(WebDriver driver, String clientid) {
         super(driver, clientid);
@@ -34,6 +35,10 @@ public class AdfButton extends AdfComponent {
 
     public boolean isSelected() {
         return (Boolean) executeScript(JS_GET_SELECTED, getClientId());
+    }
+
+    public String getText() {
+        return (String) executeScript(JS_GET_TEXT, getClientId());
     }
 
     public void clickDropdownButton() {

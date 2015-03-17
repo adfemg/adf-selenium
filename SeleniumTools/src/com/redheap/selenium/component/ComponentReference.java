@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import org.openqa.selenium.WebDriver;
+
 public class ComponentReference {
 
     private final String clientid;
@@ -20,6 +22,10 @@ public class ComponentReference {
 
     public String getComponentType() {
         return componentType;
+    }
+
+    public <C extends AdfComponent> C findComponent(WebDriver driver) {
+        return AdfComponent.forClientId(driver, clientid);
     }
 
     @Override
