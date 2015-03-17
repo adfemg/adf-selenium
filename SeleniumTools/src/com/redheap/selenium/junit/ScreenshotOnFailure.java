@@ -46,7 +46,7 @@ public class ScreenshotOnFailure extends TestWatcher {
                 fileName.append(".png");
                 File file = new File(basedir, fileName.toString());
                 file.getCanonicalFile().getParentFile().mkdirs();
-                logger.finer("dumping error screenshot " + file.getCanonicalPath());
+                logger.finer("*************** dumping error screenshot " + file.getCanonicalPath());
                 try {
                     driver.switchTo().window(guid);
                     ((TakesScreenshot) driver).getScreenshotAs(new FileOutputType(file));

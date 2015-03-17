@@ -45,7 +45,7 @@ public class SavePageSourceOnFailure extends TestWatcher {
                 fileName.append(".txt");
                 File file = new File(basedir, fileName.toString());
                 file.getCanonicalFile().getParentFile().mkdirs();
-                logger.finer("dumping page source " + file.getCanonicalPath());
+                logger.finer("*************** dumping page source " + file.getCanonicalPath());
                 try {
                     driver.switchTo().window(guid);
                     FileUtils.write(file, driver.getPageSource());
