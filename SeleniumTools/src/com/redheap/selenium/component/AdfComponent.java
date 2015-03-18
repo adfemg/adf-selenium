@@ -52,7 +52,7 @@ public class AdfComponent /*extends BaseObject*/ {
     private static final String JS_FIND_ANCESTOR_COMPONENT =
         "return AdfRichUIPeer.getFirstAncestorComponent(arguments[0]).getClientId();";
     private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID =
-        JS_FIND_COMPONENT + "return comp.findComponent(arguments[1]).getClientId()";
+        JS_FIND_COMPONENT + "return comp.findComponent(arguments[1],true).getClientId()";
     private static final String JS_FIND_COMPONENT_BY_LOCATOR =
         "var comp=AdfPage.PAGE.findComponentByAbsoluteLocator(arguments[0]); return [comp.getComponentType(),comp.getClientId()]";
     private static final String JS_GET_DESCENDANT_COMPONENTS =
