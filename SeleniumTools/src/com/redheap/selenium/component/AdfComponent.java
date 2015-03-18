@@ -324,6 +324,10 @@ public class AdfComponent /*extends BaseObject*/ {
         executeScript(JS_SCROLLINTOVIEW, getClientId());
     }
 
+    protected void scrollIntoView(WebElement element) {
+        executeScript("arguments[0].scrollIntoView()", element);
+    }
+
     protected List<ComponentReference> buildReferences(List<List<String>> jsResult) {
         List<ComponentReference> retval = new ArrayList<ComponentReference>(jsResult.size());
         for (List<String> comp : jsResult) {

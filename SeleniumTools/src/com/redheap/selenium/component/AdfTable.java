@@ -85,10 +85,13 @@ public class AdfTable extends AdfComponent {
     }
 
     public void discloseRowDetail(int rowIndex) {
-        scrollToRowIndex(rowIndex);
+        scrollToRowIndex(rowIndex); // scroll the table rows
         WebElement link = findDisclosureLink(rowIndex);
-        link.click();
-        waitForPpr();
+        if (link != null) {
+            scrollIntoView(link); // scroll the browser document
+            link.click();
+            waitForPpr();
+        }
     }
 
     public void scrollToRowIndex(int rowIndex) {
