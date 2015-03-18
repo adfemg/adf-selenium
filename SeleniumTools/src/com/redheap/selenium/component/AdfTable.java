@@ -14,9 +14,9 @@ public class AdfTable extends AdfComponent {
     private static final String SUBID_disclosureID = "disclosureID"; // [99]disclosureId returns <a> element
 
     private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWKEY =
-        JS_FIND_COMPONENT + "return comp.findComponent(arguments[1],arguments[2]).getClientId()";
+        JS_FIND_COMPONENT + "var child=comp.findComponent(arguments[1],arguments[2]); return child?child.getClientId():null";
     private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWINDEX =
-        JS_FIND_PEER + "return comp.findComponent(arguments[1],peer.getRowKey(arguments[2])).getClientId()";
+        JS_FIND_PEER + "var idx=peer.getRowKey(arguments[2]); if (!idx){return null}var child=comp.findComponent(arguments[1],idx); return child?child.getClientId():null";
     private static final String JS_IS_ROW_DISCLOSED =
         JS_FIND_COMPONENT + "return comp.isDisclosed(arguments[1])===true";
     private static final String JS_SCROLLTO_ROWINDEX = JS_FIND_COMPONENT + "comp.scrollToRowIndex(arguments[1])";
@@ -41,6 +41,9 @@ public class AdfTable extends AdfComponent {
     public <T extends AdfComponent> T findAdfComponent(String relativeClientId, String rowKey) {
         String clientid =
             (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWKEY, getClientId(), relativeClientId, rowKey);
+        if (clientid == null) {
+            return null;
+        }
         return AdfComponent.forClientId(getDriver(), clientid);
     }
 
@@ -49,6 +52,9 @@ public class AdfTable extends AdfComponent {
         String clientid =
             (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWINDEX, getClientId(), relativeClientId,
                                    rowIndex);
+        if (clientid == null) {
+            return null;
+        }
         T retval = AdfComponent.forClientId(getDriver(), clientid);
         // TODO; would be niced to use TablePeer.scrollColumnIntoView but we haven't figured out a way to
         // determine column index for a component
@@ -146,6 +152,9 @@ public class AdfTable extends AdfComponent {
     }
 
     protected WebElement findDisclosureLink(int index) {
+        // warning: when a row is disclosed all rows lower in the tabel cannot be found due to a bug in
+        // AdfDhtmlTableBasePeer.convertLocatorToClientId which doesn't account for the extra <tr> row
+        // injected by the disclosed detailStamp
         return findSubIdElement("[" + index + "]" + SUBID_disclosureID);
     }
 
