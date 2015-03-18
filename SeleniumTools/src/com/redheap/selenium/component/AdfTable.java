@@ -14,9 +14,11 @@ public class AdfTable extends AdfComponent {
     private static final String SUBID_disclosureID = "disclosureID"; // [99]disclosureId returns <a> element
 
     private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWKEY =
-        JS_FIND_COMPONENT + "var child=comp.findComponent(arguments[1],arguments[2]); return child?child.getClientId():null";
+        JS_FIND_COMPONENT +
+        "var child=comp.findComponent(arguments[1],arguments[2]); return child?child.getClientId():null";
     private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWINDEX =
-        JS_FIND_PEER + "var idx=peer.getRowKey(arguments[2]); if (!idx){return null}var child=comp.findComponent(arguments[1],idx); return child?child.getClientId():null";
+        JS_FIND_PEER +
+        "var idx=peer.getRowKey(arguments[2]); if (!idx){return null}var child=comp.findComponent(arguments[1],idx); return child?child.getClientId():null";
     private static final String JS_IS_ROW_DISCLOSED =
         JS_FIND_COMPONENT + "return comp.isDisclosed(arguments[1])===true";
     private static final String JS_SCROLLTO_ROWINDEX = JS_FIND_COMPONENT + "comp.scrollToRowIndex(arguments[1])";
@@ -129,7 +131,7 @@ public class AdfTable extends AdfComponent {
     }
 
     public long getRowCount() {
-        return ((Number)executeScript(JS_GET_ROW_COUNT, getClientId())).longValue();
+        return ((Number) executeScript(JS_GET_ROW_COUNT, getClientId())).longValue();
     }
 
     public void selectRow(int index) {
