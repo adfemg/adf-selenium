@@ -116,6 +116,39 @@ public class AdfCalendar extends AdfComponent {
         return findSubIdComponent(SUBID_next_button);
     }
 
+    public int getActivitiesInViewCount() {
+        List<WebElement> activitiesInView = findAllActivitiesInView();
+        return activitiesInView == null ? 0 : activitiesInView.size();
+    }
+
+    public void clickActivityInView(int index) {
+        WebElement element = findAllActivitiesInView().get(index);
+        element.click();
+        waitForPpr();
+    }
+
+    public int getDateLinkCount() {
+        List<WebElement> links = findAllDateLinks();
+        return links == null ? 0 : links.size();
+    }
+
+    public void clickDateLink(int index) {
+        WebElement element = findAllDateLinks().get(index);
+        element.click();
+        waitForPpr();
+    }
+
+    public int getMoreLinksInViewCount() {
+        List<WebElement> moreLinks = findAllMoreLinksInView();
+        return moreLinks == null ? 0 : moreLinks.size();
+    }
+
+    public void clickMoreLinkInView(int index) {
+        WebElement element = findAllMoreLinksInView().get(index);
+        element.click();
+        waitForPpr();
+    }
+
     // raw elements should not be exposed public due to ppr logic that should be part of component
     protected List<WebElement> findAllActivitiesInView() {
         return findSubIdElements(SUBID_all_activities_in_view);

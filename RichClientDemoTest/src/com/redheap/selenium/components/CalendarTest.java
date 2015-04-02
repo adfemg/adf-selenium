@@ -80,7 +80,6 @@ public class CalendarTest {
     @Test
     public void testActiveDay() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        String serverActiveDay = calendar.getActiveDay();
         Calendar beginToday = Calendar.getInstance();
         beginToday.set(Calendar.HOUR_OF_DAY, 0);
         beginToday.set(Calendar.MINUTE, 0);
@@ -91,6 +90,29 @@ public class CalendarTest {
         Calendar monthAgo = (Calendar) beginToday.clone();
         monthAgo.add(Calendar.MONTH, -1);
         assertEquals(monthAgo.getTime(), calendar.getActiveDayFromDom());
+    }
+
+    @Test
+    public void testActivitiesInView() {
+        AdfCalendar calendar = pages.goHome().findCalendar();
+        assertEquals(53, calendar.getActivitiesInViewCount());
+        calendar.clickActivityInView(0);
+        // TODO: how can we test if click succeeded?
+    }
+
+    @Test
+    public void testMoreLinksInView() {
+        AdfCalendar calendar = pages.goHome().findCalendar();
+        assertEquals(14, calendar.getMoreLinksInViewCount());
+        calendar.clickMoreLinkInView(0);
+        assertEquals("day", calendar.getView());
+    }
+    @Test
+    public void testDateLink() {
+        AdfCalendar calendar = pages.goHome().findCalendar();
+        assertEquals(35, calendar.getDateLinkCount());
+        calendar.clickDateLink(0);
+        assertEquals("day", calendar.getView());
     }
 
     public static void main(String[] args) {
