@@ -1,8 +1,13 @@
 package com.redheap.selenium.component;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
 import java.util.List;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 public class AdfCalendar extends AdfComponent {
@@ -27,6 +32,7 @@ public class AdfCalendar extends AdfComponent {
     private static final String JS_GET_START_HOUR = JS_FIND_COMPONENT + "return comp.getStartHour();";
     private static final String JS_GET_TIME_SLOTS_PER_HOUR = JS_FIND_COMPONENT + "return comp.getTimeSlotsPerHour();";
     private static final String JS_GET_VIEW = JS_FIND_COMPONENT + "return comp.getView();";
+    private static final String JS_GET_ACTIVE_DAY_DOM = JS_FIND_PEER + "return peer._getActiveDayFromDom(comp);";
 
     /* also interesting:
      * peer._getActivityInfo(activity, gridInfo)  (activity is dom elem)
@@ -42,6 +48,16 @@ public class AdfCalendar extends AdfComponent {
 
     public String getActiveDay() {
         return (String) executeScript(JS_GET_ACTIVE_DAY, getClientId());
+    }
+
+    public Date getActiveDayFromDom() {
+        String day = (String) executeScript(JS_GET_ACTIVE_DAY_DOM, getClientId());
+        try {
+            Date date = new SimpleDateFormat("MM/d/yyyy").parse(day);
+            return date;
+        } catch (ParseException e) {
+            throw new WebDriverException("invalid active day from dom:" + day, e);
+        }
     }
 
     public String getHourZoom() {

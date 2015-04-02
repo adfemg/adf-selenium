@@ -9,6 +9,8 @@ import com.redheap.selenium.pages.CalendarDemoPage;
 
 import java.io.File;
 
+import java.util.Calendar;
+
 import static org.junit.Assert.*;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -73,6 +75,22 @@ public class CalendarTest {
         assertNotEquals(activeDay, calendar.getActiveDay());
         calendar.findPreviousButton().click();
         assertEquals(activeDay, calendar.getActiveDay());
+    }
+
+    @Test
+    public void testActiveDay() {
+        AdfCalendar calendar = pages.goHome().findCalendar();
+        String serverActiveDay = calendar.getActiveDay();
+        Calendar beginToday = Calendar.getInstance();
+        beginToday.set(Calendar.HOUR_OF_DAY, 0);
+        beginToday.set(Calendar.MINUTE, 0);
+        beginToday.set(Calendar.SECOND, 0);
+        beginToday.set(Calendar.MILLISECOND, 0);
+        assertEquals(beginToday.getTime(), calendar.getActiveDayFromDom());
+        calendar.findPreviousButton().click();
+        Calendar monthAgo = (Calendar) beginToday.clone();
+        monthAgo.add(Calendar.MONTH, -1);
+        assertEquals(monthAgo.getTime(), calendar.getActiveDayFromDom());
     }
 
     public static void main(String[] args) {
