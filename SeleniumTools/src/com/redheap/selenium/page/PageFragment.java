@@ -3,6 +3,8 @@ package com.redheap.selenium.page;
 import com.redheap.selenium.component.AdfComponent;
 import com.redheap.selenium.component.AdfRegion;
 
+import java.util.Map;
+
 import oracle.adf.view.rich.automation.selenium.DialogManager;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
@@ -41,6 +43,10 @@ public class PageFragment /*extends BaseObject*/ {
 
     protected <T extends AdfComponent> T findAdfComponent(String relativeClientId) {
         return region.findAdfComponent(relativeClientId);
+    }
+
+    protected Map getMessages() {
+        return findRegion().getAllMessages();
     }
 
 }

@@ -1,5 +1,10 @@
 package com.redheap.selenium.component.uix;
 
+import com.redheap.selenium.domain.FacesMessageDomain;
+
+import java.util.Map;
+
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
@@ -49,4 +54,11 @@ public abstract class UixInput extends UixValue {
         tabNext();
     }
 
+    public Map getMessages() {
+        return FacesMessageDomain.getComponentMessages((JavascriptExecutor)getDriver(), getClientId());
+    }
+
+    public Map getPageMessages() {
+        return FacesMessageDomain.getAllMessages((JavascriptExecutor)getDriver());
+    }
 }
