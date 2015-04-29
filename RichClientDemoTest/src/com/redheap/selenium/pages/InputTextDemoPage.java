@@ -5,6 +5,9 @@ import com.redheap.selenium.page.Page;
 
 import org.openqa.selenium.WebDriver;
 
+/**
+ * Java representation of the adf-richclient-demo/faces/components/inputText.jspx page.
+ */
 public class InputTextDemoPage extends Page {
 
     private final String INPUTTEXT_NUMBERCONVERTER = "dmoTpl:idInputText2";
@@ -22,7 +25,7 @@ public class InputTextDemoPage extends Page {
     /**
      * @return
      */
-    public UixInput findNumberInputText(){
+    public UixInput findNumberInputText() {
         return findAdfComponent(INPUTTEXT_NUMBERCONVERTER);
     }
 

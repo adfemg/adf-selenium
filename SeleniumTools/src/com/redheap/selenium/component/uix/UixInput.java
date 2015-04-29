@@ -1,8 +1,6 @@
 package com.redheap.selenium.component.uix;
 
-import com.redheap.selenium.domain.FacesMessageDomain;
-
-import java.util.Map;
+import com.redheap.selenium.domain.PageMessageWrapper;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -54,11 +52,21 @@ public abstract class UixInput extends UixValue {
         tabNext();
     }
 
-    public Map getMessages() {
-        return FacesMessageDomain.getComponentMessages((JavascriptExecutor)getDriver(), getClientId());
+    /**
+     * Private method that will give back the {@link com.redheap.selenium.domain.PageMessageWrapper PageMessageWrapper}.
+     * @return The {@link com.redheap.selenium.domain.PageMessageWrapper PageMessageWrapper} with all facesmessages
+     * for the page.
+     */
+    private PageMessageWrapper getPageMessages() {
+        return PageMessageWrapper.getAllMessages((JavascriptExecutor) getDriver());
     }
 
-    public Map getPageMessages() {
-        return FacesMessageDomain.getAllMessages((JavascriptExecutor)getDriver());
+    /**
+     * A convenience method that will check if this component has a specific message.
+     * @param messageText The messagetext you want to check for.
+     * @return  a boolean value with the result of the question if the supplied component has the supplied message.
+     */
+    public boolean hasMessage(String messageText) {
+        return getPageMessages().hasMessage(getClientId(), messageText);
     }
 }
