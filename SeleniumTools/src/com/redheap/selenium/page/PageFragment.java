@@ -2,6 +2,7 @@ package com.redheap.selenium.page;
 
 import com.redheap.selenium.component.AdfComponent;
 import com.redheap.selenium.component.AdfRegion;
+import com.redheap.selenium.domain.PageMessageWrapper;
 
 import oracle.adf.view.rich.automation.selenium.DialogManager;
 
@@ -41,6 +42,15 @@ public class PageFragment /*extends BaseObject*/ {
 
     protected <T extends AdfComponent> T findAdfComponent(String relativeClientId) {
         return region.findAdfComponent(relativeClientId);
+    }
+
+    /**
+     * Convenience method to get all the messages on the page.
+     * @return A {@link com.redheap.selenium.domain.PageMessageWrapper PageMessageWrapper} object containing
+     * all messages and some convenicence methods
+     */
+    protected PageMessageWrapper getMessages() {
+        return findRegion().getAllMessages();
     }
 
 }

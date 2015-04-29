@@ -4,6 +4,7 @@ import com.redheap.selenium.component.AdfCommandButton;
 import com.redheap.selenium.component.AdfInputText;
 import com.redheap.selenium.component.AdfMessage;
 import com.redheap.selenium.component.AdfPanelFormLayout;
+import com.redheap.selenium.component.AdfSelectBooleanCheckbox;
 import com.redheap.selenium.component.ComponentReference;
 import com.redheap.selenium.page.Page;
 
@@ -13,6 +14,11 @@ public class MessageDemoPage extends Page {
 
     private final String message = "dmoTpl:message1";
     private final String editor = "dmoTpl:tagEditor:editor:pfl1";
+    
+    private final String PAGE_LEVEL_MESSAGES = "dmoTpl:pageLevel";   
+    private final String PAGE_LEVEL_MESSAGES_FORMATTED = "dmoTpl:pageLevel2";
+    private final String COMPONENT_LEVEL_MESSAGES = "dmoTpl:compLevel"; 
+    private final String COMPONENT_LEVEL_MESSAGES_FORMATTED = "dmoTpl:compLevel2";
 
     public MessageDemoPage(WebDriver webDriver) {
         super(webDriver);
@@ -69,6 +75,22 @@ public class MessageDemoPage extends Page {
     public void setMessageType(String type) {
         findMessageTypeEditor().typeValue(type);
         findEditorUpdateButton().click();
+    }
+    
+    public AdfSelectBooleanCheckbox findPageLevelMessages(){
+        return findAdfComponent(PAGE_LEVEL_MESSAGES);
+    }
+    
+    public AdfSelectBooleanCheckbox findFormattedPageLevelMessages(){
+        return findAdfComponent(PAGE_LEVEL_MESSAGES_FORMATTED);
+    }
+    
+    public AdfSelectBooleanCheckbox findComponentLevelMessages(){
+        return findAdfComponent(COMPONENT_LEVEL_MESSAGES);
+    }
+    
+    public AdfSelectBooleanCheckbox findFormattedComponentLevelMessages(){
+        return findAdfComponent(COMPONENT_LEVEL_MESSAGES_FORMATTED);
     }
 
 }

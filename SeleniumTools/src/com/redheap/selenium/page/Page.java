@@ -2,6 +2,7 @@ package com.redheap.selenium.page;
 
 import com.redheap.selenium.component.AdfComponent;
 import com.redheap.selenium.component.AdfDocument;
+import com.redheap.selenium.domain.PageMessageWrapper;
 
 import java.util.logging.Logger;
 
@@ -10,7 +11,7 @@ import oracle.adf.view.rich.automation.selenium.RichWebDrivers;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -91,6 +92,15 @@ public abstract class Page /*implements TakesScreenshot*/ {
 
     public <X extends Object> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
         return driver.getScreenshotAs(target);
+    }
+
+    /**
+     * Convenience method to get all the messages on the page.
+     * @return A {@link com.redheap.selenium.domain.PageMessageWrapper PageMessageWrapper} object containing
+     * all messages and some convenicence methods
+     */
+    public PageMessageWrapper getAllMessages() {
+        return PageMessageWrapper.getAllMessages(driver);
     }
 
 }
