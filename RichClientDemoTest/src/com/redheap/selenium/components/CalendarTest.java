@@ -11,6 +11,8 @@ import java.io.File;
 
 import java.util.Calendar;
 
+import static org.hamcrest.Matchers.*;
+
 import static org.junit.Assert.*;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -107,12 +109,26 @@ public class CalendarTest {
         calendar.clickMoreLinkInView(0);
         assertEquals("day", calendar.getView());
     }
+
     @Test
     public void testDateLink() {
         AdfCalendar calendar = pages.goHome().findCalendar();
         assertEquals(35, calendar.getDateLinkCount());
         calendar.clickDateLink(0);
         assertEquals("day", calendar.getView());
+    }
+
+    @Test
+    public void testCreatePopup() {
+        CalendarDemoPage page = pages.goHome();
+        AdfCalendar calendar = page.findCalendar();
+        assertNull("popup should not be openend before click", page.findCreatePopupAllDay());
+        assertNull("popup should not be openend before click", page.findCreatePopupFrom());
+        assertNull("popup should not be openend before click", page.findCreatePopupTo());
+        final int day = 15;
+        calendar.createDayActivity(day);
+        assertTrue("popup should open with all-day activity", (Boolean) page.findCreatePopupAllDay().getValue());
+        assertThat(page.findCreatePopupTo().getSubmittedValue(), containsString("/" + (day + 1) + "/"));
     }
 
     public static void main(String[] args) {

@@ -1,11 +1,14 @@
 package com.redheap.selenium.component;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -34,6 +37,15 @@ public class AdfCalendar extends AdfComponent {
     private static final String JS_GET_VIEW = JS_FIND_COMPONENT + "return comp.getView();";
     private static final String JS_GET_ACTIVE_DAY_DOM = JS_FIND_PEER + "return peer._getActiveDayFromDom(comp);";
 
+    private final DateFormat dateformat = new SimpleDateFormat("MM/d/yyyy");
+
+    public static enum View {
+        MONTH,
+        DAY,
+        WEEK,
+        LIST
+    };
+
     /* also interesting:
      * peer._getActivityInfo(activity, gridInfo)  (activity is dom elem)
      *   gridinfo can come from _calculateMonthGridInfo(monthgrid,monthheader) both are subids
@@ -53,7 +65,7 @@ public class AdfCalendar extends AdfComponent {
     public Date getActiveDayFromDom() {
         String day = (String) executeScript(JS_GET_ACTIVE_DAY_DOM, getClientId());
         try {
-            Date date = new SimpleDateFormat("MM/d/yyyy").parse(day);
+            Date date = dateformat.parse(day);
             return date;
         } catch (ParseException e) {
             throw new WebDriverException("invalid active day from dom:" + day, e);
@@ -84,8 +96,9 @@ public class AdfCalendar extends AdfComponent {
         return ((Number) executeScript(JS_GET_TIME_SLOTS_PER_HOUR, getClientId())).intValue();
     }
 
-    public String getView() {
-        return (String) executeScript(JS_GET_VIEW, getClientId());
+    public View getView() {
+        String view = (String) executeScript(JS_GET_VIEW, getClientId());
+        return View.valueOf(view.toUpperCase());
     }
 
     public AdfButton findDayViewButton() {
@@ -146,6 +159,25 @@ public class AdfCalendar extends AdfComponent {
     public void clickMoreLinkInView(int index) {
         WebElement element = findAllMoreLinksInView().get(index);
         element.click();
+        waitForPpr();
+    }
+
+    public void createDayActivity(int dayOfMonth) {
+        View view = getView();
+        WebElement target;
+        switch (view) {
+        case MONTH:
+            final Calendar targetDay = Calendar.getInstance();
+            targetDay.setTime(getActiveDayFromDom());
+            targetDay.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            final String xpath = "//div[@_adfdycl='" + dateformat.format(targetDay.getTime()) + "']";
+            target =
+                getElement().findElement(By.xpath(xpath)).findElement(By.cssSelector(".af_calendar_month-grid-cell-header"));
+            break;
+        default:
+            throw new IllegalStateException("unsupported view for creating day activity: " + view);
+        }
+        target.click();
         waitForPpr();
     }
 
