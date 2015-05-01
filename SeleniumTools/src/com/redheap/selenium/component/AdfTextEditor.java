@@ -2,12 +2,8 @@ package com.redheap.selenium.component;
 
 import com.redheap.selenium.component.uix.UixInput;
 
-import java.util.List;
-
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class AdfTextEditor extends UixInput {
 
@@ -16,9 +12,93 @@ public class AdfTextEditor extends UixInput {
     private static final String SUBID_content =
         "content"; // Gets the Head Div with all other content like toolbar,IFrame etc.
     private static final String SUBID_label = "label"; // Gets the content_Label
+    private static final String SUBID_bold_button = "_afrBold"; // Bold button
+    private static final String SUBID_italic_button = "_afrItalic"; // Italic butotn
+    private static final String SUBID_underline_button = "_afrUnderline"; // Underline button
+    private static final String SUBID_undo = "_afrUndo"; // Undo button
+    private static final String SUBID_redo = "_afrUnderline"; // Underline button
+    private static final String SUBID_outdent = "_afrOutdent"; // Outdent button
+    private static final String SUBID_indent = "_afrIndent"; // Indent button
+    private static final String SUBID_ordered_list = "_afrOrdList"; // Orderedlist button
+    private static final String SUBID_unordered_list = "_afrUnordList"; // Unorderedlist button
+
+    private static final String JS_FIND_CONTENT_TEXT = JS_FIND_PEER +
+        "var content = peer.getSubIdDomElement(comp,'"+ SUBID_cont + "').contentWindow.document.body.innerHTML; return content;";
 
     public AdfTextEditor(WebDriver webDriver, String clientId) {
         super(webDriver, clientId);
+    }
+
+    /**
+     * Gets the bold button
+     * @return bold button
+     */
+    public AdfCommandToolbarButton findBoldButton() {
+        return findSubIdComponent(SUBID_bold_button);
+    }
+
+    /**
+     * Gets the italic button
+     * @return italic button
+     */
+    public AdfCommandToolbarButton findItalicButton() {
+        return findSubIdComponent(SUBID_italic_button);
+    }
+
+    /**
+     * Gets the underline button
+     * @return underline button
+     */
+    public AdfCommandToolbarButton findUnderlineButton() {
+        return findSubIdComponent(SUBID_underline_button);
+    }
+
+    /**
+     * Gets the undo button
+     * @return undo button
+     */
+    public AdfCommandToolbarButton findUndoButton() {
+        return findSubIdComponent(SUBID_undo);
+    }
+
+    /**
+     * Gets the redo button
+     * @return redo button
+     */
+    public AdfCommandToolbarButton findRedoButton() {
+        return findSubIdComponent(SUBID_redo);
+    }
+
+    /**
+     * Gets the outdent button
+     * @return outdent button
+     */
+    public AdfCommandToolbarButton findOutdentButton() {
+        return findSubIdComponent(SUBID_outdent);
+    }
+
+    /**
+     * Gets the indent button
+     * @return indent button
+     */
+    public AdfCommandToolbarButton findIndentButton() {
+        return findSubIdComponent(SUBID_indent);
+    }
+
+    /**
+     * Gets the ordered list button
+     * @return orderedlist button
+     */
+    public AdfCommandToolbarButton findOrderedListButton() {
+        return findSubIdComponent(SUBID_ordered_list);
+    }
+
+    /**
+     * Gets the unordered list button
+     * @return unorderedlist button
+     */
+    public AdfCommandToolbarButton findUnorderedListButton() {
+        return findSubIdComponent(SUBID_unordered_list);
     }
 
     /**
@@ -39,6 +119,14 @@ public class AdfTextEditor extends UixInput {
     }
 
     /**
+     * Method to return the inner html of the text editor
+     * @return the html body
+     */
+    public String findContText() {
+        return (String) executeScript(JS_FIND_CONTENT_TEXT, getClientId());
+    }
+
+    /**
      * Method to get the Content WebElement.
      * <p>
      * This element has both the Toolbar as well as the IFrame with the content.
@@ -55,4 +143,5 @@ public class AdfTextEditor extends UixInput {
     protected WebElement findlabel() {
         return findSubIdElement(SUBID_label);
     }
+
 }

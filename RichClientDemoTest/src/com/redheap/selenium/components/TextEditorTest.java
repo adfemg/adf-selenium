@@ -1,23 +1,15 @@
 package com.redheap.selenium.components;
 
-import com.redheap.selenium.component.AdfInputNumberSpinbox;
 import com.redheap.selenium.component.AdfTextEditor;
 import com.redheap.selenium.junit.PageProvider;
 import com.redheap.selenium.junit.SavePageSourceOnFailure;
 import com.redheap.selenium.junit.ScreenshotOnFailure;
 import com.redheap.selenium.junit.WebDriverResource;
-import com.redheap.selenium.pages.InputNumberSpinboxDemoPage;
-
 import com.redheap.selenium.pages.TextEditorDemoPage;
 
 import java.io.File;
 
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-
-import static org.junit.Assert.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,7 +35,14 @@ public class TextEditorTest {
     public void testContentsTextEditor() {
         AdfTextEditor texteditor = pages.goHome().findTextEditor();
         assertEquals("Rich text value", texteditor.getLabel());
-        assertEquals(INITIAL_CONTENT, texteditor.getValue());
+        assertEquals(INITIAL_CONTENT, texteditor.findContText());
+    }
+
+    @Test
+    public void testToolbarButtons() {
+        AdfTextEditor texteditor = pages.goHome().findTextEditor();
+        texteditor.findBoldButton().click();
+        texteditor.findOrderedListButton().click();
     }
 
     public static void main(String[] args) {
