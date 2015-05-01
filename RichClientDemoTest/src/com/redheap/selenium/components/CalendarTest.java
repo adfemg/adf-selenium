@@ -97,7 +97,7 @@ public class CalendarTest {
     @Test
     public void testActivitiesInView() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals(53, calendar.getActivitiesInViewCount());
+        assertEquals(42, calendar.getActivitiesInViewCount());
         calendar.clickActivityInView(0);
         // TODO: how can we test if click succeeded?
     }
@@ -105,7 +105,7 @@ public class CalendarTest {
     @Test
     public void testMoreLinksInView() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals(14, calendar.getMoreLinksInViewCount());
+        assertEquals(22, calendar.getMoreLinksInViewCount());
         calendar.clickMoreLinkInView(0);
         assertEquals("day", calendar.getView());
     }
@@ -113,7 +113,7 @@ public class CalendarTest {
     @Test
     public void testDateLink() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals(35, calendar.getDateLinkCount());
+        assertEquals(42, calendar.getDateLinkCount());
         calendar.clickDateLink(0);
         assertEquals("day", calendar.getView());
     }
@@ -129,6 +129,14 @@ public class CalendarTest {
         calendar.createDayActivity(day);
         assertTrue("popup should open with all-day activity", (Boolean) page.findCreatePopupAllDay().getValue());
         assertThat(page.findCreatePopupTo().getSubmittedValue(), containsString("/" + (day + 1) + "/"));
+    }
+
+    @Test
+    public void testHover() {
+        CalendarDemoPage page = pages.goHome();
+        AdfCalendar calendar = page.findCalendar();
+        calendar.hoverActivityInView(0, driver.getDriver());
+        assertEquals("NOTE: This popup is for demo purposes only; it is not part of the built in functionality of the calendar.", page.findPopupNote().getValue());
     }
 
     public static void main(String[] args) {

@@ -12,6 +12,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 public class AdfCalendar extends AdfComponent {
 
@@ -138,6 +139,19 @@ public class AdfCalendar extends AdfComponent {
         WebElement element = findAllActivitiesInView().get(index);
         element.click();
         waitForPpr();
+    }
+
+    public void hoverActivityInView(int index, WebDriver driver) {
+        WebElement element = findAllActivitiesInView().get(index);
+        Actions action = new Actions(driver);
+        Actions hoverOverElement = action.moveToElement(element);
+        hoverOverElement.perform();
+        // FIXME
+        // Wait till popup shows up
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+        }
     }
 
     public int getDateLinkCount() {
