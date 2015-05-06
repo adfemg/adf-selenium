@@ -44,15 +44,15 @@ public class CalendarTest {
     @Test
     public void testCalendarViews() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals("month", calendar.getView());
+        assertEquals(AdfCalendar.View.MONTH, calendar.getView());
         calendar.findDayViewButton().click();
-        assertEquals("day", calendar.getView());
+        assertEquals(AdfCalendar.View.DAY, calendar.getView());
         calendar.findWeekViewButton().click();
-        assertEquals("week", calendar.getView());
+        assertEquals(AdfCalendar.View.WEEK, calendar.getView());
         calendar.findMonthViewButton().click();
-        assertEquals("month", calendar.getView());
+        assertEquals(AdfCalendar.View.MONTH, calendar.getView());
         calendar.findListViewButton().click();
-        assertEquals("list", calendar.getView());
+        assertEquals(AdfCalendar.View.LIST, calendar.getView());
     }
 
     @Test
@@ -105,17 +105,17 @@ public class CalendarTest {
     @Test
     public void testMoreLinksInView() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals(14, calendar.getMoreLinksInViewCount());
+        assertEquals(15, calendar.getMoreLinksInViewCount());
         calendar.clickMoreLinkInView(0);
-        assertEquals("day", calendar.getView());
+        assertEquals(AdfCalendar.View.DAY, calendar.getView());
     }
 
     @Test
     public void testDateLink() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals(35, calendar.getDateLinkCount());
+        assertEquals(42, calendar.getDateLinkCount());
         calendar.clickDateLink(0);
-        assertEquals("day", calendar.getView());
+        assertEquals(AdfCalendar.View.DAY, calendar.getView());
     }
 
     @Test
@@ -129,6 +129,15 @@ public class CalendarTest {
         calendar.createDayActivity(day);
         assertTrue("popup should open with all-day activity", (Boolean) page.findCreatePopupAllDay().getValue());
         assertThat(page.findCreatePopupTo().getSubmittedValue(), containsString("/" + (day + 1) + "/"));
+    }
+
+    @Test
+    public void testHover() {
+        CalendarDemoPage page = pages.goHome();
+        AdfCalendar calendar = page.findCalendar();
+        calendar.hoverActivityInView(0);
+        assertEquals("NOTE: This popup is for demo purposes only; it is not part of the built in functionality of the calendar.",
+                     page.findPopupNote().getValue());
     }
 
     public static void main(String[] args) {

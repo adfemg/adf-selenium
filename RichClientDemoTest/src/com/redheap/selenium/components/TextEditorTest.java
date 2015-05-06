@@ -1,22 +1,14 @@
 package com.redheap.selenium.components;
 
-import com.redheap.selenium.component.AdfInputNumberSpinbox;
 import com.redheap.selenium.component.AdfTextEditor;
 import com.redheap.selenium.junit.PageProvider;
 import com.redheap.selenium.junit.SavePageSourceOnFailure;
 import com.redheap.selenium.junit.ScreenshotOnFailure;
 import com.redheap.selenium.junit.WebDriverResource;
-import com.redheap.selenium.pages.InputNumberSpinboxDemoPage;
-
 import com.redheap.selenium.pages.TextEditorDemoPage;
 
 import java.io.File;
 
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-
-import static org.junit.Assert.*;
 import static org.junit.Assert.*;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -27,7 +19,8 @@ public class TextEditorTest {
 
     @ClassRule
     public static WebDriverResource driver = new WebDriverResource();
-    private static final String INITIAL_CONTENT = "<font color=\"blue\" face=\"Comic Sans MS,Comic Sans,cursive\" size=\"4\">Hello</font> world.<br>This <i>is</i> <b>for<sup>matt</sup>ed</b> text!!!";
+    private static final String INITIAL_CONTENT =
+        "<font color=\"blue\" face=\"Comic Sans MS,Comic Sans,cursive\" size=\"4\">Hello</font> world.<br>This <i>is</i> <b>for<sup>matt</sup>ed</b> text!!!";
     @Rule
     public PageProvider<TextEditorDemoPage> pages =
         new PageProvider(TextEditorDemoPage.class, HOME_PAGE, driver.getDriver());
@@ -44,6 +37,13 @@ public class TextEditorTest {
         AdfTextEditor texteditor = pages.goHome().findTextEditor();
         assertEquals("Rich text value", texteditor.getLabel());
         assertEquals(INITIAL_CONTENT, texteditor.getValue());
+    }
+
+    @Test
+    public void testToolbarButtons() {
+        AdfTextEditor texteditor = pages.goHome().findTextEditor();
+        texteditor.findBoldButton().click();
+        texteditor.findOrderedListButton().click();
     }
 
     public static void main(String[] args) {

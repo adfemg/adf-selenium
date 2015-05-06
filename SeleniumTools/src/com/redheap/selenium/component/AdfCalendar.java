@@ -12,6 +12,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 public class AdfCalendar extends AdfComponent {
 
@@ -137,6 +138,13 @@ public class AdfCalendar extends AdfComponent {
     public void clickActivityInView(int index) {
         WebElement element = findAllActivitiesInView().get(index);
         element.click();
+        waitForPpr();
+    }
+
+    public void hoverActivityInView(int index) {
+        WebElement element = findAllActivitiesInView().get(index);
+        // we use pause to give javascript timer to detect hover and show popup
+        new Actions(getDriver()).moveToElement(element).pause(1000).perform();
         waitForPpr();
     }
 
