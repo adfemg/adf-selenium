@@ -11,6 +11,8 @@ import java.io.File;
 
 import java.util.Calendar;
 
+import org.apache.commons.lang3.StringUtils;
+
 import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
@@ -138,6 +140,16 @@ public class CalendarTest {
         calendar.hoverActivityInView(0);
         assertEquals("NOTE: This popup is for demo purposes only; it is not part of the built in functionality of the calendar.",
                      page.findPopupNote().getValue());
+    }
+
+    @Test
+    public void testActivitiesText() {
+        CalendarDemoPage page = pages.goHome();
+        AdfCalendar calendar = page.findCalendar();
+        for (int i=0, n=calendar.getActivitiesInViewCount(); i<n; i++) {
+            String label = calendar.getActivityInViewLabel(i);
+            assertTrue("activity " + i + " should have a label, not " + label, StringUtils.isNotBlank(label));
+        }
     }
 
     public static void main(String[] args) {

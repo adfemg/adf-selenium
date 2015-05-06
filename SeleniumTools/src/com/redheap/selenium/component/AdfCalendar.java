@@ -148,6 +148,12 @@ public class AdfCalendar extends AdfComponent {
         waitForPpr();
     }
 
+    public String getActivityInViewLabel(int index) {
+        WebElement div = findAllActivitiesInView().get(index);
+        //WebElement span = div.findElement(By.tagName("span"));
+        return div.getText();
+    }
+
     public int getDateLinkCount() {
         List<WebElement> links = findAllDateLinks();
         return links == null ? 0 : links.size();
