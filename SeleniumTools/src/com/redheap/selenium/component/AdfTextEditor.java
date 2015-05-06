@@ -22,9 +22,6 @@ public class AdfTextEditor extends UixInput {
     private static final String SUBID_ordered_list = "_afrOrdList"; // Orderedlist button
     private static final String SUBID_unordered_list = "_afrUnordList"; // Unorderedlist button
 
-    private static final String JS_FIND_CONTENT_TEXT = JS_FIND_PEER +
-        "var content = peer.getSubIdDomElement(comp,'"+ SUBID_cont + "').contentWindow.document.body.innerHTML; return content;";
-
     public AdfTextEditor(WebDriver webDriver, String clientId) {
         super(webDriver, clientId);
     }
@@ -118,12 +115,10 @@ public class AdfTextEditor extends UixInput {
         return findSubIdElement(SUBID_cont);
     }
 
-    /**
-     * Method to return the inner html of the text editor
-     * @return the html body
-     */
-    public String findContText() {
-        return (String) executeScript(JS_FIND_CONTENT_TEXT, getClientId());
+    @Override
+    public Object getValue() {
+        // getValue() javascript is not implemented and always returns null for RTE. So just use the submittedValue
+        return getSubmittedValue();
     }
 
     /**

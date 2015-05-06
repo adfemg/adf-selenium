@@ -11,7 +11,7 @@ import java.io.File;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,7 +22,8 @@ public class SelectManyChoiceTest {
     @ClassRule
     public static WebDriverResource driver = new WebDriverResource();
     @Rule
-    public PageProvider<SelectManyChoiceDemoPage> pages =  new PageProvider(SelectManyChoiceDemoPage.class, HOME_PAGE, driver.getDriver());
+    public PageProvider<SelectManyChoiceDemoPage> pages =
+        new PageProvider(SelectManyChoiceDemoPage.class, HOME_PAGE, driver.getDriver());
     @Rule
     public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
     @Rule
@@ -46,9 +47,9 @@ public class SelectManyChoiceTest {
     @Test
     public void testSetValue() {
         AdfSelectManyChoice choice = pages.goHome().findDrinksSelectManyChoice();
-        choice.clickItemsByIndices(new int[] {1,3});
+        choice.clickItemsByIndices(new int[] { 1, 3 });
         choice.click();
-        ArrayList clickedItems = (ArrayList)choice.getValue();
+        ArrayList clickedItems = (ArrayList) choice.getValue();
         assertEquals(2, clickedItems.size());
         assertEquals("1", clickedItems.get(0));
         assertEquals("3", clickedItems.get(1));

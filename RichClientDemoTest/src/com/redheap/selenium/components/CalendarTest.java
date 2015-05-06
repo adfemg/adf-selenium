@@ -44,15 +44,15 @@ public class CalendarTest {
     @Test
     public void testCalendarViews() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals("month", calendar.getView());
+        assertEquals(AdfCalendar.View.MONTH, calendar.getView());
         calendar.findDayViewButton().click();
-        assertEquals("day", calendar.getView());
+        assertEquals(AdfCalendar.View.DAY, calendar.getView());
         calendar.findWeekViewButton().click();
-        assertEquals("week", calendar.getView());
+        assertEquals(AdfCalendar.View.WEEK, calendar.getView());
         calendar.findMonthViewButton().click();
-        assertEquals("month", calendar.getView());
+        assertEquals(AdfCalendar.View.MONTH, calendar.getView());
         calendar.findListViewButton().click();
-        assertEquals("list", calendar.getView());
+        assertEquals(AdfCalendar.View.LIST, calendar.getView());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class CalendarTest {
     @Test
     public void testActivitiesInView() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals(42, calendar.getActivitiesInViewCount());
+        assertEquals(53, calendar.getActivitiesInViewCount());
         calendar.clickActivityInView(0);
         // TODO: how can we test if click succeeded?
     }
@@ -105,9 +105,9 @@ public class CalendarTest {
     @Test
     public void testMoreLinksInView() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals(22, calendar.getMoreLinksInViewCount());
+        assertEquals(15, calendar.getMoreLinksInViewCount());
         calendar.clickMoreLinkInView(0);
-        assertEquals("day", calendar.getView());
+        assertEquals(AdfCalendar.View.DAY, calendar.getView());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class CalendarTest {
         AdfCalendar calendar = pages.goHome().findCalendar();
         assertEquals(42, calendar.getDateLinkCount());
         calendar.clickDateLink(0);
-        assertEquals("day", calendar.getView());
+        assertEquals(AdfCalendar.View.DAY, calendar.getView());
     }
 
     @Test
@@ -135,8 +135,9 @@ public class CalendarTest {
     public void testHover() {
         CalendarDemoPage page = pages.goHome();
         AdfCalendar calendar = page.findCalendar();
-        calendar.hoverActivityInView(0, driver.getDriver());
-        assertEquals("NOTE: This popup is for demo purposes only; it is not part of the built in functionality of the calendar.", page.findPopupNote().getValue());
+        calendar.hoverActivityInView(0);
+        assertEquals("NOTE: This popup is for demo purposes only; it is not part of the built in functionality of the calendar.",
+                     page.findPopupNote().getValue());
     }
 
     public static void main(String[] args) {

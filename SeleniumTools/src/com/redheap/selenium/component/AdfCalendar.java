@@ -141,17 +141,11 @@ public class AdfCalendar extends AdfComponent {
         waitForPpr();
     }
 
-    public void hoverActivityInView(int index, WebDriver driver) {
+    public void hoverActivityInView(int index) {
         WebElement element = findAllActivitiesInView().get(index);
-        Actions action = new Actions(driver);
-        Actions hoverOverElement = action.moveToElement(element);
-        hoverOverElement.perform();
-        // FIXME
-        // Wait till popup shows up
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-        }
+        // we use pause to give javascript timer to detect hover and show popup
+        new Actions(getDriver()).moveToElement(element).pause(1000).perform();
+        waitForPpr();
     }
 
     public int getDateLinkCount() {

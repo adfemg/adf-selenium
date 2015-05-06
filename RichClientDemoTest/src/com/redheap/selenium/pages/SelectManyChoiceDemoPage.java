@@ -5,7 +5,7 @@ import com.redheap.selenium.page.Page;
 
 import org.openqa.selenium.WebDriver;
 
-public class SelectManyChoiceDemoPage extends Page{
+public class SelectManyChoiceDemoPage extends Page {
 
     private final String drinks = "dmoTpl:targetChoice";
 
