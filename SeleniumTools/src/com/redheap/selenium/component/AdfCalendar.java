@@ -195,6 +195,71 @@ public class AdfCalendar extends AdfComponent {
         waitForPpr();
     }
 
+
+    /**
+     * Set the ADFCalendar to a specific Date
+     *
+     * @param date
+     */
+    public void goToDate(Date date) {
+
+        View view = this.getView();
+
+        Date preppedTarget = preppedTarget = prepDateForComparison(date, view);
+
+        Date preppedCalendar = prepDateForComparison(this.getActiveDayFromDom(), view);
+        int direction = preppedTarget.compareTo(preppedCalendar);
+        // if not the correct day/week/month, navigate
+        while (direction != 0) {
+
+            // direction > 0 = target date is still in the future.
+            if (direction > 0) {
+                this.findNextButton().click();
+            }
+            // direction < 0 = target date is still in the past.
+            else {
+                this.findPreviousButton().click();
+            }
+
+            preppedCalendar = prepDateForComparison(this.getActiveDayFromDom(), view);
+            direction = preppedTarget.compareTo(preppedCalendar);
+        }
+    }
+
+    /**
+     * Preparing the two dates for comparison.
+     * Time is set to '00:00:00'. If current calendar view is a month or week,
+     * dates are adjusted to one specific day of the month or week.
+     *
+     * @param date
+     * @param view
+     * @return date
+     */
+    private Date prepDateForComparison(Date date, View view) {
+
+        Date preppedDate = date;
+
+        if (view.equals(AdfCalendar.View.DAY) || view.equals(AdfCalendar.View.WEEK) ||
+            view.equals(AdfCalendar.View.MONTH)) {
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.set(Calendar.HOUR, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+
+            if (view.equals(AdfCalendar.View.WEEK)) {
+                c.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+            } else if (view.equals(AdfCalendar.View.MONTH)) {
+                c.set(Calendar.DAY_OF_MONTH, 1);
+            }
+            preppedDate = c.getTime();
+        }
+
+        return preppedDate;
+    }
+
+
     // raw elements should not be exposed public due to ppr logic that should be part of component
     protected List<WebElement> findAllActivitiesInView() {
         return findSubIdElements(SUBID_all_activities_in_view);
