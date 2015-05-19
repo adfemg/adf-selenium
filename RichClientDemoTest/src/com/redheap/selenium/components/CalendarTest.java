@@ -9,6 +9,10 @@ import com.redheap.selenium.pages.CalendarDemoPage;
 
 import java.io.File;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +38,8 @@ public class CalendarTest {
     public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
 
     private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo/faces/components/calendar.jspx";
+
+    private final DateFormat yyyymmdd = new SimpleDateFormat("yyyyMMdd");
 
     @Test
     public void testCalendarActiveDay() {
@@ -84,14 +90,14 @@ public class CalendarTest {
     @Test
     public void testActiveDay() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        Calendar beginToday = Calendar.getInstance();
-        beginToday.set(Calendar.HOUR_OF_DAY, 0);
-        beginToday.set(Calendar.MINUTE, 0);
-        beginToday.set(Calendar.SECOND, 0);
-        beginToday.set(Calendar.MILLISECOND, 0);
-        assertEquals(beginToday.getTime(), calendar.getActiveDayFromDom());
+        Calendar midnightToday = Calendar.getInstance();
+        midnightToday.set(Calendar.HOUR_OF_DAY, 0);
+        midnightToday.set(Calendar.MINUTE, 0);
+        midnightToday.set(Calendar.SECOND, 0);
+        midnightToday.set(Calendar.MILLISECOND, 0);
+        assertEquals(midnightToday.getTime(), calendar.getActiveDayFromDom());
         calendar.findPreviousButton().click();
-        Calendar monthAgo = (Calendar) beginToday.clone();
+        Calendar monthAgo = (Calendar) midnightToday.clone();
         monthAgo.add(Calendar.MONTH, -1);
         assertEquals(monthAgo.getTime(), calendar.getActiveDayFromDom());
     }
@@ -99,7 +105,8 @@ public class CalendarTest {
     @Test
     public void testActivitiesInView() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals(53, calendar.getActivitiesInViewCount());
+        // exact number is unknown as sample app uses random data
+        assertThat(calendar.getActivitiesInViewCount(), greaterThan(10));
         calendar.clickActivityInView(0);
         // TODO: how can we test if click succeeded?
     }
@@ -107,7 +114,8 @@ public class CalendarTest {
     @Test
     public void testMoreLinksInView() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals(15, calendar.getMoreLinksInViewCount());
+        // exact number is unknown as sample app uses random data
+        assertThat(calendar.getMoreLinksInViewCount(), greaterThan(5));
         calendar.clickMoreLinkInView(0);
         assertEquals(AdfCalendar.View.DAY, calendar.getView());
     }
@@ -150,6 +158,69 @@ public class CalendarTest {
             String label = calendar.getActivityInViewLabel(i);
             assertTrue("activity " + i + " should have a label, not " + label, StringUtils.isNotBlank(label));
         }
+    }
+
+    @Test
+    public void testGoToDateMonth() throws ParseException {
+        CalendarDemoPage page = pages.goHome();
+        AdfCalendar calendar = page.findCalendar();
+        calendar.findMonthViewButton().click();
+        // browse back to first day of month
+        calendar.goToDate(yyyymmdd.parse("20150301"));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.MONTH), is(Calendar.MARCH));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.YEAR), is(2015));
+        // browse back to middle of month
+        calendar.goToDate(yyyymmdd.parse("20150115"));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.MONTH), is(Calendar.JANUARY));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.YEAR), is(2015));
+        // browse forward to last day of month
+        calendar.goToDate(yyyymmdd.parse("20150430"));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.MONTH), is(Calendar.APRIL));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.YEAR), is(2015));
+    }
+
+    @Test
+    public void testGoToDateWeek() throws ParseException {
+        CalendarDemoPage page = pages.goHome();
+        AdfCalendar calendar = page.findCalendar();
+        calendar.findWeekViewButton().click();
+        // browse back to first day of week
+        calendar.goToDate(yyyymmdd.parse("20150504")); // monday
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.MONTH), is(Calendar.MAY));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.YEAR), is(2015));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.WEEK_OF_YEAR), is(19));
+        // browse back to middle of week
+        calendar.goToDate(yyyymmdd.parse("20150422")); // wednesday
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.MONTH), is(Calendar.APRIL));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.YEAR), is(2015));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.WEEK_OF_YEAR), is(17));
+        // browse forward to last day of week
+        calendar.goToDate(yyyymmdd.parse("20150516")); // saturday
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.MONTH), is(Calendar.MAY));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.YEAR), is(2015));
+        //assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.WEEK_OF_YEAR), is(20));
+    }
+
+    @Test
+    public void testGoToDateDay() throws ParseException {
+        CalendarDemoPage page = pages.goHome();
+        AdfCalendar calendar = page.findCalendar();
+        calendar.findMonthViewButton().click();
+        // quickly browse by month to target month
+        calendar.goToDate(yyyymmdd.parse("20150301"));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.MONTH), is(Calendar.MARCH));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.YEAR), is(2015));
+        // switch to day and browse back to within february
+        calendar.findDayViewButton().click();
+        calendar.goToDate(yyyymmdd.parse("20150227"));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.DAY_OF_MONTH), is(27));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.MONTH), is(Calendar.FEBRUARY));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.YEAR), is(2015));
+        // browse forward
+        calendar.goToDate(yyyymmdd.parse("20150302"));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.DAY_OF_MONTH), is(2));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.MONTH), is(Calendar.MARCH));
+        assertThat(calendar.getActiveDayFromDomCalendar().get(Calendar.YEAR), is(2015));
     }
 
     public static void main(String[] args) {
