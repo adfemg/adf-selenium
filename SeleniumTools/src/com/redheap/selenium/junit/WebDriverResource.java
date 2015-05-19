@@ -62,7 +62,9 @@ public class WebDriverResource extends ExternalResource {
 
     protected FirefoxProfile createProfile() {
         FirefoxProfile profile = new FirefoxProfile();
-        profile.setEnableNativeEvents(true); // needed for Mac OSX (default is non-native which doesn't work with ADF)
+        // native events cause "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsINativeMouse.click]"
+        // on Windows with multiple calls to AdfSelectOneChoice.clickItemByIndex (and others)
+        profile.setEnableNativeEvents(false);
         profile.setPreference("app.update.enabled", false); // don't bother updating Firefox (takes too much time)
         return profile;
     }
