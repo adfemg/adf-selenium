@@ -73,6 +73,12 @@ public class AdfCalendar extends AdfComponent {
         }
     }
 
+    public Calendar getActiveDayFromDomCalendar() {
+        Calendar retval = Calendar.getInstance();
+        retval.setTime(getActiveDayFromDom());
+        return retval;
+    }
+
     public String getHourZoom() {
         return (String) executeScript(JS_GET_HOUR_ZOOM, getClientId());
     }
@@ -194,6 +200,65 @@ public class AdfCalendar extends AdfComponent {
         target.click();
         waitForPpr();
     }
+
+
+    /**
+     * Browse the calendar with previous/next buttons until the day, week or month is shown that contains the given
+     * date.
+     * @param date date which should be included in the view after this method completes
+     * @throws IllegalStateException when calendar is currently in list view
+     */
+    public void goToDate(final Date date) {
+        if (getView() == View.LIST) {
+            throw new IllegalStateException("goToDate cannot be used with list view");
+        }
+        final Date targetViewStart = startOfViewPeriod(date);
+        int direction;
+        do {
+            direction = targetViewStart.compareTo(startOfViewPeriod(this.getActiveDayFromDom()));
+            if (direction < 0) {
+                // direction < 0 = target date is still in the past.
+                this.findPreviousButton().click();
+            } else if (direction > 0) {
+                // direction > 0 = target date is still in the future.
+                this.findNextButton().click();
+            }
+        } while (direction != 0);
+    }
+
+    /**
+     * Convert a given date to a date that would be at the beginning of the period showing in the browser with the
+     * current view type.
+     * For example, for day view this would only strip the time component from the given date, for week view this
+     * would return midnight at Monday at the beginning of the week that contains the given date, for month view this
+     * would return midnight of the first day of the month containing the given date.
+     * @param date
+     * @return date
+     * @throws IllegalStateException when calendar is currently in list view
+     */
+    private Date startOfViewPeriod(final Date date) {
+        final Calendar retval = Calendar.getInstance();
+        retval.setTime(date);
+        // strip time components
+        retval.set(Calendar.HOUR, 0);
+        retval.set(Calendar.MINUTE, 0);
+        retval.set(Calendar.SECOND, 0);
+        retval.set(Calendar.MILLISECOND, 0);
+        switch (getView()) {
+        case DAY: // nothing to do, other than time stripping
+            break;
+        case WEEK:
+            retval.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            break;
+        case MONTH:
+            retval.set(Calendar.DAY_OF_MONTH, 1);
+            break;
+        case LIST:
+            throw new IllegalStateException("startOfViewPeriod cannot be used with list view");
+        }
+        return retval.getTime();
+    }
+
 
     // raw elements should not be exposed public due to ppr logic that should be part of component
     protected List<WebElement> findAllActivitiesInView() {
