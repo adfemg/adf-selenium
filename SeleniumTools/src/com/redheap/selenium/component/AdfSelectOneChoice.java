@@ -46,16 +46,14 @@ public class AdfSelectOneChoice extends UixValue {
     }
 
     public String getValueLabel() {
-        Object valueObj = getValue();
-        Integer value = null;
-
-        if (valueObj instanceof Number) {
-            value = ((Number) valueObj).intValue();
-        } else if (valueObj instanceof String) {
-            value = Integer.valueOf((String) valueObj);
+        Object value = getValue();
+        if (value instanceof Number) {
+            return getItemLabel(((Number) value).intValue());
+        } else if (value instanceof String) {
+            return getItemLabel(Integer.valueOf((String) value));
+        } else {
+            return null;
         }
-
-        return value == null ? null : getItemLabel(value);
     }
 
     public boolean isCompact() {
