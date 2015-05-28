@@ -1,0 +1,13 @@
+package com.redheap.selenium.component;
+
+import com.redheap.selenium.component.uix.UixInput;
+
+import org.openqa.selenium.WebDriver;
+
+public class AdfInputFile extends UixInput {
+
+    public AdfInputFile(WebDriver webDriver, String string) {
+        super(webDriver, string);
+    }
+
+}
