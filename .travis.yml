@@ -33,4 +33,6 @@ cache:
   directories:
     - $WLS_UNZIP
 before_cache:
+  - $DOMAIN_HOME/bin/stopWebLogic.sh
   - rm -f $MW_HOME/silent_install*.log
+  - rm -f $DOMAIN_HOME/config/config.lok
