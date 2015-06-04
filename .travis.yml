@@ -6,7 +6,7 @@ before_script:
   - ls -al wls
   - mkdir -p wls
   - ls -al wls
-  - wget -O wls/wls.zip https://s3-us-west-2.amazonaws.com/redheap-wls/wls1213_dev_update2.zip
+  - wget -nc -O wls/wls.zip https://s3-us-west-2.amazonaws.com/redheap-wls/wls1213_dev_update2.zip
   - ls -al wls
 
 cache:
