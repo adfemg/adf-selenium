@@ -1,5 +1,10 @@
 language: java
 
+# build time with caching:
+#   11.4 download cache, 53 unzip cache, 2 configure, 10 wait for wls start = 76 (assuming no cache upload)
+# build time without caching:
+#   10 download zip from s3, 6 unzip, 79 configure, 52 wait for wls start = 147
+
 env: WLS_UNZIP=$PWD/wls
      MW_HOME=$WLS_UNZIP/wls12130
      WLS_BIN=$MW_HOME/wlserver/server/bin
@@ -11,7 +16,7 @@ before_script:
   # download weblogic if not yet available from cache
   - test -f $WLS_UNZIP/wls.zip || wget -O $WLS_UNZIP/wls.zip https://s3-us-west-2.amazonaws.com/redheap-wls/wls1213_dev_update2.zip
   # unzip wls.zip if not yet available from cache
-  - test -d $MW_HOME || unzip $WLS_UNZIP/wls.zip -d $WLS_UNZIP
+  - test -d $MW_HOME || unzip -q $WLS_UNZIP/wls.zip -d $WLS_UNZIP
   - ls -al $WLS_UNZIP
   # configure weblogic, will finish fast if already configured in cache
   - (cd $MW_HOME && . ./configure.sh -silent)
@@ -27,13 +32,16 @@ before_script:
   - while true; do sleep 1; wget -q -O - http://localhost:7001/console && echo 'WLS started' && break; done
 
 after_script:
+  # todo: replace with killing weblogic as first ever wlst invoke scans classpath for 30 seconds
   - $DOMAIN_HOME/bin/stopWebLogic.sh
 
 cache:
   directories:
     - $WLS_UNZIP
 before_cache:
+  # stop weblogic before persisting cache
   - $DOMAIN_HOME/bin/stopWebLogic.sh
+  # clear files that would trigger cache update when not needed
   - rm -f $MW_HOME/silent_install*.log
   - rm -f $MW_HOME/logs/*
   - rm -f $DOMAIN_HOME/config/config.lok
