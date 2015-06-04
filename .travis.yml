@@ -3,16 +3,14 @@ language: java
 env: WLS_UNZIP=$PWD/wls MW_HOME=$WLS_UNZIP/wls12130
 # test
 before_script:
-  - pwd
-  - ls -al wls
-  - mkdir -p wls
-  - ls -al wls
-  - test -f wls/wls.zip || wget -O wls/wls.zip https://s3-us-west-2.amazonaws.com/redheap-wls/wls1213_dev_update2.zip
-  - ls -al wls
-  - unzip wls/wls.zip -d wls
-  - ls -al wls
-  - set
+  - ls -al $WLS_UNZIP
+  - mkdir -p $WLS_UNZIP
+  - ls -al $WLS_UNZIP
+  - test -f $WLS_UNZIP/wls.zip || wget -O $WLS_UNZIP/wls.zip https://s3-us-west-2.amazonaws.com/redheap-wls/wls1213_dev_update2.zip
+  - ls -al $WLS_UNZIP
+  - unzip $WLS_UNZIP/wls.zip -d $WLS_UNZIP
+  - ls -al $WLS_UNZIP
 
 cache:
   directories:
-    - wls
+    - $WLS_UNZIP
