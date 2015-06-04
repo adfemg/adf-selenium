@@ -1,1 +1,6 @@
 language: java
+
+# test
+before_script:
+  - pwd
+  - wget https://s3-us-west-2.amazonaws.com/redheap-wls/wls1213_dev_update2.zip
