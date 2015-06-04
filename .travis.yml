@@ -41,9 +41,7 @@ after_script:
 
 cache:
   directories:
-    #- $WLS_UNZIP
-    - $MW_HOME
-    - $DOMAIN_HOME
+    - $WLS_UNZIP
 
 before_cache:
   # stop weblogic before persisting cache
