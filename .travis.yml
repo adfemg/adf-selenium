@@ -10,6 +10,7 @@ before_script:
   - ls -al $WLS_UNZIP
   - test -d $MW_HOME || unzip $WLS_UNZIP/wls.zip -d $WLS_UNZIP
   - ls -al $WLS_UNZIP
+  - $MW_HOME/configure.sh -silent
 
 cache:
   directories:
