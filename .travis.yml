@@ -45,3 +45,5 @@ before_cache:
   - rm -f $MW_HOME/silent_install*.log
   - rm -f $MW_HOME/logs/*
   - rm -f $DOMAIN_HOME/config/config.lok
+  - rm -f $DOMAIN_HOME/servers/myserver/logs/*
+  - rm -rf $DOMAIN_HOME/servers/myserver/tmp/*
