@@ -24,10 +24,13 @@ before_script:
                          -Dweblogic.management.username=weblogic -Dweblogic.management.password=weblogic1 
                          weblogic.Server &)
   # wait for WLS to complete its start in the background
-  - while true; do sleep 1; wget -O - http://localhost:7001/console && echo 'WLS started' && break; done
+  - while true; do sleep 1; wget -q -O - http://localhost:7001/console && echo 'WLS started' && break; done
 
 after_script:
   - $DOMAIN_HOME/bin/stopWebLogic.sh
+
 cache:
   directories:
     - $WLS_UNZIP
+before_cache:
+  - rm -f $MW_HOME/silent_install.log
