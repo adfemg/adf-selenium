@@ -1,6 +1,10 @@
 language: java
 
-env: WLS_UNZIP=$PWD/wls MW_HOME=$WLS_UNZIP/wls12130 WLS_BIN=$MW_HOME/wlserver/server/bin DOMAIN_HOME=$WLS_UNZIP/domain_home
+env: WLS_UNZIP=$PWD/wls
+     MW_HOME=$WLS_UNZIP/wls12130
+	 WLS_BIN=$MW_HOME/wlserver/server/bin
+	 DOMAIN_HOME=$WLS_UNZIP/domain_home
+
 # test
 before_script:
   - mkdir -p $WLS_UNZIP
@@ -14,7 +18,11 @@ before_script:
   - cat $MW_HOME/silent_install.log
   # setup WLS environment and create and start WLS domain
   - mkdir -p $DOMAIN_HOME
-  - (. $WLS_BIN/setWLSEnv.sh && cd $DOMAIN_HOME && echo 'y' | $JAVA_HOME/bin/java $JAVA_OPTIONS -Xmx1024m -XX:MaxPermSize=256m -Dweblogic.management.username=weblogic -Dweblogic.management.password=weblogic1 weblogic.Server)
+  - (. $WLS_BIN/setWLSEnv.sh && cd $DOMAIN_HOME && echo 'y' | 
+     $JAVA_HOME/bin/java $JAVA_OPTIONS -Xmx1024m -XX:MaxPermSize=256m 
+	                     -Dweblogic.Domain=mydomain -Dweblogic.Name=myserver
+	                     -Dweblogic.management.username=weblogic -Dweblogic.management.password=weblogic1 
+						 weblogic.Server)
 
 cache:
   directories:
