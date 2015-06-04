@@ -23,6 +23,7 @@ before_script:
   - cat $MW_HOME/silent_install.log
   # setup WLS environment and create and start WLS domain
   - mkdir -p $DOMAIN_HOME
+  - test -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/ldap.tar && tar -xf $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/ldap.tar -C $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/
   - (. $WLS_BIN/setWLSEnv.sh && cd $DOMAIN_HOME && echo 'y' | 
      $JAVA_HOME/bin/java $JAVA_OPTIONS -Xmx1024m -XX:MaxPermSize=256m 
                          -Dweblogic.Domain=mydomain -Dweblogic.Name=myserver
@@ -31,6 +32,8 @@ before_script:
   # wait for WLS to complete its start in the background
   # todo: this also triggers deployment of console app which takes time
   - while true; do sleep 1; wget -q -O - http://localhost:7001/console && echo 'WLS started' && break; done
+  # archive ldap files on fresh start (not from cache)
+  - test -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/ldap.tar || tar -cf $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/ldap.tar $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/Embedded*
 
 after_script:
   # todo: replace with killing weblogic as first ever wlst invoke scans classpath for 30 seconds
@@ -50,9 +53,7 @@ before_cache:
   - rm -f $MW_HOME/logs/*
   - rm -f $DOMAIN_HOME/config/config.lok
   # remove ldap files that seem to change at each wls run
-  - rm -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/*.tran
-  - rm -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/*.trpos
-  - rm -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/*.twpos
+  - rm -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/Embedded*
   # not sure what store is for (contains default and diagnostics subdirs that change)
   - rm -f $DOMAIN_HOME/servers/myserver/data/store/default/*
   - rm -f $DOMAIN_HOME/servers/myserver/data/store/diagnostics/*
