@@ -23,6 +23,8 @@ before_script:
                          -Dweblogic.Domain=mydomain -Dweblogic.Name=myserver
                          -Dweblogic.management.username=weblogic -Dweblogic.management.password=weblogic1 
                          weblogic.Server &)
+  # wait for WLS to complete its start in the background
+  - while true; do sleep 1; wget -O - http://localhost:7001/console && echo 'WLS started' && break; done
 
 after_script:
   - $DOMAIN_HOME/bin/stopWebLogic.sh
