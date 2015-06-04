@@ -22,8 +22,10 @@ before_script:
      $JAVA_HOME/bin/java $JAVA_OPTIONS -Xmx1024m -XX:MaxPermSize=256m 
                          -Dweblogic.Domain=mydomain -Dweblogic.Name=myserver
                          -Dweblogic.management.username=weblogic -Dweblogic.management.password=weblogic1 
-                         weblogic.Server)
+                         weblogic.Server &)
 
+after_script:
+  - $DOMAIN_HOME/bin/stopWebLogic.sh
 cache:
   directories:
     - $WLS_UNZIP
