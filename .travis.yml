@@ -8,7 +8,7 @@ before_script:
   - ls -al $WLS_UNZIP
   - test -f $WLS_UNZIP/wls.zip || wget -O $WLS_UNZIP/wls.zip https://s3-us-west-2.amazonaws.com/redheap-wls/wls1213_dev_update2.zip
   - ls -al $WLS_UNZIP
-  - test -d MW_HOME || unzip $WLS_UNZIP/wls.zip -d $WLS_UNZIP
+  - test -d $MW_HOME || unzip $WLS_UNZIP/wls.zip -d $WLS_UNZIP
   - ls -al $WLS_UNZIP
 
 cache:
