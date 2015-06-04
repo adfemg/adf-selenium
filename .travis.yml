@@ -1,5 +1,6 @@
 language: java
 
+env: WLS_UNZIP=$PWD/wls MW_HOME=$WLS_UNZIP/wls12130
 # test
 before_script:
   - pwd
@@ -10,6 +11,7 @@ before_script:
   - ls -al wls
   - unzip wls/wls.zip -d wls
   - ls -al wls
+  - set
 
 cache:
   directories:
