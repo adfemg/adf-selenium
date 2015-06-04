@@ -29,6 +29,7 @@ before_script:
                          -Dweblogic.management.username=weblogic -Dweblogic.management.password=weblogic1 
                          weblogic.Server &)
   # wait for WLS to complete its start in the background
+  # todo: this also triggers deployment of console app which takes time
   - while true; do sleep 1; wget -q -O - http://localhost:7001/console && echo 'WLS started' && break; done
 
 after_script:
@@ -45,5 +46,12 @@ before_cache:
   - rm -f $MW_HOME/silent_install*.log
   - rm -f $MW_HOME/logs/*
   - rm -f $DOMAIN_HOME/config/config.lok
+  # remove ldap files that seem to change at each wls run
+  - rm -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/*.tran
+  - rm -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/*.trpos
+  - rm -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/*.twpos
+  # not sure what store is for (contains default and diagnostics subdirs that change)
+  - rm -f $DOMAIN_HOME/servers/myserver/data/store/default/*
+  - rm -f $DOMAIN_HOME/servers/myserver/data/store/diagnostics/*
   - rm -f $DOMAIN_HOME/servers/myserver/logs/*
   - rm -rf $DOMAIN_HOME/servers/myserver/tmp/*
