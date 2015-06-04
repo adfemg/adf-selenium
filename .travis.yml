@@ -1,17 +1,20 @@
 language: java
 
-env: WLS_UNZIP=$PWD/wls MW_HOME=$WLS_UNZIP/wls12130
+env: WLS_UNZIP=$PWD/wls MW_HOME=$WLS_UNZIP/wls12130 WLS_BIN=$MW_HOME/wlserver/server/bin DOMAIN_HOME=$WLS_UNZIP/domain_home
 # test
 before_script:
-  - ls -al $WLS_UNZIP
   - mkdir -p $WLS_UNZIP
-  - ls -al $WLS_UNZIP
+  # download weblogic if not yet available from cache
   - test -f $WLS_UNZIP/wls.zip || wget -O $WLS_UNZIP/wls.zip https://s3-us-west-2.amazonaws.com/redheap-wls/wls1213_dev_update2.zip
-  - ls -al $WLS_UNZIP
+  # unzip wls.zip if not yet available from cache
   - test -d $MW_HOME || unzip $WLS_UNZIP/wls.zip -d $WLS_UNZIP
   - ls -al $WLS_UNZIP
+  # configure weblogic, will finish fast if already configured in cache
   - (cd $MW_HOME && . ./configure.sh -silent)
   - cat $MW_HOME/silent_install.log
+  # setup WLS environment and create and start WLS domain
+  - mkdir -p $DOMAIN_HOME
+  - (. $WLS_BIN/setWLSEnv.sh && cd $DOMAIN_HOME && echo 'y' | $JAVA_HOME/bin/java $JAVA_OPTIONS -Xmx1024m -XX:MaxPermSize=256m -Dweblogic.management.username=weblogic -Dweblogic.management.password=weblogic1 weblogic.Server)
 
 cache:
   directories:
