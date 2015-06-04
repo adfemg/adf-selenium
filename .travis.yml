@@ -8,6 +8,8 @@ before_script:
   - ls -al wls
   - test -f wls/wls.zip || wget -O wls/wls.zip https://s3-us-west-2.amazonaws.com/redheap-wls/wls1213_dev_update2.zip
   - ls -al wls
+  - unzip wls/wls.zip -d wls
+  - ls -al wls
 
 cache:
   directories:
