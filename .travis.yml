@@ -11,6 +11,7 @@ env: WLS_UNZIP=$PWD/wls
      DOMAIN_HOME=$WLS_UNZIP/domain_home
      LDAP_DIR=$DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles
      LDAP_TAR=$LDAP_DIR/ldap.tar
+     DYNAMIC_TAR=$DOMAIN_HOME/dynamic.tar
 
 cache:
   directories:
@@ -30,7 +31,7 @@ before_script:
   - cat $MW_HOME/silent_install.log
   # setup WLS environment and create and start WLS domain
   - mkdir -p $DOMAIN_HOME
-  - test ! -f $LDAP_DIR/ldap.tar || (cd $LDAP_DIR && tar -xf ldap.tar) 
+  - test ! -f $DYNAMIC_TAR || (cd $DOMAIN_HOME && tar -xf dynamic.tar) 
   - (. $WLS_BIN/setWLSEnv.sh && cd $DOMAIN_HOME && echo 'y' | 
      $JAVA_HOME/bin/java $JAVA_OPTIONS -Xmx1024m -XX:MaxPermSize=256m 
                          -Dweblogic.Domain=mydomain -Dweblogic.Name=myserver
@@ -39,7 +40,7 @@ before_script:
   # wait for WLS to complete its start in the background
   # todo: this also triggers deployment of console app which takes time
   - while true; do sleep 1; wget -q -O - http://localhost:7001/console && echo 'WLS started' && break; done
-  - ls -al $LDAP_DIR
+  - ls -al $DOMAIN_DIR
 
 # stuff to run after a build (clean up)
 #after_script:
@@ -52,16 +53,16 @@ before_cache:
   # stop weblogic before persisting cache
   # todo: replace with killing weblogic as first ever wlst invoke scans classpath for 30 seconds
   - $DOMAIN_HOME/bin/stopWebLogic.sh
-  # archive ldap files if tar does not exist yet (so not started with cache)
-  - test -f $LDAP_DIR/ldap.tar || (cd $LDAP_DIR && tar -c -f ldap.tar Embedded*) 
-  - ls -al $LDAP_DIR
+  # archive dynamic files if tar does not exist yet (so not started with cache)
+  - test -f $DYNAMIC_TAR || (cd $DOMAIN_DIR && tar -c -f dynamic.tar servers/myserver/data/) 
+  - ls -al $DOMAIN_DIR
   # clear files that would trigger cache update when not needed
   - rm -f $MW_HOME/silent_install*.log
   - rm -f $MW_HOME/logs/*
   - rm -f $DOMAIN_HOME/config/config.lok
-  # remove ldap files that seem to change at each wls run
+  # remove dynamic files that seem to change at each wls run
   # initial version will be kept in tar file
-  - rm -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/Embedded*
+  - rm -rf $DOMAIN_HOME/servers/myserver/data/*
   # not sure what store is for (contains default and diagnostics subdirs that change)
   - rm -f $DOMAIN_HOME/servers/myserver/data/store/default/*
   - rm -f $DOMAIN_HOME/servers/myserver/data/store/diagnostics/*
