@@ -12,7 +12,12 @@ env: WLS_UNZIP=$PWD/wls
      LDAP_DIR=$DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles
      LDAP_TAR=$LDAP_DIR/ldap.tar
 
-# test
+cache:
+  directories:
+    - $WLS_UNZIP
+
+# setup to run before doing the actual build
+# installs weblogic and creates a domain
 before_script:
   - mkdir -p $WLS_UNZIP
   # download weblogic if not yet available from cache
@@ -34,26 +39,27 @@ before_script:
   # wait for WLS to complete its start in the background
   # todo: this also triggers deployment of console app which takes time
   - while true; do sleep 1; wget -q -O - http://localhost:7001/console && echo 'WLS started' && break; done
-  # archive ldap files on fresh start (not from cache)
-  - test -f $LDAP_TAR || tar -cf $LDAP_TAR $LDAP_DIR/Embedded*
-  - ls -al $LDAP_DIR
 
-after_script:
+# stuff to run after a build (clean up)
+#after_script:
   # todo: replace with killing weblogic as first ever wlst invoke scans classpath for 30 seconds
-  - $DOMAIN_HOME/bin/stopWebLogic.sh
+#  - $DOMAIN_HOME/bin/stopWebLogic.sh
 
-cache:
-  directories:
-    - $WLS_UNZIP
-
+# stuff to run before caching the final WLS directory
+# cleans out things that change on each run and would trigger a cache refresh
 before_cache:
   # stop weblogic before persisting cache
+  # todo: replace with killing weblogic as first ever wlst invoke scans classpath for 30 seconds
   - $DOMAIN_HOME/bin/stopWebLogic.sh
+  # archive ldap files if tar does not exist yet (so not started with cache)
+  - test -f $LDAP_TAR || tar -cf $LDAP_TAR $LDAP_DIR/Embedded*
+  - ls -al $LDAP_DIR
   # clear files that would trigger cache update when not needed
   - rm -f $MW_HOME/silent_install*.log
   - rm -f $MW_HOME/logs/*
   - rm -f $DOMAIN_HOME/config/config.lok
   # remove ldap files that seem to change at each wls run
+  # initial version will be kept in tar file
   - rm -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/Embedded*
   # not sure what store is for (contains default and diagnostics subdirs that change)
   - rm -f $DOMAIN_HOME/servers/myserver/data/store/default/*
