@@ -30,7 +30,9 @@ before_script:
   - cat $MW_HOME/silent_install.log
   # setup WLS environment and create and start WLS domain
   - mkdir -p $DOMAIN_HOME
+  - ls -al $LDAP_TAR
   - test ! -f $LDAP_TAR || tar -xf $LDAP_TAR -C $LDAP_DIR
+  - ls -al $LDAP_TAR
   - (. $WLS_BIN/setWLSEnv.sh && cd $DOMAIN_HOME && echo 'y' | 
      $JAVA_HOME/bin/java $JAVA_OPTIONS -Xmx1024m -XX:MaxPermSize=256m 
                          -Dweblogic.Domain=mydomain -Dweblogic.Name=myserver
