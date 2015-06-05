@@ -59,12 +59,10 @@ before_cache:
   # clear files that would trigger cache update when not needed
   - rm -f $MW_HOME/silent_install*.log
   - rm -f $MW_HOME/logs/*
-  - rm -f $DOMAIN_HOME/config/config.lok
+  - rm  -f $DOMAIN_HOME/shutdown-myserver.py
+  - rm  -f $DOMAIN_HOME/config/config.lok
   # remove dynamic files that seem to change at each wls run
   # initial version will be kept in tar file
   - rm -rf $DOMAIN_HOME/servers/myserver/data/*
-  # not sure what store is for (contains default and diagnostics subdirs that change)
-  - rm -f $DOMAIN_HOME/servers/myserver/data/store/default/*
-  - rm -f $DOMAIN_HOME/servers/myserver/data/store/diagnostics/*
-  - rm -f $DOMAIN_HOME/servers/myserver/logs/*
+  - rm  -f $DOMAIN_HOME/servers/myserver/logs/*
   - rm -rf $DOMAIN_HOME/servers/myserver/tmp/*
