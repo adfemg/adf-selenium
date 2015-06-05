@@ -30,7 +30,7 @@ before_script:
   - cat $MW_HOME/silent_install.log
   # setup WLS environment and create and start WLS domain
   - mkdir -p $DOMAIN_HOME
-  - test ! -f $LDAP_DIR/ldap.tar || tar -x -C $LDAP_DIR -f $LDAP_DIR/ldap.tar 
+  - test ! -f $LDAP_DIR/ldap.tar || (cd $LDAP_DIR && tar -xf ldap.tar) 
   - (. $WLS_BIN/setWLSEnv.sh && cd $DOMAIN_HOME && echo 'y' | 
      $JAVA_HOME/bin/java $JAVA_OPTIONS -Xmx1024m -XX:MaxPermSize=256m 
                          -Dweblogic.Domain=mydomain -Dweblogic.Name=myserver
@@ -53,7 +53,7 @@ before_cache:
   # todo: replace with killing weblogic as first ever wlst invoke scans classpath for 30 seconds
   - $DOMAIN_HOME/bin/stopWebLogic.sh
   # archive ldap files if tar does not exist yet (so not started with cache)
-  - test -f $LDAP_DIR/ldap.tar || tar -c -C $LDAP_DIR -f $LDAP_DIR/ldap.tar Embedded* 
+  - test -f $LDAP_DIR/ldap.tar || (cd $LDAP_DIR && tar -c -f ldap.tar Embedded*) 
   - ls -al $LDAP_DIR
   # clear files that would trigger cache update when not needed
   - rm -f $MW_HOME/silent_install*.log
