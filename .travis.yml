@@ -30,9 +30,7 @@ before_script:
   - cat $MW_HOME/silent_install.log
   # setup WLS environment and create and start WLS domain
   - mkdir -p $DOMAIN_HOME
-  - ls -al $LDAP_DIR
   - test ! -f $LDAP_DIR/ldap.tar || tar -x -C $LDAP_DIR -f ldap.tar 
-  - ls -al $LDAP_DIR
   - (. $WLS_BIN/setWLSEnv.sh && cd $DOMAIN_HOME && echo 'y' | 
      $JAVA_HOME/bin/java $JAVA_OPTIONS -Xmx1024m -XX:MaxPermSize=256m 
                          -Dweblogic.Domain=mydomain -Dweblogic.Name=myserver
@@ -41,6 +39,7 @@ before_script:
   # wait for WLS to complete its start in the background
   # todo: this also triggers deployment of console app which takes time
   - while true; do sleep 1; wget -q -O - http://localhost:7001/console && echo 'WLS started' && break; done
+  - ls -al $LDAP_DIR
 
 # stuff to run after a build (clean up)
 #after_script:
