@@ -9,6 +9,8 @@ env: WLS_UNZIP=$PWD/wls
      MW_HOME=$WLS_UNZIP/wls12130
      WLS_BIN=$MW_HOME/wlserver/server/bin
      DOMAIN_HOME=$WLS_UNZIP/domain_home
+     LDAP_DIR=$DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles
+     LDAP_TAR=$LDAP_DIR/ldap.tar
 
 # test
 before_script:
@@ -23,7 +25,7 @@ before_script:
   - cat $MW_HOME/silent_install.log
   # setup WLS environment and create and start WLS domain
   - mkdir -p $DOMAIN_HOME
-  - test -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/ldap.tar && tar -xf $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/ldap.tar -C $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/
+  - test ! -f $LDAP_TAR || tar -xf $LDAP_TAR -C $LDAP_DIR
   - (. $WLS_BIN/setWLSEnv.sh && cd $DOMAIN_HOME && echo 'y' | 
      $JAVA_HOME/bin/java $JAVA_OPTIONS -Xmx1024m -XX:MaxPermSize=256m 
                          -Dweblogic.Domain=mydomain -Dweblogic.Name=myserver
@@ -33,7 +35,8 @@ before_script:
   # todo: this also triggers deployment of console app which takes time
   - while true; do sleep 1; wget -q -O - http://localhost:7001/console && echo 'WLS started' && break; done
   # archive ldap files on fresh start (not from cache)
-  - test -f $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/ldap.tar || tar -cf $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/ldap.tar $DOMAIN_HOME/servers/myserver/data/ldap/ldapfiles/Embedded*
+  - test -f $LDAP_TAR || tar -cf $LDAP_TAR $LDAP_DIR/Embedded*
+  - ls -al $LDAP_DIR
 
 after_script:
   # todo: replace with killing weblogic as first ever wlst invoke scans classpath for 30 seconds
