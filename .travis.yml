@@ -42,6 +42,7 @@ before_script:
   - while true; do sleep 1; wget -q -O - http://localhost:7001/console && echo 'WLS started' && break; done
   - ls -al $DOMAIN_DIR
 
+
 # stuff to run after a build (clean up)
 #after_script:
   # todo: replace with killing weblogic as first ever wlst invoke scans classpath for 30 seconds
