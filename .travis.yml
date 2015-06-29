@@ -17,7 +17,6 @@ cache:
   directories:
     - $WLS_UNZIP
 
-
 # setup to run before doing the actual build
 # installs weblogic and creates a domain
 before_script:
