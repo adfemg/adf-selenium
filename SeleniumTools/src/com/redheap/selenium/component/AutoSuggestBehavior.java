@@ -78,10 +78,16 @@ public class AutoSuggestBehavior<C extends UixInput> {
     public void typeAndWait(String value) {
         component.clear();
         component.sendKeys(Keys.BACK_SPACE, value);
+        final AdfComponent comp = component;
         new WebDriverWait(component.getDriver(), 10, 100).until(new Predicate<WebDriver>() {
             @Override
             public boolean apply(WebDriver webDriver) {
-                return isPopupVisible();
+                if (isPopupVisible()) {
+                    comp.waitForPpr();
+                    return true;
+                } else {
+                    return false;
+                }
             }
         });
     }

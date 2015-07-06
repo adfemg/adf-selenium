@@ -2,68 +2,101 @@ package com.redheap.selenium.component;
 
 import com.redheap.selenium.component.uix.UixValue;
 
-import org.openqa.selenium.Keys;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class AdfSelectManyChoice extends UixValue {
 
     // see http://jdevadf.oracle.com/adf-richclient-demo/docs/js-subids.html
-    private static final String SUBID_content = "content"; // <select> element
-    private static final String SUBID_dropdown = "dropdown"; // only when mode=compact <a> element
-    private static final String SUBID_item = "item"; // item[99] <option> element (or <li> when mode=compact)
+    private static final String SUBID_content = "content"; // <input type='text'> element
+    private static final String SUBID_drop = "drop"; // <a> element to expand
+    private static final String SUBID_item = "item"; // item[99] <input type='checkbox'> element
     private static final String SUBID_label = "label"; // <label> element
 
-    private static final String JS_VALUE_BY_LABEL =
+    private static final String JS_INDEX_BY_LABEL =
         JS_FIND_COMPONENT +
-        "var items=comp.getSelectItems(); for (var i=0;i<items.length;i++){if (items[i].getLabel()===arguments[1]) return items[i].getValue()}; return null;";
-    private static final String JS_LABEL_BY_VALUE =
+        "var items=comp.getSelectItems(); for (var i=0;i<items.length;i++){if (items[i].getLabel()===arguments[1]) return i}; return null;";
+    private static final String JS_INDEX_BY_VALUE =
         JS_FIND_COMPONENT +
-        "var items=comp.getSelectItems(); for (var i=0;i<items.length;i++){if (items[i].getValue()===arguments[1]) return items[i].getLabel()}; return null;";
+        "var items=comp.getSelectItems(); for (var i=0;i<items.length;i++){if (items[i].getValue()===arguments[1]) return i}; return null;";
+    private static final String JS_LABEL_BY_INDEX =
+        JS_FIND_COMPONENT +
+        "return comp.getSelectItems()[arguments[1]] && comp.getSelectItems()[arguments[1]].getLabel();";
+    private static final String JS_VALUE_BY_INDEX =
+        JS_FIND_COMPONENT +
+        "return comp.getSelectItems()[arguments[1]] && comp.getSelectItems()[arguments[1]].getValue();";
 
-    public AdfSelectManyChoice(WebDriver webDriver, String clientId) {
-        super(webDriver, clientId);
+    public AdfSelectManyChoice(WebDriver driver, String clientId) {
+        super(driver, clientId);
     }
 
     /**
-     * Click all items in the list on the indices
+     * Click items in the list on the indices. This deselects an item if it was selected or selects it if it was not.
      * @param indices
+     * @see #clickItemsByLabels
      */
-    public void clickItemsByIndices(int[] indices) {
-        // expand list
-        WebElement dropdown = findDropdown();
-        if (dropdown != null) {
-            dropdown.click(); // mode=compact
-        } else {
-            click(); // click element itself when not in compact mode
-        }
+    public void clickItemsByIndices(long... indices) {
+        findDrop().click(); // expand list
         // click items within list
         for (int i = 0; i < indices.length; i++) {
             findItem(indices[i]).click();
         }
-        findContentNode().sendKeys(Keys.TAB);
+        findDrop().click(); // collapse list
         waitForPpr();
     }
 
     /**
-     * Click all items in the list which equal the labels
-     * @param label
+     * Click all items in the list which equal the labels. This deselects an item if it was selected or selects it if
+     * it was not
+     * @param labels
+     * @see #clickItemsByIndices
      */
-    public void clickItemsByLabels(String[] label) {
-        int[] indices = new int[label.length];
-        for (int i = 0; i < label.length; i++) {
-            indices[i] = getValueByLabel(label[i]);
+    public void clickItemsByLabels(String... labels) {
+        long[] indices = new long[labels.length];
+        for (int i = 0, n = labels.length; i < n; i++) {
+            indices[i] = getItemIndexByLabel(labels[i]);
         }
         clickItemsByIndices(indices);
     }
 
     /**
-     * Get the label of an item in the list
-     * @param index
-     * @return string label
+     * Returns the value of the selected items in this selectManyChoice. Typically these are just string values
+     * with the indices unless valuePassThrou is enabled which causes the server-side value to be used at the client
+     * side.
+     * @return values of items which could be empty but never {@code null}
+     * @see #getValueLabels
      */
-    public String getItemLabel(int index) {
-        return (String) executeScript(JS_LABEL_BY_VALUE, getClientId(), Integer.toString(index));
+    @Override
+    public List<Object> getValue() {
+        List<Object> val = (List<Object>) super.getValue();
+        return val == null ? Collections.emptyList() : new ArrayList<Object>(val);
+    }
+
+    /**
+     * Returns the labels of the selected items in this selectManyChoice.
+     * @return collection of item labels
+     * @see #getValue
+     */
+    public List<String> getValueLabels() {
+        List<Object> vals = getValue();
+        List<String> retval = new ArrayList<String>(vals.size());
+        for (Object val : vals) {
+            retval.add(getItemLabel(getItemIndexByValue(val)));
+        }
+        return retval;
+    }
+
+    public long[] getValueIndices() {
+        List<Object> vals = getValue();
+        long[] retval = new long[vals.size()];
+        for (int i = 0, n = vals.size(); i < n; i++) {
+            retval[i] = getItemIndexByValue(vals.get(i));
+        }
+        return retval;
     }
 
     /**
@@ -71,18 +104,24 @@ public class AdfSelectManyChoice extends UixValue {
      * @param label
      * @return int value
      */
-    public int getValueByLabel(String label) {
-        String value = (String) executeScript(JS_VALUE_BY_LABEL, getClientId(), label);
-        return value == null ? -1 : Integer.valueOf(value);
+    public long getItemIndexByLabel(String label) {
+        Long index = (Long) executeScript(JS_INDEX_BY_LABEL, getClientId(), label);
+        return index == null ? -1 : Long.valueOf(index);
     }
 
-    /**
-     * Get the valuelabel
-     * @return string value
-     */
-    public String getValueLabel() {
-        String value = (String) getValue();
-        return value == null || value.isEmpty() ? null : getItemLabel(Integer.valueOf(value));
+    public long getItemIndexByValue(Object value) {
+        Long index = (Long) executeScript(JS_INDEX_BY_VALUE, getClientId(), value);
+        return index == null ? -1 : Long.valueOf(index);
+    }
+
+    public String getItemLabel(long index) {
+        String label = (String) executeScript(JS_LABEL_BY_INDEX, getClientId(), index);
+        return label;
+    }
+
+    public Object getItemValue(long index) {
+        Object value = executeScript(JS_VALUE_BY_INDEX, getClientId(), index);
+        return value;
     }
 
     /**
@@ -94,21 +133,21 @@ public class AdfSelectManyChoice extends UixValue {
     }
 
     /**
-     * Method to get the dropdown list
+     * Method to get the &lt;a&gt; element to expand or collapse the dropdown list
      * @return the dropdown WebElement
      */
-    protected WebElement findDropdown() {
-        return findSubIdElement(SUBID_dropdown);
+    protected WebElement findDrop() {
+        return findSubIdElement(SUBID_drop);
     }
 
     /**
-     * Get an item in the list by index
+     * Get an item in the list by index.
      * @param index
-     * @return The item WebElement
+     * @return The &lt;input type=checkbox&gt; item WebElement
      */
-    protected WebElement findItem(int index) {
-        // warning: does not work for mode=compact when not yet expanded
-        return findSubIdElement(SUBID_item + "[" + index + "]");
+    protected WebElement findItem(long index) {
+        Object value = getItemValue(index);
+        return findSubIdElement(SUBID_item + "[" + value + "]");
     }
 
     /**
