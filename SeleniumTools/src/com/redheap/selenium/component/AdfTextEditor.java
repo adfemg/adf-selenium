@@ -1,6 +1,7 @@
 package com.redheap.selenium.component;
 
 import com.redheap.selenium.component.uix.UixInput;
+import com.redheap.selenium.errors.SubIdNotFoundException;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,9 +9,9 @@ import org.openqa.selenium.WebElement;
 public class AdfTextEditor extends UixInput {
 
     // subid's at http://jdevadf.oracle.com/adf-richclient-demo/docs/js-subids.html
-    private static final String SUBID_cont = "cont"; // Gets the IFrame
-    private static final String SUBID_content =
-        "content"; // Gets the Head Div with all other content like toolbar,IFrame etc.
+    private static final String JS_FIND_CONTENT_NODE =
+        JS_FIND_ELEMENT +
+        "return (comp.getEditMode()==\"wysiwyg\"?AdfSubIdUtils.getSubIdElementById(comp, \"cont\"):AdfSubIdUtils.getSubIdElementById(comp, \"src\"));";
     private static final String SUBID_label = "label"; // Gets the content_Label
     private static final String SUBID_bold_button = "_afrBold"; // Bold button
     private static final String SUBID_italic_button = "_afrItalic"; // Italic butotn
@@ -21,6 +22,9 @@ public class AdfTextEditor extends UixInput {
     private static final String SUBID_indent = "_afrIndent"; // Indent button
     private static final String SUBID_ordered_list = "_afrOrdList"; // Orderedlist button
     private static final String SUBID_unordered_list = "_afrUnordList"; // Unorderedlist button
+    private static final String SUBID_mode_source = "_afrModeCode"; // Editor mode source button
+    private static final String SUBID_mode_wysiwyg = "_afrModeRichText"; // Editor mode wysiwyg button
+
 
     public AdfTextEditor(WebDriver webDriver, String clientId) {
         super(webDriver, clientId);
@@ -99,6 +103,22 @@ public class AdfTextEditor extends UixInput {
     }
 
     /**
+     * Gets the editor mode source button
+     * @return editor mode source button
+     */
+    public AdfCommandToolbarButton findEditorModeSourceButton() {
+        return findSubIdComponent(SUBID_mode_source);
+    }
+
+    /**
+     * Gets the editor mode wysiwyg button
+     * @return editor mode wysiwyg button
+     */
+    public AdfCommandToolbarButton findEditorModeWysiwygButton() {
+        return findSubIdComponent(SUBID_mode_wysiwyg);
+    }
+
+    /**
      * Gets the component label.
      * @return the component label
      */
@@ -108,27 +128,27 @@ public class AdfTextEditor extends UixInput {
     }
 
     /**
-     * Method to get the IFrame WebElement.
-     * @return the IFrame WebElement
+     * Returns the submittedValue instead of the value.
+     * getValue() javascript is not implemented and always returns null for RTE.
+     * @return submittedValue
      */
-    protected WebElement findCont() {
-        return findSubIdElement(SUBID_cont);
-    }
-
     @Override
     public Object getValue() {
-        // getValue() javascript is not implemented and always returns null for RTE. So just use the submittedValue
         return getSubmittedValue();
     }
 
     /**
-     * Method to get the Content WebElement.
-     * <p>
-     * This element has both the Toolbar as well as the IFrame with the content.
-     * @return the Content WebElement
+     * Returns the content node depending on the Editor Mode (source or wysiwyg).
+     * @return text editor content node.
      */
-    protected WebElement findContent() {
-        return findSubIdElement(SUBID_content);
+    @Override
+    protected WebElement findContentNode() {
+        final Object result = executeScript(JS_FIND_CONTENT_NODE, getClientId());
+        if (result instanceof WebElement) {
+            return (WebElement) result;
+        } else {
+            throw new SubIdNotFoundException("could not find content node for " + getElement());
+        }
     }
 
     /**
