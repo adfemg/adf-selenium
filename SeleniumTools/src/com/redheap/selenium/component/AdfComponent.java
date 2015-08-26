@@ -382,6 +382,13 @@ public class AdfComponent /*extends BaseObject*/ {
         return ((RemoteWebDriver) driver).getCapabilities().getPlatform().is(p);
     }
 
+    public void hover() {
+        WebElement element = getElement();
+        // we use pause to give javascript timer to detect hover and show popup
+        new Actions(getDriver()).moveToElement(element).pause(1000).perform();
+        waitForPpr();
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("clientid", clientid).build();
