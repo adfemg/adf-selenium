@@ -9,11 +9,13 @@ import com.redheap.selenium.pages.TextEditorDemoPage;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
+
+import org.openqa.selenium.Keys;
 
 public class TextEditorTest {
 
@@ -34,14 +36,33 @@ public class TextEditorTest {
 
     @Test
     public void testContentsTextEditor() {
-        AdfTextEditor texteditor = pages.goHome().findTextEditor();
+        final AdfTextEditor texteditor = pages.goHome().findTextEditor();
         assertEquals("Rich text value", texteditor.getLabel());
         assertEquals(INITIAL_CONTENT, texteditor.getValue());
+
+        texteditor.typeValue("");
+        assertEquals("", texteditor.getValue());
+        texteditor.typeValue("This is plain text");
+        texteditor.sendKeys(Keys.ENTER);
+        assertEquals("This is plain text<br>", texteditor.getValue());
+        texteditor.typeValue("");
+        texteditor.sendKeys("This is ");
+        texteditor.findBoldButton().click();
+        texteditor.sendKeys("BOLD");
+        texteditor.tabNext();
+        assertEquals("This is <span style=\"font-weight: bold;\">BOLD</span><br>", texteditor.getValue());
+
+        texteditor.findEditorModeSourceButton().click();
+
+        texteditor.typeValue("");
+        assertEquals("", texteditor.getValue());
+        texteditor.typeValue("Test54321");
+        assertEquals("Test54321", texteditor.getValue());
     }
 
     @Test
     public void testToolbarButtons() {
-        AdfTextEditor texteditor = pages.goHome().findTextEditor();
+        final AdfTextEditor texteditor = pages.goHome().findTextEditor();
         texteditor.findBoldButton().click();
         texteditor.findOrderedListButton().click();
     }

@@ -2,6 +2,8 @@ package com.redheap.selenium.component;
 
 import com.redheap.selenium.component.uix.UixInput;
 
+import java.io.File;
+
 import org.openqa.selenium.WebDriver;
 
 public class AdfInputFile extends UixInput {
@@ -16,6 +18,15 @@ public class AdfInputFile extends UixInput {
 
     public AdfInputFile(WebDriver driver, String clientid) {
         super(driver, clientid);
+    }
+
+    public void typeFileName(File file) {
+        if (!(file != null && file.isFile() && file.canRead())) {
+            throw new IllegalArgumentException("cannot read file " + file);
+        }
+        // sendKeys to input[type='file'] already triggers submit when autosubmit=true, no need for Tab-key
+        sendKeys(file.getAbsolutePath());
+        waitForPpr();
     }
 
 }
