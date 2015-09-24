@@ -1,41 +1,19 @@
 package com.redheap.selenium.components;
 
 import com.redheap.selenium.component.AdfTable;
-import com.redheap.selenium.junit.PageProvider;
-import com.redheap.selenium.junit.SavePageSourceOnFailure;
-import com.redheap.selenium.junit.ScreenshotOnFailure;
-import com.redheap.selenium.junit.WebDriverResource;
 import com.redheap.selenium.pages.TableDetailStampDemoPage;
-
-import java.io.File;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
 
 
-public class TableTest {
-
-    @ClassRule
-    public static WebDriverResource driver = new WebDriverResource();
-    @Rule
-    public PageProvider<TableDetailStampDemoPage> detailStampPage =
-        new PageProvider(TableDetailStampDemoPage.class, DETAIL_STAMP_PAGE, driver.getDriver());
-    @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
-    @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
-
-    private static final String DETAIL_STAMP_PAGE =
-        "http://localhost:7101/adf-richclient-demo/faces/components/table/detailStampTable.jspx";
+public class TableTest extends PageTestBase<TableDetailStampDemoPage> {
 
     @Test
     public void testDetailStamp() {
-        AdfTable table = detailStampPage.goHome().findTable();
+        AdfTable table = pages.goHome().findTable();
         assertFalse(table.isRowDisclosed(0));
         table.discloseRowDetail(0);
         assertTrue(table.isRowDisclosed(0));
@@ -50,7 +28,7 @@ public class TableTest {
 
     @Test
     public void testRowSelection() {
-        AdfTable table = detailStampPage.goHome().findTable();
+        AdfTable table = pages.goHome().findTable();
         table.selectRow(3);
         assertEquals(Arrays.asList(3), table.getSelectedRows());
         table.selectAdditionalRow(5);
@@ -61,7 +39,7 @@ public class TableTest {
 
     @Test
     public void testChildComponent() {
-        TableDetailStampDemoPage page = detailStampPage.goHome();
+        TableDetailStampDemoPage page = pages.goHome();
         assertEquals("admin.jar", page.findName(2).getValue());
         assertEquals("database", page.findName(7).getValue());
         page.findTable().discloseRowDetail(9);
@@ -70,7 +48,7 @@ public class TableTest {
 
     @Test
     public void testNonExistingChildComponent() {
-        TableDetailStampDemoPage page = detailStampPage.goHome();
+        TableDetailStampDemoPage page = pages.goHome();
         AdfTable table = page.findTable();
         assertNotNull("existing component by row-index", table.findAdfComponent("ot4", 0));
         assertNull("non-existing component by row-index", table.findAdfComponent("foo", 0));
@@ -85,7 +63,7 @@ public class TableTest {
 
     @Test
     public void testCount() {
-        TableDetailStampDemoPage page = detailStampPage.goHome();
+        TableDetailStampDemoPage page = pages.goHome();
         assertEquals(5400, page.findTable().getRowCount());
     }
 
@@ -94,4 +72,13 @@ public class TableTest {
         org.junit.runner.JUnitCore.main(args2);
     }
 
+    @Override
+    protected Class<TableDetailStampDemoPage> getPageClass() {
+        return TableDetailStampDemoPage.class;
+    }
+
+    @Override
+    protected String getJspxName() {
+        return "detailStampTable.jspx";
+    }
 }

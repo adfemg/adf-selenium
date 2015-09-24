@@ -1,33 +1,12 @@
 package com.redheap.selenium.components;
 
 import com.redheap.selenium.component.AdfCarousel;
-import com.redheap.selenium.junit.PageProvider;
-import com.redheap.selenium.junit.SavePageSourceOnFailure;
-import com.redheap.selenium.junit.ScreenshotOnFailure;
-import com.redheap.selenium.junit.WebDriverResource;
 import com.redheap.selenium.pages.CarouselDemoPage;
 
-import java.io.File;
-
 import static org.junit.Assert.*;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
 
-public class CarouselTest {
-
-    @ClassRule
-    public static WebDriverResource driver = new WebDriverResource();
-    @Rule
-    public PageProvider<CarouselDemoPage> pages =
-        new PageProvider(CarouselDemoPage.class, HOME_PAGE, driver.getDriver());
-    @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
-    @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
-
-    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo/faces/components/carousel.jspx";
+public class CarouselTest extends PageTestBase<CarouselDemoPage> {
 
     @Test
     public void testCarouselBrowse() {
@@ -78,4 +57,13 @@ public class CarouselTest {
         org.junit.runner.JUnitCore.main(args2);
     }
 
+    @Override
+    protected Class<CarouselDemoPage> getPageClass() {
+        return CarouselDemoPage.class;
+    }
+
+    @Override
+    protected String getJspxName() {
+        return "carousel.jspx";
+    }
 }

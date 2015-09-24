@@ -154,7 +154,7 @@
       <hash n="runConfigurationDefinitions">
          <hash n="Default">
             <value n="custom" v="false"/>
-            <value n="javaOptions" v="-Djava.util.logging.config.file=logging.properties"/>
+            <value n="javaOptions" v="-Djava.util.logging.config.file=logging.properties -Dphantomjs.binary.path=../libs/phantomjs-1.9.8/phantomjs.exe"/>
             <value n="name" v="Default"/>
             <value n="targetURL"/>
          </hash>

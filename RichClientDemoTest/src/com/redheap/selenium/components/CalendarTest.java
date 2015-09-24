@@ -1,13 +1,7 @@
 package com.redheap.selenium.components;
 
 import com.redheap.selenium.component.AdfCalendar;
-import com.redheap.selenium.junit.PageProvider;
-import com.redheap.selenium.junit.SavePageSourceOnFailure;
-import com.redheap.selenium.junit.ScreenshotOnFailure;
-import com.redheap.selenium.junit.WebDriverResource;
 import com.redheap.selenium.pages.CalendarDemoPage;
-
-import java.io.File;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -20,24 +14,9 @@ import org.apache.commons.lang3.StringUtils;
 import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
 
-public class CalendarTest {
-
-    @ClassRule
-    public static WebDriverResource driver = new WebDriverResource();
-    @Rule
-    public PageProvider<CalendarDemoPage> pages =
-        new PageProvider(CalendarDemoPage.class, HOME_PAGE, driver.getDriver());
-    @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
-    @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
-
-    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo/faces/components/calendar.jspx";
+public class CalendarTest extends PageTestBase<CalendarDemoPage> {
 
     private final DateFormat yyyymmdd = new SimpleDateFormat("yyyyMMdd");
 
@@ -123,7 +102,8 @@ public class CalendarTest {
     @Test
     public void testDateLink() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        assertEquals(42, calendar.getDateLinkCount());
+        // exact number is unknown as test app uses random data
+        assertTrue(calendar.getDateLinkCount() > 10);
         calendar.clickDateLink(0);
         assertEquals(AdfCalendar.View.DAY, calendar.getView());
     }
@@ -154,7 +134,7 @@ public class CalendarTest {
     public void testActivitiesText() {
         CalendarDemoPage page = pages.goHome();
         AdfCalendar calendar = page.findCalendar();
-        for (int i=0, n=calendar.getActivitiesInViewCount(); i<n; i++) {
+        for (int i = 0, n = calendar.getActivitiesInViewCount(); i < n; i++) {
             String label = calendar.getActivityInViewLabel(i);
             assertTrue("activity " + i + " should have a label, not " + label, StringUtils.isNotBlank(label));
         }
@@ -228,4 +208,13 @@ public class CalendarTest {
         org.junit.runner.JUnitCore.main(args2);
     }
 
+    @Override
+    protected Class<CalendarDemoPage> getPageClass() {
+        return CalendarDemoPage.class;
+    }
+
+    @Override
+    protected String getJspxName() {
+        return "calendar.jspx";
+    }
 }

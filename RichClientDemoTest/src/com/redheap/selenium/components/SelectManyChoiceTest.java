@@ -1,36 +1,14 @@
 package com.redheap.selenium.components;
 
 import com.redheap.selenium.component.AdfSelectManyChoice;
-import com.redheap.selenium.junit.PageProvider;
-import com.redheap.selenium.junit.SavePageSourceOnFailure;
-import com.redheap.selenium.junit.ScreenshotOnFailure;
-import com.redheap.selenium.junit.WebDriverResource;
 import com.redheap.selenium.pages.SelectManyChoiceDemoPage;
-
-import java.io.File;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
 
-public class SelectManyChoiceTest {
-
-    @ClassRule
-    public static WebDriverResource driver = new WebDriverResource();
-    @Rule
-    public PageProvider<SelectManyChoiceDemoPage> pages =
-        new PageProvider(SelectManyChoiceDemoPage.class, HOME_PAGE, driver.getDriver());
-    @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
-    @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
-
-    private static final String HOME_PAGE =
-        "http://localhost:7101/adf-richclient-demo/faces/components/selectManyChoice.jspx";
+public class SelectManyChoiceTest extends PageTestBase<SelectManyChoiceDemoPage> {
 
     @Test
     public void testItems() {
@@ -58,7 +36,7 @@ public class SelectManyChoiceTest {
     public void testSetValue() {
         AdfSelectManyChoice choice = pages.goHome().findDrinksSelectManyChoice();
         choice.clickItemsByIndices(1, 3, 4); // idx=3 is disabled so should not work
-        assertEquals( "tea; lemonade", choice.getContent());
+        assertEquals("tea; lemonade", choice.getContent());
         // selected values
         List<Object> selectedValues = choice.getValue();
         assertEquals(2, selectedValues.size());
@@ -88,4 +66,13 @@ public class SelectManyChoiceTest {
         org.junit.runner.JUnitCore.main(args2);
     }
 
+    @Override
+    protected Class<SelectManyChoiceDemoPage> getPageClass() {
+        return SelectManyChoiceDemoPage.class;
+    }
+
+    @Override
+    protected String getJspxName() {
+        return "selectManyChoice.jspx";
+    }
 }

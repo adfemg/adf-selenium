@@ -1,13 +1,7 @@
 package com.redheap.selenium.components;
 
 import com.redheap.selenium.component.AdfInputDate;
-import com.redheap.selenium.junit.PageProvider;
-import com.redheap.selenium.junit.SavePageSourceOnFailure;
-import com.redheap.selenium.junit.ScreenshotOnFailure;
-import com.redheap.selenium.junit.WebDriverResource;
 import com.redheap.selenium.pages.InputDateDemoPage;
-
-import java.io.File;
 
 import java.text.SimpleDateFormat;
 
@@ -16,24 +10,9 @@ import java.util.Date;
 import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
 
-public class InputDateTest {
-
-    @ClassRule
-    public static WebDriverResource driver = new WebDriverResource();
-    @Rule
-    public PageProvider<InputDateDemoPage> pages =
-        new PageProvider(InputDateDemoPage.class, HOME_PAGE, driver.getDriver());
-    @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
-    @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
-
-    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo/faces/components/inputDate.jspx";
+public class InputDateTest extends PageTestBase<InputDateDemoPage> {
 
     private String today(String format) {
         return new SimpleDateFormat(format).format(new Date());
@@ -82,4 +61,13 @@ public class InputDateTest {
         org.junit.runner.JUnitCore.main(args2);
     }
 
+    @Override
+    protected Class<InputDateDemoPage> getPageClass() {
+        return InputDateDemoPage.class;
+    }
+
+    @Override
+    protected String getJspxName() {
+        return "inputDate.jspx";
+    }
 }

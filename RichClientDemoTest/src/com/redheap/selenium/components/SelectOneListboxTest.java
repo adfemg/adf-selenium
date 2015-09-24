@@ -1,32 +1,12 @@
 package com.redheap.selenium.components;
 
 import com.redheap.selenium.component.AdfSelectOneListbox;
-import com.redheap.selenium.junit.PageProvider;
-import com.redheap.selenium.junit.SavePageSourceOnFailure;
-import com.redheap.selenium.junit.ScreenshotOnFailure;
-import com.redheap.selenium.junit.WebDriverResource;
-
 import com.redheap.selenium.pages.SelectOneListboxDemoPage;
 
-import java.io.File;
-
-import static org.junit.Assert.assertEquals;
-import org.junit.ClassRule;
-import org.junit.Rule;
+import static org.junit.Assert.*;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
 
-public class SelectOneListboxTest {
-    @ClassRule
-    public static WebDriverResource driver = new WebDriverResource();
-    @Rule
-    public PageProvider<SelectOneListboxDemoPage> pages = new PageProvider(SelectOneListboxDemoPage.class, HOME_PAGE, driver.getDriver());
-    @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
-    @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
-
-    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo/faces/components/selectOneListbox.jspx";
+public class SelectOneListboxTest extends PageTestBase<SelectOneListboxDemoPage> {
 
     @Test
     public void testItemLabels() {
@@ -64,5 +44,15 @@ public class SelectOneListboxTest {
     public static void main(String[] args) {
         String[] args2 = { SelectOneListboxTest.class.getName() };
         org.junit.runner.JUnitCore.main(args2);
+    }
+
+    @Override
+    protected Class<SelectOneListboxDemoPage> getPageClass() {
+        return SelectOneListboxDemoPage.class;
+    }
+
+    @Override
+    protected String getJspxName() {
+        return "selectOneListbox.jspx";
     }
 }
