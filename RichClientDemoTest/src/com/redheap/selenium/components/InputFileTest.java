@@ -23,7 +23,7 @@ public class InputFileTest extends PageTestBase<InputFileDemoPage> {
         File f = new File(url.toURI());
         System.out.println(f.getAbsolutePath());
         inputFile.typeFileName(f);
-        assertThat(inputFile.getSubmittedValue(), hasToString("C:\\fakepath\\build.xml"));
+        assertThat(inputFile.getSubmittedValue(), endsWith("build.xml"));
         assertThat(inputFile.getValue(), nullValue());
         assertThat(inputFile.getUpdateValue(), nullValue());
         page.findPartialPostbackButton().click();
