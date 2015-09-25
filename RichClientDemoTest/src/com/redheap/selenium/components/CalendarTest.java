@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,9 +24,9 @@ public class CalendarTest extends PageTestBase<CalendarDemoPage> {
     @Test
     public void testCalendarActiveDay() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        String activeDay = calendar.getActiveDay();
+        Date activeDay = calendar.getActiveDayFromDom();
         calendar.findPreviousButton().click();
-        assertNotEquals(activeDay, calendar.getActiveDay());
+        assertNotEquals(activeDay, calendar.getActiveDayFromDom());
     }
 
     @Test
@@ -45,25 +46,25 @@ public class CalendarTest extends PageTestBase<CalendarDemoPage> {
     @Test
     public void testToday() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        String activeDay = calendar.getActiveDay();
+        Date activeDay = calendar.getActiveDayFromDom();
         calendar.findPreviousButton().click();
-        assertNotEquals(activeDay, calendar.getActiveDay());
+        assertNotEquals(activeDay, calendar.getActiveDayFromDom());
         calendar.findTodayButton().click();
-        assertEquals(activeDay, calendar.getActiveDay());
+        assertEquals(activeDay, calendar.getActiveDayFromDom());
     }
 
     @Test
     public void testPreviousNext() {
         AdfCalendar calendar = pages.goHome().findCalendar();
-        String activeDay = calendar.getActiveDay();
+        Date activeDay = calendar.getActiveDayFromDom();
         calendar.findPreviousButton().click();
-        assertNotEquals(activeDay, calendar.getActiveDay());
+        assertNotEquals(activeDay, calendar.getActiveDayFromDom());
         calendar.findNextButton().click();
-        assertEquals(activeDay, calendar.getActiveDay());
+        assertEquals(activeDay, calendar.getActiveDayFromDom());
         calendar.findNextButton().click();
-        assertNotEquals(activeDay, calendar.getActiveDay());
+        assertNotEquals(activeDay, calendar.getActiveDayFromDom());
         calendar.findPreviousButton().click();
-        assertEquals(activeDay, calendar.getActiveDay());
+        assertEquals(activeDay, calendar.getActiveDayFromDom());
     }
 
     @Test
