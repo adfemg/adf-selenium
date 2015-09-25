@@ -7,3 +7,4 @@ RichClientDemoTest/reports/
 
 # screenshots and html sources on errors
 RichClientDemoTest/errors/
+RichClientDemoTest/junit*.properties
