@@ -1,5 +1,6 @@
 package com.redheap.selenium.junit;
 
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,22 +17,24 @@ public abstract class WebDriverResource extends ExternalResource {
     private RemoteWebDriver driver;
     private final int width;
     private final int height;
+    private final Locale locale;
 
     private static final Logger logger = Logger.getLogger(WebDriverResource.class.getName());
 
     public WebDriverResource() {
-        this(1920, 1200);
+        this(1920, 1200, Locale.US);
     }
 
-    public WebDriverResource(int width, int height) {
+    public WebDriverResource(int width, int height, Locale locale) {
         this.width = width;
         this.height = height;
+        this.locale = locale;
     }
 
     @Override
     protected void before() throws Throwable {
         logger.fine("starting browser...");
-        driver = createDriver();
+        driver = createDriver(locale.toLanguageTag());
         if (logger.isLoggable(Level.FINE)) {
             Capabilities capabilities = driver.getCapabilities();
             logger.fine("running " + capabilities.getBrowserName() + " version " + capabilities.getVersion() + " on " +
@@ -41,7 +44,7 @@ public abstract class WebDriverResource extends ExternalResource {
         driver.manage().window().setSize(new Dimension(width, height));
     }
 
-    protected abstract RemoteWebDriver createDriver();
+    protected abstract RemoteWebDriver createDriver(String language);
 
     @Override
     protected void after() {
