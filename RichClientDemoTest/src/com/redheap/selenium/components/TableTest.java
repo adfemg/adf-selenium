@@ -79,6 +79,6 @@ public class TableTest extends PageTestBase<TableDetailStampDemoPage> {
 
     @Override
     protected String getJspxName() {
-        return "detailStampTable.jspx";
+        return "table/detailStampTable.jspx";
     }
 }

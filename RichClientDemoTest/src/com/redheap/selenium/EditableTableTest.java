@@ -174,6 +174,6 @@ public class EditableTableTest extends PageTestBase<EditableTablePage> {
 
     @Override
     protected String getJspxName() {
-        return "editableTable.jspx";
+        return "table/editableTable.jspx";
     }
 }
