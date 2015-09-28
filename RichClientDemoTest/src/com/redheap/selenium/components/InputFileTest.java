@@ -3,10 +3,12 @@ package com.redheap.selenium.components;
 import com.redheap.selenium.component.AdfInputFile;
 import com.redheap.selenium.pages.InputFileDemoPage;
 
-import java.io.File;
+import java.io.IOException;
 
 import java.net.URISyntaxException;
-import java.net.URL;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.hamcrest.Matchers.*;
 
@@ -16,20 +18,22 @@ import org.junit.Test;
 public class InputFileTest extends PageTestBase<InputFileDemoPage> {
 
     @Test
-    public void testPlainInputFile() throws URISyntaxException {
+    public void testPlainInputFile() throws URISyntaxException, IOException {
         InputFileDemoPage page = pages.goHome();
         AdfInputFile inputFile = page.findInputFile();
-        URL url = Thread.currentThread().getContextClassLoader().getResource("build.xml");
-        File f = new File(url.toURI());
-        System.out.println(f.getAbsolutePath());
-        inputFile.typeFileName(f);
-        assertThat(inputFile.getSubmittedValue(), endsWith("build.xml"));
-        assertThat(inputFile.getValue(), nullValue());
-        assertThat(inputFile.getUpdateValue(), nullValue());
-        page.findPartialPostbackButton().click();
-        assertThat(inputFile.getSubmittedValue(), hasToString(""));
-        assertThat(inputFile.getValue(), nullValue());
-        assertThat(inputFile.getUpdateValue(), hasToString("build.xml"));
+        Path tmp = Files.createTempFile(getClass().getName(), ".tmp");
+        try {
+            inputFile.typeFileName(tmp.toAbsolutePath().toFile());
+            assertThat(inputFile.getSubmittedValue(), endsWith(tmp.getFileName().toString()));
+            assertThat(inputFile.getValue(), nullValue());
+            assertThat(inputFile.getUpdateValue(), nullValue());
+            page.findPartialPostbackButton().click();
+            assertThat(inputFile.getSubmittedValue(), hasToString(""));
+            assertThat(inputFile.getValue(), nullValue());
+            assertThat(inputFile.getUpdateValue(), hasToString(tmp.getFileName().toString()));
+        } finally {
+            Files.deleteIfExists(tmp);
+        }
     }
 
     public static void main(String[] args) {
