@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="antlib:org.apache.tools.ant" name="AdfSelenium" basedir="." default="test">
+
+    <target name="test">
+    </target>
+
+</project>

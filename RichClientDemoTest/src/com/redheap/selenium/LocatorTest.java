@@ -2,48 +2,20 @@ package com.redheap.selenium;
 
 import com.redheap.selenium.component.AdfInputText;
 import com.redheap.selenium.component.AdfTable;
-import com.redheap.selenium.junit.PageProvider;
-import com.redheap.selenium.junit.SavePageSourceOnFailure;
-import com.redheap.selenium.junit.ScreenshotOnFailure;
-import com.redheap.selenium.junit.WebDriverResource;
+import com.redheap.selenium.components.PageTestBase;
 import com.redheap.selenium.pages.EditableTablePage;
 
-import java.io.File;
-
-import java.util.logging.Logger;
-
 import static org.junit.Assert.*;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
 
 /**
  * Test component lookups by relative locators.
  */
-public class LocatorTest {
-
-    @ClassRule
-    public static WebDriverResource driver = new WebDriverResource();
-    @Rule
-    public PageProvider<EditableTablePage> tablePage = new PageProvider(EditableTablePage.class, TABLE_PAGE, driver.getDriver());
-//    @Rule
-//    public PageProvider<DeclarativeComponentPage> declCompPage = new PageProvider(DeclarativeComponentPage.class, DECL_COMP_PAGE, driver.getDriver());
-    @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
-    @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
-
-    //private static final String HOME_PAGE = "http://jdevadf.oracle.com/adf-richclient-demo/faces/components/table/editableTable.jspx";
-    private static final String TABLE_PAGE =
-        "http://localhost:7101/adf-richclient-demo/faces/components/table/editableTable.jspx";
-    private static final String DECL_COMP_PAGE =
-        "http://localhost:7101/adf-richclient-demo/faces/components/declarativeComponent.jspx";
-    private static final Logger logger = Logger.getLogger(EditableTableTest.class.getName());
+public class LocatorTest extends PageTestBase<EditableTablePage> {
 
     @Test
     public void testAbsoluteLocator() {
-        EditableTablePage page = tablePage.goHome();
+        EditableTablePage page = pages.goHome();
         AdfTable table = page.findTable();
         AdfInputText target = table.findAdfComponentByLocator(":dmoTpl:table1[0]:it2");
         assertEquals("dmoTpl:table1[0]:it2", target.getAbsoluteLocator());
@@ -52,7 +24,7 @@ public class LocatorTest {
 
     @Test
     public void testRelativeLocatorFromNonNamingContainer() {
-        EditableTablePage page = tablePage.goHome();
+        EditableTablePage page = pages.goHome();
         AdfTable table = page.findTable();
         AdfInputText base = table.findAdfComponentByLocator(":dmoTpl:table1[0]:it2");
         AdfInputText target = base.findAdfComponentByLocator("it3");
@@ -72,7 +44,7 @@ public class LocatorTest {
 
     @Test
     public void testRelativeDifferentIndexLocator() {
-        EditableTablePage page = tablePage.goHome();
+        EditableTablePage page = pages.goHome();
         AdfTable table = page.findTable();
         AdfInputText base = table.findAdfComponentByLocator(":dmoTpl:table1[0]:it2");
         AdfInputText target = base.findAdfComponentByLocator("::[1]:it3");
@@ -82,7 +54,7 @@ public class LocatorTest {
 
     @Test
     public void testIndexLocator() {
-        EditableTablePage page = tablePage.goHome();
+        EditableTablePage page = pages.goHome();
         AdfTable table = page.findTable();
         AdfInputText target = table.findAdfComponentByLocator("[2]:it2");
         assertEquals("dmoTpl:table1[2]:it2", target.getAbsoluteLocator());
@@ -91,7 +63,7 @@ public class LocatorTest {
 
     @Test
     public void testNonExistingChild() {
-        EditableTablePage page = tablePage.goHome();
+        EditableTablePage page = pages.goHome();
         AdfTable table = page.findTable();
         assertNull(table.findAdfComponent("foo"));
     }
@@ -121,6 +93,15 @@ public class LocatorTest {
         org.junit.runner.JUnitCore.main(args2);
     }
 
+    @Override
+    protected Class<EditableTablePage> getPageClass() {
+        return EditableTablePage.class;
+    }
+
+    @Override
+    protected String getJspxName() {
+        return "editableTable.jspx";
+    }
 }
 
 
