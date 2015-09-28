@@ -22,7 +22,7 @@ public class InputDateTest extends PageTestBase<InputDateDemoPage> {
     public void testPlainDate() {
         AdfInputDate id = pages.goHome().findPlainInputDate();
         // getvalue() returns Date (which is converted to string due to JSON communication)
-        assertTrue(id.getValue().toString().startsWith(today("yyyy-MM-dd")));
+        assertThat(id.getValue().toString(), startsWith(today("yyyy-MM-dd")));
         // getSubmittedValue() returns value as shown in the <input> element
         assertEquals(today("M/d/yyyy"), id.getSubmittedValue());
         assertNull(id.getTimezoneId());
@@ -32,7 +32,7 @@ public class InputDateTest extends PageTestBase<InputDateDemoPage> {
     @Test
     public void testDateOnly() {
         AdfInputDate id = pages.goHome().findDateOnly();
-        assertTrue(id.getValue().toString().startsWith(today("yyyy-MM-dd")));
+        assertThat(id.getValue().toString(), startsWith(today("yyyy-MM-dd")));
         assertEquals(today("M/d/yyyy"), id.getSubmittedValue());
         assertNull(id.getTimezoneId());
         assertNull(id.getTimezoneName());
@@ -41,7 +41,7 @@ public class InputDateTest extends PageTestBase<InputDateDemoPage> {
     @Test
     public void testDateAndTime() {
         AdfInputDate id = pages.goHome().findDateAndTime();
-        assertTrue(id.getValue().toString().startsWith(today("yyyy-MM-dd")));
+        assertThat(id.getValue().toString(), startsWith(today("yyyy-MM-dd")));
         assertEquals(today("EEEE, MMMM d, yyyy h:mm aa"), id.getSubmittedValue());
         assertNull(id.getTimezoneId());
         assertNull(id.getTimezoneName());
@@ -50,7 +50,7 @@ public class InputDateTest extends PageTestBase<InputDateDemoPage> {
     @Test
     public void testTimezone() {
         AdfInputDate id = pages.goHome().findDateWithTimezone();
-        assertTrue(id.getValue().toString().startsWith(today("yyyy-MM-dd")));
+        assertThat(id.getValue().toString(), startsWith(today("yyyy-MM-dd")));
         assertThat(id.getSubmittedValue(), containsString(today("yyyy/MM/dd hh:mm")));
         assertEquals("Europe/Amsterdam", id.getTimezoneId());
         assertThat(id.getTimezoneName(), containsString("(CET)"));
