@@ -95,4 +95,39 @@ public class AdfTree extends AdfComponent {
         waitForPpr();
     }
 
+    /**
+     * Click the disclose icon to expand (or collapse) a tree node.
+     * @param locator Locator to find the {@code <tr>} element of a tree node.
+     * @see com.redheap.selenium.AdfFinder#treeNodeByLabel(String)
+     */
+    public void discloseNode(final By locator) {
+        WebElement treerow = getElement().findElement(locator);
+        WebElement disclosureIcon = (WebElement) executeScript(JS_GET_DISCLOSURE_ICON, getClientId(), treerow);
+        disclosureIcon.click();
+        waitForPpr();
+    }
+
+    /**
+     * Get the rowkey for a tree node based on its label or locator.
+     * @param locator Locator to find the {@code <tr>}element of a tree node.
+     * @return rowkey
+     * @see com.redheap.selenium.AdfFinder#treeNodeByLabel(String)
+     */
+    public String getRowKey(final By locator) {
+        WebElement treerow = getElement().findElement(locator);
+        return (String) executeScript(JS_GET_ROW_KEY, getClientId(), treerow);
+    }
+
+    /**
+     * Determines if a tree node is disclosed (expanded) or collapsed based on its label or locator.
+     * @param locator Locator to find the {@code <tr>}element of a tree node.
+     * @return {@code true} if the rowkey of the row with this locator is in the set of disclosed row keys
+     * @see com.redheap.selenium.AdfFinder#treeNodeByLabel(String)
+     */
+    public boolean isDisclosed(final By locator) {
+        List<String> disclosed = getDisclosedRowKeys();
+        String rowkey = getRowKey(locator);
+        return disclosed.contains(rowkey);
+    }
+
 }
