@@ -25,6 +25,10 @@ public class AdfTree extends AdfComponent {
     private static final String JS_GET_ROWINFO =
         JS_FIND_PEER + "var rowinfo=peer.FindRowByKey(arguments[1]);" +
         "return [rowinfo.tr,rowinfo.index,rowinfo.block];";
+    private static final String JS_GET_DISCLOSURE_ICON =
+        JS_FIND_PEER + "return peer._getDisclosureIconInCell(arguments[1]);";
+    private static final String JS_GET_ROW_KEY =
+        JS_FIND_PEER + "var rowkeyandrow=peer.GetRowKeyAndRow(arguments[1]); return rowkeyandrow&&rowkeyandrow[0];";
 
     public AdfTree(WebDriver driver, String clientid) {
         super(driver, clientid);
