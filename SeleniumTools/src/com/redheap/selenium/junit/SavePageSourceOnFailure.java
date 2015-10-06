@@ -45,10 +45,10 @@ public class SavePageSourceOnFailure extends TestWatcher {
                 fileName.append(".txt");
                 File file = new File(basedir, fileName.toString());
                 file.getCanonicalFile().getParentFile().mkdirs();
-                logger.finer("*************** dumping page source " + file.getCanonicalPath());
+                logger.info("*************** dumping page source " + file.getCanonicalPath());
                 try {
                     driver.switchTo().window(guid);
-                    FileUtils.write(file, driver.getPageSource());
+                    FileUtils.writeStringToFile(file, driver.getPageSource());
                 } catch (RuntimeException e) {
                     // ignore and continue with next window
                     e.printStackTrace();
