@@ -42,7 +42,7 @@ public class SavePageSourceOnFailure extends TestWatcher {
                 if (windows.size() > 1) {
                     fileName.append("-").append((idx++));
                 }
-                fileName.append(".txt");
+                fileName.append(".html");
                 File file = new File(basedir, fileName.toString());
                 file.getCanonicalFile().getParentFile().mkdirs();
                 logger.info("*************** dumping page source " + file.getCanonicalPath());
