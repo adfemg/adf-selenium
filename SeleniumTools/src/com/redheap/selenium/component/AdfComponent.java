@@ -2,12 +2,17 @@ package com.redheap.selenium.component;
 
 import com.redheap.selenium.errors.SubIdNotFoundException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -30,15 +35,17 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 
 public class AdfComponent /*extends BaseObject*/ {
+    private static final Logger logger = Logger.getLogger(AdfComponent.class.getName());
 
     private final WebDriver driver;
     private final String clientid;
     private final WebElement element;
     private long timeoutMillisecs = DFLT_WAIT_TIMEOUT_MSECS;
 
-    public static final long DFLT_WAIT_TIMEOUT_MSECS = 30000;
+    private static boolean timeoutRetrieved = false;
+    private static final long STD_WAIT_TIMEOUT_MSECS = 30000;
+    public static final long DFLT_WAIT_TIMEOUT_MSECS = getDefaultTimeout();
 
-    private static final Logger logger = Logger.getLogger(AdfComponent.class.getName());
 
     private static final ServiceLoader<ComponentFactory> factories = ServiceLoader.load(ComponentFactory.class);
     private static final Map<String, Class<? extends AdfComponent>> defaultComponents = new HashMap<>();
@@ -90,6 +97,41 @@ public class AdfComponent /*extends BaseObject*/ {
         // some components do not have element (like dynamic declarative component)
         // TODO: why not lazy resolving in getElement?
         this.element = (elems != null && elems.size() == 1) ? elems.get(0) : null;
+    }
+
+    /**
+     * Gets the default timeout property value from
+     * the adf-selenium-tools.properties (should be next to the jar)
+     *
+     * @return timeout long
+     * @throws IOException
+     */
+    public static long getDefaultTimeout() {
+        if (timeoutRetrieved) {
+            return DFLT_WAIT_TIMEOUT_MSECS;
+        } else {
+            long timeoutMillisecs = STD_WAIT_TIMEOUT_MSECS;
+
+            Properties properties = new Properties();
+            String path = "/adf-selenium-tools.properties";
+
+            try {
+                File jarPath =
+                    new File(AdfComponent.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+                String propertiesPath = jarPath.getParentFile().getAbsolutePath();
+                properties.load(new FileInputStream(propertiesPath + path));
+
+                //retrieve the property we are intrested, the app.version
+                timeoutMillisecs = Long.parseLong(properties.getProperty("default.wait.timeout"));
+            } catch (Exception ex) {
+                logger.warning("Unable to read timeout, returning default");
+                return timeoutMillisecs;
+            }
+            timeoutRetrieved = true;
+
+            return timeoutMillisecs;
+        }
+
     }
 
     public static <C extends AdfComponent> C forClientId(WebDriver driver, String clientid) {
