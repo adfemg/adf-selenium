@@ -2,8 +2,6 @@ package com.redheap.selenium.component;
 
 import com.redheap.selenium.errors.SubIdNotFoundException;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -12,7 +10,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -100,8 +97,7 @@ public class AdfComponent /*extends BaseObject*/ {
     }
 
     /**
-     * Gets the default timeout property value from
-     * the adf-selenium-tools.properties (should be next to the jar)
+     * Gets the default timeout property value from the property default.wait.timeout
      *
      * @return timeout long
      * @throws IOException
@@ -112,22 +108,14 @@ public class AdfComponent /*extends BaseObject*/ {
         } else {
             long timeoutMillisecs = STD_WAIT_TIMEOUT_MSECS;
 
-            Properties properties = new Properties();
-            String path = "/adf-selenium-tools.properties";
-
             try {
-                File jarPath =
-                    new File(AdfComponent.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-                String propertiesPath = jarPath.getParentFile().getAbsolutePath();
-                properties.load(new FileInputStream(propertiesPath + path));
-
-                //retrieve the property we are intrested, the app.version
-                timeoutMillisecs = Long.parseLong(properties.getProperty("default.wait.timeout"));
-            } catch (Exception ex) {
+                timeoutMillisecs = Long.parseLong(System.getProperty("default.wait.timeout"));
+            }catch (Exception ex) {
                 logger.warning("Unable to read timeout, returning default");
                 return timeoutMillisecs;
+            } finally {
+                timeoutRetrieved = true;
             }
-            timeoutRetrieved = true;
 
             return timeoutMillisecs;
         }
