@@ -3,7 +3,31 @@ Library for easy testing of Oracle ADF applications with Selenium.
 
 ## Example Test
 Just a quick example to demonstrate how easy it is to test an ADF application with these tools:
-
+```
+@Test
+public void testDragAndDrop() throws Exception {
+  DragDropPage page = dragDropPageProvider.goHome(); // navigate to page
+  AdfInputText source = page.findInputTextDragSource(); // easily locate components on the page
+  AdfOutputText target = page.findOutputTextDropTarget();
+  assertEquals("Now Drag Me!", source.getValue()); // easily get value from adf component
+  assertEquals("Drop Here!", target.getValue());
+  source.dragAndDropTo(target); // easily interact with components (here we do drag-and-drop)
+  assertEquals("Now Drag Me!", target.getValue()); // assert the value of the drop component has changed
+}
+@Test
+public void testAutoSuggest() {
+  AutoSuggestPage page = autoSuggestPageProvider.goHome();
+  AutoSuggestBehavior<AdfInputText> inputtext = page.findInputText(); // find item with auto-suggest behavior
+  assertFalse(inputtext.isPopupVisible()); // easily check status of auto-suggest-behavior
+  inputtext.typeAndWait("Bla"); // type text in field and wait for auto-suggest to kick in
+  assertTrue(inputtext.isPopupVisible()); // auto-suggest should now be shown
+  assertEquals(5, inputtext.getSuggestItems().size()); // verify auto-suggest items
+  assertEquals("Blake3         Technician", inputtext.getSuggestItems().get(0));
+  inputtext.clickSuggestItem(2); // click an item in the auto-suggest list
+  assertEquals("Blake81", inputtext.getComponent().getValue()); // af:inputText itself is updated
+}
+```
+Notice there is no low level interaction with html elements. You just write tests against ADF Component Classes provided by this toolkit. For the full example class, see the [original source code](../blob/master/RichClientDemoTest/src/com/redheap/selenium/DemoTest.java)
 
 ## Getting Started
 * be sure the JUnit Extension is installed in your JDeveloper (use Help > Check for Update)
