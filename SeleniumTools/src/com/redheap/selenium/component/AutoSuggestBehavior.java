@@ -36,10 +36,10 @@ public class AutoSuggestBehavior<C extends UixInput> {
     private static final String SUGGEST_BUSY_STYLE = "AFAutoSuggestBusyStyle";
 
     private static final String JS_IS_POPUP_VISIBLE =
-        AdfComponent.JS_FIND_PEER + "return peer.isPopupVisible(comp,AdfAutoSuggestBehavior._POPUP_PANEL_ID);";
+        AdfComponent.JS_FIND_PEER + "return peer.isPopupVisible(comp,AdfAutoSuggestBehavior._POPUP_PANEL_ID||AdfAutoSuggestBehaviorImpl._POPUP_PANEL_ID);";
     private static final String JS_GET_POPUP_ELEMENT =
         AdfComponent.JS_FIND_PEER +
-        "var pw=peer.getPopupWindow(comp,AdfAutoSuggestBehavior._POPUP_PANEL_ID);if (!pw){return null;}return pw.getElement();";
+        "var pw=peer.getPopupWindow(comp,AdfAutoSuggestBehavior._POPUP_PANEL_ID||AdfAutoSuggestBehaviorImpl._POPUP_PANEL_ID);if (!pw){return null;}return pw.getElement();";
 
     public AutoSuggestBehavior(C component) {
         super();
