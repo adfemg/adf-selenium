@@ -45,5 +45,8 @@ Notice there is no low level interaction with html elements. You just write test
 * Download and alter Oracle's Rich Client Demo application to be used for automated tests. For details see the blog post at http://www.redheap.com/2015/02/adf-faces-12c-components-demo-test-automation.html or simply download and run the `public_html/index.jspx` in these fixed versions from within JDeveloper:
   * [Component demo for 12.1](https://drive.google.com/open?id=0B0EvDYuyTjZzYnlVSjFlYnhucFE)
   * [Component demo for 12.2](https://drive.google.com/open?id=0B0EvDYuyTjZzeHByNW1hZVQtaE0)
+* Run individual tests from the RichClientDemoTest project within JDeveloper or run je `junit` ant task in the build.xml to run all tests
+  * the ant build task uses a system property to tell it where you have deployed the ADF Faces Component Demo. You might need to change that
+  * when running individuel tests within JDeveloper it uses the system property set in the run profiles. Change the settings of the Default Run Profile of the RichClientDemoTest project to the URL where you have deployed the ADF Faces Component Demo
 * Optionally change `com/redheap/selenium/components/PageTestBase.java`
   * Replace `new PhantomJSDriverResource()` with `new FirefoxDriverResource()` to use Firefox instead of PhantomJS if you want to see what is going on in the browser
