@@ -97,7 +97,7 @@ public class AutoSuggestBehavior<C extends UixInput> {
         if (table == null) {
             return Collections.emptyList();
         }
-        List<WebElement> items = table.findElements(By.xpath(".//li[@_afrvalue]"));
+        List<WebElement> items = table.findElements(By.xpath(".//li[@_afrvalue | @data-afr-value]"));
         List<String> retval = new ArrayList<String>(items.size());
         for (WebElement li : items) {
             retval.add(li.getText());
@@ -107,7 +107,7 @@ public class AutoSuggestBehavior<C extends UixInput> {
 
     public void clickSuggestItem(int index) {
         WebElement table = findPopupElement();
-        List<WebElement> items = table.findElements(By.xpath(".//li[@_afrvalue]"));
+        List<WebElement> items = table.findElements(By.xpath(".//li[@_afrvalue | @data-afr-value]"));
         items.get(index).click();
         component.waitForPpr();
     }
