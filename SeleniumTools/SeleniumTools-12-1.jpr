@@ -133,12 +133,26 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
+            <value n="id" v="Adf-richclient-automation-12-1.jar"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
             <url n="id" path="../../../.jdeveloper/system12.1.3.0.41.140521.1008/o.jdeveloper/ADF 12.1.3 src.library"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
       <hash n="internalDefinitions">
-         <list n="libraryDefinitions"/>
+         <list n="libraryDefinitions">
+            <hash>
+               <list n="classPath">
+                  <url path="../libs/adf-richclient-automation-12-1.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Adf-richclient-automation-12-1.jar"/>
+               <value n="id" v="Adf-richclient-automation-12-1.jar"/>
+               <value n="locked" v="true"/>
+            </hash>
+         </list>
       </hash>
       <list n="libraryReferences">
          <hash>
@@ -147,6 +161,10 @@
          </hash>
          <hash>
             <url n="id" path="../libs/Selenium Libs.library"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Adf-richclient-automation-12-1.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
          <hash>

@@ -5,11 +5,10 @@
     <fail unless="oracle.home" message="set oracle.home property to jdeveloper basedir, for example /Users/JohnDoe/Oracle/jdev12130/jdeveloper/"/>
 
     <path id="classpath">
-        <fileset dir="${oracle.home}/..">
-            <include name="jdeveloper/jdev/extensions/ooracle.jdeveloper.junit/junit4*/junit-4*.jar"/>
-        </fileset>
         <fileset dir="${basedir}/..">
-            <include name="libs/**/*.jar"/>
+            <include name="libs/selenium-2.52.0/**/*.jar"/>
+            <include name="libs/adf-richclient-automation-12-2.jar"/>
+            <include name="libs/junit*.jar"/>
         </fileset>
     </path>
 
@@ -32,6 +31,7 @@
         <mkdir dir="reports"/>
         <junit printsummary="on" showoutput="true" fork="yes">
             <sysproperty key="phantomjs.binary.path" path="../libs/phantomjs-1.9.8/phantomjs.exe"/>
+            <sysproperty key="adf.facesdemo.baseurl" value="http://localhost:1221/faces-12.2.1.0.0"/>
             <classpath>
                 <path refid="classpath"/>
                 <pathelement location="classes"/>
@@ -40,7 +40,7 @@
             <formatter type="xml"/>
             <batchtest todir="reports">
                 <!-- ButtonTest seems to hang PhantomJS, so temporary disabled -->
-                <fileset dir="src" includes="**/components/*Test.java" excludes="**/ButtonTest.java"/>
+                <fileset dir="src" includes="**/components/*Test.java"/>
             </batchtest>
             <sysproperty key="java.util.logging.config.file" file="logging.properties"/>
         </junit>
