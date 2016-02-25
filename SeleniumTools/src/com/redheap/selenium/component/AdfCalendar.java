@@ -59,7 +59,8 @@ public class AdfCalendar extends AdfComponent {
         super(webDriver, clientid);
     }
 
-    public String getActiveDay() {
+    private String getActiveDay() {
+        // do not expose this method as it sometimes does not return a date, but a function (in PhantomJS)
         return (String) executeScript(JS_GET_ACTIVE_DAY, getClientId());
     }
 

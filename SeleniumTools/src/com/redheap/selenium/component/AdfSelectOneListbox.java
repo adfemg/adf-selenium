@@ -24,8 +24,10 @@ public class AdfSelectOneListbox extends UixValue {
         super(webDriver, clientId);
     }
 
-    public void clickItemByIndex(int index) {
-        findItem(index).click(); // click item within list
+    public void clickItemByIndex(int index)  {
+        final WebElement elem = findItem(index);
+        executeScript("arguments[0].scrollIntoView()", elem); // needed in 12.2
+        elem.click(); // click item within list
         waitForPpr();
     }
 

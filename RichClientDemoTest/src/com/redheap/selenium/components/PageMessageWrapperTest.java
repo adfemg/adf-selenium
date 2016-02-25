@@ -2,40 +2,19 @@ package com.redheap.selenium.components;
 
 import com.redheap.selenium.component.uix.UixInput;
 import com.redheap.selenium.domain.PageMessageWrapper;
-import com.redheap.selenium.junit.PageProvider;
-import com.redheap.selenium.junit.SavePageSourceOnFailure;
-import com.redheap.selenium.junit.ScreenshotOnFailure;
-import com.redheap.selenium.junit.WebDriverResource;
 import com.redheap.selenium.pages.InputTextDemoPage;
-
-import java.io.File;
 
 import java.text.MessageFormat;
 
-import static org.junit.Assert.assertTrue;
-import org.junit.ClassRule;
-import org.junit.Rule;
+import static org.junit.Assert.*;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
 
 /**
  * Class containing tests related to {@link com.redheap.selenium.domain.PageMessageWrapper PageMessageWrapper}.
  * <p>
  * These tests are about handling facesmessages and the convenience methods.
  */
-public class PageMessageWrapperTest {
-
-    @ClassRule
-    public static WebDriverResource driver = new WebDriverResource();
-    @Rule
-    public PageProvider<InputTextDemoPage> pages =
-        new PageProvider(InputTextDemoPage.class, HOME_PAGE, driver.getDriver());
-    @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
-    @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
-
-    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo/faces/components/inputText.jspx";
+public class PageMessageWrapperTest extends PageTestBase<InputTextDemoPage> {
 
     /**
      * General test dealing with basic message handling.
@@ -67,4 +46,13 @@ public class PageMessageWrapperTest {
         org.junit.runner.JUnitCore.main(args2);
     }
 
+    @Override
+    protected Class<InputTextDemoPage> getPageClass() {
+        return InputTextDemoPage.class;
+    }
+
+    @Override
+    protected String getJspxName() {
+        return "inputText.jspx";
+    }
 }

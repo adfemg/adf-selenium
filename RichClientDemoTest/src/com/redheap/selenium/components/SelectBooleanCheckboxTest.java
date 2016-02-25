@@ -1,33 +1,13 @@
 package com.redheap.selenium.components;
 
 import com.redheap.selenium.component.AdfSelectBooleanCheckbox;
-import com.redheap.selenium.junit.PageProvider;
-import com.redheap.selenium.junit.SavePageSourceOnFailure;
-import com.redheap.selenium.junit.ScreenshotOnFailure;
-import com.redheap.selenium.junit.WebDriverResource;
 import com.redheap.selenium.pages.SelectBooleanCheckboxDemoPage;
 
-import java.io.File;
-
 import static org.junit.Assert.*;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
 
 
-public class SelectBooleanCheckboxTest {
-
-    @ClassRule
-    public static WebDriverResource driver = new WebDriverResource();
-    @Rule
-    public PageProvider<SelectBooleanCheckboxDemoPage> pages = new PageProvider(SelectBooleanCheckboxDemoPage.class, HOME_PAGE, driver.getDriver());
-    @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
-    @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
-
-    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo/faces/components/selectBooleanCheckbox.jspx";
+public class SelectBooleanCheckboxTest extends PageTestBase<SelectBooleanCheckboxDemoPage> {
 
     @Test
     public void testText() {
@@ -73,4 +53,13 @@ public class SelectBooleanCheckboxTest {
         org.junit.runner.JUnitCore.main(args2);
     }
 
+    @Override
+    protected Class<SelectBooleanCheckboxDemoPage> getPageClass() {
+        return SelectBooleanCheckboxDemoPage.class;
+    }
+
+    @Override
+    protected String getJspxName() {
+        return "selectBooleanCheckbox.jspx";
+    }
 }

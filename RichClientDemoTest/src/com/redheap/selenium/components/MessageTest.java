@@ -1,33 +1,12 @@
 package com.redheap.selenium.components;
 
 import com.redheap.selenium.component.AdfMessage;
-import com.redheap.selenium.junit.PageProvider;
-import com.redheap.selenium.junit.SavePageSourceOnFailure;
-import com.redheap.selenium.junit.ScreenshotOnFailure;
-import com.redheap.selenium.junit.WebDriverResource;
 import com.redheap.selenium.pages.MessageDemoPage;
 
-import java.io.File;
-
 import static org.junit.Assert.*;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
 
-public class MessageTest {
-
-    @ClassRule
-    public static WebDriverResource driver = new WebDriverResource();
-    @Rule
-    public PageProvider<MessageDemoPage> pages =
-        new PageProvider(MessageDemoPage.class, HOME_PAGE, driver.getDriver());
-    @Rule
-    public TestWatcher screenshotOnFailure = new ScreenshotOnFailure(driver.getDriver(), new File("errors"));
-    @Rule
-    public TestWatcher saveSourceOnFailure = new SavePageSourceOnFailure(driver.getDriver(), new File("errors"));
-
-    private static final String HOME_PAGE = "http://localhost:7101/adf-richclient-demo/faces/components/message.jspx";
+public class MessageTest extends PageTestBase<MessageDemoPage> {
 
     @Test
     public void testInitialEmptyMessage() {
@@ -60,4 +39,13 @@ public class MessageTest {
         org.junit.runner.JUnitCore.main(args2);
     }
 
+    @Override
+    protected Class<MessageDemoPage> getPageClass() {
+        return MessageDemoPage.class;
+    }
+
+    @Override
+    protected String getJspxName() {
+        return "message.jspx";
+    }
 }
