@@ -11,7 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-public class AdfSelectManyShuttle extends UixValue {
+public class AdfSelectOrderShuttle extends UixValue {
 
     // see http://jdevadf.oracle.com/adf-richclient-demo/docs/js-subids.html
     private static final String SUBID_content = "content"; // <div> element
@@ -20,6 +20,10 @@ public class AdfSelectManyShuttle extends UixValue {
     private static final String SUBID_label = "label"; // <label> element
     private static final String SUBID_move = "move"; // <a> element
     private static final String SUBID_moveAll = "moveall"; // <a> element
+    private static final String SUBID_moveBottom = "movebottom"; // <a> element
+    private static final String SUBID_moveDown = "movedown"; // <a> element
+    private static final String SUBID_moveTop = "movetop"; // <a> element
+    private static final String SUBID_moveUp = "moveup"; // <a> element
     private static final String SUBID_remove = "remove"; // <a> element
     private static final String SUBID_removeAll = "removeall"; // <a> element
 
@@ -38,7 +42,7 @@ public class AdfSelectManyShuttle extends UixValue {
         "return comp.getSelectItems()[arguments[1]] && comp.getSelectItems()[arguments[1]].getValue();";
 
 
-    public AdfSelectManyShuttle(WebDriver webDriver, String clientId) {
+    public AdfSelectOrderShuttle(WebDriver webDriver, String clientId) {
         super(webDriver, clientId);
     }
 
@@ -207,6 +211,34 @@ public class AdfSelectManyShuttle extends UixValue {
      */
     public void clickMoveAll() {
         findSubIdElement(SUBID_moveAll).click();
+    }
+
+    /**
+     * Method to click on the &lt;a&gt; element to move a selected item to the bottom of the selected list.
+     */
+    public void clickMoveBottom() {
+        findSubIdElement(SUBID_moveBottom).click();
+    }
+
+    /**
+     * Method to click on the &lt;a&gt; element to move a selected item down in the selected list.
+     */
+    public void clickMoveDown() {
+        findSubIdElement(SUBID_moveDown).click();
+    }
+
+    /**
+     * Method to click on the &lt;a&gt; element to move a selected item to the top of the selected list.
+     */
+    public void clickMoveTop() {
+        findSubIdElement(SUBID_moveTop).click();
+    }
+
+    /**
+     * Method to click on the &lt;a&gt; element to move a selected item up in the selected list.
+     */
+    public void clickMoveUp() {
+        findSubIdElement(SUBID_moveUp).click();
     }
 
     /**

@@ -1,18 +1,18 @@
 package com.redheap.selenium.components;
 
-import com.redheap.selenium.component.AdfSelectManyShuttle;
-import com.redheap.selenium.pages.SelectManyShuttleDemoPage;
+import com.redheap.selenium.component.AdfSelectOrderShuttle;
+import com.redheap.selenium.pages.SelectOrderShuttleDemoPage;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-public class SelectManyShuttleTest extends PageTestBase<SelectManyShuttleDemoPage> {
+public class SelectOrderShuttleTest extends PageTestBase<SelectOrderShuttleDemoPage> {
 
     @Test
     public void testItems() {
-        AdfSelectManyShuttle shuttle = pages.goHome().findDrinksSelectManyShuttle();
+        AdfSelectOrderShuttle shuttle = pages.goHome().findDrinksSelectOrderShuttle();
         assertEquals("coffee", shuttle.getItemLabel(0));
         assertEquals("0", shuttle.getItemValue(0));
         assertEquals(0, shuttle.getItemIndexByLabel("coffee"));
@@ -34,7 +34,7 @@ public class SelectManyShuttleTest extends PageTestBase<SelectManyShuttleDemoPag
 
     @Test
     public void testSetValue() {
-        AdfSelectManyShuttle shuttle = pages.goHome().findDrinksSelectManyShuttle();
+        AdfSelectOrderShuttle shuttle = pages.goHome().findDrinksSelectOrderShuttle();
         //Select items by index
         shuttle.clickItemsByIndices(1, 3, 4); // idx=3 is disabled so should not work
         shuttle.clickMove();
@@ -63,28 +63,31 @@ public class SelectManyShuttleTest extends PageTestBase<SelectManyShuttleDemoPag
         assertEquals("milk", selectedLabels.get(1));
         assertEquals("fizz", selectedLabels.get(2));
         assertEquals("lemonade", selectedLabels.get(3));
-        //Remove milk from selection
+        //rearrange items
+        shuttle.clickSelectedItemsByIndices(0);
+        shuttle.clickMoveBottom();
         shuttle.clickSelectedItemsByIndices(1);
-        shuttle.clickRemove();
+        shuttle.clickMoveUp();
         selectedLabels = shuttle.getValueLabels();
-        assertEquals(3, selectedLabels.size());
-        assertEquals("tea", selectedLabels.get(0));
-        assertEquals("fizz", selectedLabels.get(1));
+        assertEquals(4, selectedLabels.size());
+        assertEquals("fizz", selectedLabels.get(0));
+        assertEquals("milk", selectedLabels.get(1));
         assertEquals("lemonade", selectedLabels.get(2));
+        assertEquals("tea", selectedLabels.get(3));
     }
 
     public static void main(String[] args) {
-        String[] args2 = { SelectManyShuttleTest.class.getName() };
+        String[] args2 = { SelectOrderShuttleTest.class.getName() };
         org.junit.runner.JUnitCore.main(args2);
     }
 
     @Override
-    protected Class<SelectManyShuttleDemoPage> getPageClass() {
-        return SelectManyShuttleDemoPage.class;
+    protected Class<SelectOrderShuttleDemoPage> getPageClass() {
+        return SelectOrderShuttleDemoPage.class;
     }
 
     @Override
     protected String getJspxName() {
-        return "selectManyShuttle.jspx";
+        return "selectOrderShuttle.jspx";
     }
 }
