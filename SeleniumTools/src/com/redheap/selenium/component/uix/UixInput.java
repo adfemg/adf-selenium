@@ -6,12 +6,14 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.BrowserType;
 
 public abstract class UixInput extends UixValue {
 
     private static final String JS_GET_VALID = JS_FIND_COMPONENT + "return comp.getValid();";
     private static final String JS_GET_SUBMITTED_VALUE = JS_FIND_ELEMENT + "return peer.GetSubmittedValue(comp,elem);";
     private static final String JS_GET_LABEL = JS_FIND_COMPONENT + "return comp.getLabel();";
+    private static final String JS_SELECT_INPUT = "arguments[0].select();";
 
     public UixInput(WebDriver webDriver, String clientid) {
         super(webDriver, clientid);
@@ -34,10 +36,15 @@ public abstract class UixInput extends UixValue {
     }
 
     public void clear() {
-        if (isPlatform(Platform.MAC)) {
-            findContentNode().sendKeys(Keys.chord(Keys.COMMAND, "a"), Keys.DELETE);
+        if (isBrowser(BrowserType.CHROME)) {
+            executeScript(JS_SELECT_INPUT, findContentNode());
+            findContentNode().sendKeys(Keys.DELETE);
         } else {
-            findContentNode().sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
+            if (isPlatform(Platform.MAC)) {
+                findContentNode().sendKeys(Keys.chord(Keys.COMMAND, "a"), Keys.DELETE);
+            } else {
+                findContentNode().sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
+            }
         }
     }
 
