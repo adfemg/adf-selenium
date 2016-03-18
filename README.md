@@ -58,4 +58,3 @@ $ORACLE_HOME/oracle_common/modules/org.apache.maven_3.2.5/bin/mvn install:instal
     -Dfile=adf-richclient-automation-11.jar -DgroupId=com.oracle.adf \
     -DartifactId=richclient-automation -Dversion=12.2 -Dpackaging=jar
 ```
-```
