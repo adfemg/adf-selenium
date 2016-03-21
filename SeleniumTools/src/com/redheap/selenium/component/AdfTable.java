@@ -131,7 +131,11 @@ public class AdfTable extends AdfComponent {
     }
 
     public long getRowCount() {
-        return ((Number) executeScript(JS_GET_ROW_COUNT, getClientId())).longValue();
+        Number num = ((Number) executeScript(JS_GET_ROW_COUNT, getClientId()));
+        if (num==null) {
+            return 0;
+        }
+        return num.longValue();
     }
 
     public void selectRow(int index) {
