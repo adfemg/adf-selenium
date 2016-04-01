@@ -48,3 +48,13 @@ Notice there is no low level interaction with html elements. You just write test
 * Run individual tests from the RichClientDemoTest project within JDeveloper or run the `junit` ant task in the build.xml to run all tests
   * the ant build task uses a system property to tell it where you have deployed the ADF Faces Component Demo. You might need to change that. All output is written to the `reports` subdirectory in the RichClientDemoTest project. A html report is also included in `reports/html`
   * when running individuel tests within JDeveloper it uses the system property set in the run profiles. Change the settings of the Default Run Profile of the RichClientDemoTest project to the URL where you have deployed the ADF Faces Component Demo
+
+## Using Maven
+**WARNING:** this is not completed yet. Still under development
+Unfortunately the richclient-automation library needed for testing ADF is not available on a maven repository, not even maven.oracle.com. So the best thing you can do is install this in your local repository:
+```
+cd $ORACLE_HOME/oracle_common/modules/oracle.adf.view
+$ORACLE_HOME/oracle_common/modules/org.apache.maven_3.2.5/bin/mvn install:install-file \
+    -Dfile=adf-richclient-automation-11.jar -DgroupId=com.oracle.adf \
+    -DartifactId=richclient-automation -Dversion=12.2 -Dpackaging=jar
+```
