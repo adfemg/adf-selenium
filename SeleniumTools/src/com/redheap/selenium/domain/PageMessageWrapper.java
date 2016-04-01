@@ -18,7 +18,7 @@ public class PageMessageWrapper {
 
     /**
      * This method gets all facesmessages on the page.
-     * @param A {@link org.openqa.selenium.JavascriptExecutor JavascriptExecutor} as we need to execute some JavaScript
+     * @param javascriptExecutor A {@link org.openqa.selenium.JavascriptExecutor JavascriptExecutor} as we need to execute some JavaScript
      * @return A {@link com.redheap.selenium.domain.PageMessageWrapper PageMessageWrapper} with all facesmessages on
      * the page as wel as some convenience methods.
      */
