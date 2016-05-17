@@ -29,7 +29,13 @@ public class TextEditorTest extends PageTestBase<TextEditorDemoPage> {
         texteditor.findBoldButton().click();
         texteditor.sendKeys("BOLD");
         texteditor.tabNext();
-        assertEquals("This is <span style=\"font-weight: bold;\">BOLD</span><br>", texteditor.getValue());
+        String value = (String) texteditor.getValue();
+        if (value.contains("<span")) {
+            // ADF 12.1.3.x uses <span> tags
+            assertEquals("This is <span style=\"font-weight: bold;\">BOLD</span><br>", value);
+        } else {
+            assertEquals("This is <b>BOLD</b><br>", value);
+        }
 
         texteditor.findEditorModeSourceButton().click();
 

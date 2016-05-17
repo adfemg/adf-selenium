@@ -32,6 +32,7 @@ public class FirefoxDriverResource extends WebDriverResource {
         // on Windows with multiple calls to AdfSelectOneChoice.clickItemByIndex (and others)
         profile.setEnableNativeEvents(false);
         profile.setPreference("app.update.enabled", false); // don't bother updating Firefox (takes too much time)
+        profile.setPreference("browser.usedOnWindows10", true); // don't show first-time windows 10 welcome page
         profile.setPreference("intl.accept_languages", language);
         return profile;
     }
