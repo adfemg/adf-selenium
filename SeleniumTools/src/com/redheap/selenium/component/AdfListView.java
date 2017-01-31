@@ -7,7 +7,6 @@ import org.openqa.selenium.WebDriver;
 
 /**
  * AdfListView component class.
- * TODO Deze class mag weg zodra deze is opgenomen in adf-selenium
  */
 public class AdfListView extends AdfComponent {
 
@@ -15,7 +14,7 @@ public class AdfListView extends AdfComponent {
         JS_FIND_PEER +
         "var keys=Object.keys(comp.getSelectedRowKeys()); var retval=[]; keys.forEach(function(key){retval.push(peer.getRowIndex(key))}); return retval;";
 
-    //TODO: geen geweldige manier maar comp.getRows() werkt niet.
+    //Not great but comp.getRows() does not work.
     //private static final String JS_GET_ROW_COUNT = JS_FIND_COMPONENT + "return comp.getRows();";
     private static final String JS_GET_ROW_COUNT =
         JS_FIND_COMPONENT + "var list=comp.getDescendantComponents(); var li=0; for(var i=0;i<list.length;i++ ){ " +
@@ -77,10 +76,6 @@ public class AdfListView extends AdfComponent {
         }
         return AdfComponent.forClientId(getDriver(), clientid);
     }
-
-    // TODO werkt niet altijd. Bij ZittingDetails in Zitting tab werkt het wel,
-    // in ZaakOpZittingDetails bij activiteit PlaatsZaakOpZitting ( praktisch een kopie van ZittingDetails )
-    // werkt het niet.
 
     /**
      * Find the given AdfComponent.

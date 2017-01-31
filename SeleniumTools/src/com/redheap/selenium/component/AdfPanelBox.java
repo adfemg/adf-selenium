@@ -3,9 +3,7 @@ package com.redheap.selenium.component;
 import org.openqa.selenium.WebDriver;
 
 /**
- * ADF Selenium representatie voor een {@code panelBox} component.
- * <p>
- * Mag weg zodra opgenomen in adf-selenium tools.
+ * ADF Selenium representation of a {@code panelBox} component.
  */
 public class AdfPanelBox extends AdfComponent {
     // see javascript AdfDhtmlShowDetailItemPeer.prototype.GetSubIdDomElement
@@ -23,7 +21,7 @@ public class AdfPanelBox extends AdfComponent {
 
     /**
      * Getter voor attribuut {@code text}.
-     * @return Waarde van atribuut {@code text}, de titel van de box
+     * @return value of attribute {@code text}, the title.
      */
     public String getText() {
         return (String) getProperty("text");
