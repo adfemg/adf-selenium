@@ -178,11 +178,11 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <url n="id" path="../libs/Selenium Libs.library"/>
+            <value n="id" v="Adf-richclient-automation-12-2.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Adf-richclient-automation-12-2.jar"/>
+            <url n="id" path="../../../../adf-selenium/libs/SeleniumLibs3.0.1.library"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
@@ -205,11 +205,11 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <url n="id" path="../libs/Selenium Libs.library"/>
+            <value n="id" v="Adf-richclient-automation-12-2.jar"/>
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Adf-richclient-automation-12-2.jar"/>
+            <url n="id" path="../../../../adf-selenium/libs/SeleniumLibs3.0.1.library"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
