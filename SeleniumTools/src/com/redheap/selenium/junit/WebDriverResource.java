@@ -14,12 +14,12 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public abstract class WebDriverResource extends ExternalResource {
 
+    private static final Logger logger = Logger.getLogger(WebDriverResource.class.getName());
+
     private RemoteWebDriver driver;
     private final int width;
     private final int height;
     private final Locale locale;
-
-    private static final Logger logger = Logger.getLogger(WebDriverResource.class.getName());
 
     public WebDriverResource() {
         this(1920, 1200, Locale.US);

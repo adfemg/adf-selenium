@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="US-ASCII" ?>
 <project xmlns="antlib:org.apache.tools.ant" default="junit">
-
     <!-- run ant from JDev which automatically sets oracle.home or supply on command line with -Doracle.home=/xxx/xxx -->
-    <fail unless="oracle.home" message="set oracle.home property to jdeveloper basedir, for example /Users/JohnDoe/Oracle/jdev12130/jdeveloper/"/>
-
+    <fail unless="oracle.home"
+          message="set oracle.home property to jdeveloper basedir, for example /Users/JohnDoe/Oracle/jdev12130/jdeveloper/"/>
     <path id="classpath">
-        <fileset dir="${basedir}/..">
-            <include name="libs/selenium-3.0.1/**/*.jar"/>
-            <include name="libs/adf-richclient-automation-12-2.jar"/>
-            <include name="libs/junit*.jar"/>
+        <fileset dir="${basedir}/../..">
+            <include name="selenium-3.0.1/**/*.jar"/>
+        </fileset>
+        <fileset dir="${oracle.home}../oracle_common/modules/oracle.adf.view">
+            <include name="adf-richclient-automation-11.jar"/>
         </fileset>
     </path>
-
     <target name="clean">
         <delete dir="classes"/>
         <delete dir="reports"/>
         <delete dir="errors"/>
     </target>
-
     <target name="compile">
         <mkdir dir="classes"/>
         <javac srcdir="src" destdir="classes" classpathref="classpath" debug="on" deprecation="on"
@@ -26,7 +24,6 @@
             <src location="../SeleniumTools/src"/>
         </javac>
     </target>
-
     <target name="junit" depends="clean,compile">
         <mkdir dir="reports"/>
         <junit printsummary="on" showoutput="true" fork="yes">
