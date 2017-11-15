@@ -75,7 +75,7 @@ public class AdfComponent /*extends BaseObject*/ {
     private static final String JS_SCROLLINTOVIEW_SUBTARGET = JS_FIND_COMPONENT + "comp.scrollIntoView(arguments[1]);";
     private static final String JS_SCROLLINTOVIEW = JS_FIND_COMPONENT + "comp.scrollIntoView();";
     private static final String JS_FIND_CONTENT_NODE =
-        JS_FIND_ELEMENT + "return AdfDhtmlEditableValuePeer.GetContentNode(comp, elem);";
+        JS_FIND_ELEMENT + "return AdfDhtmlEditableValuePeer.getContentNode(comp, elem);";
     private static final String JS_FIND_SUBID_ELEMENT =
         JS_FIND_PEER + "return peer.getSubIdDomElement(comp,arguments[1]);";
     private static final String JS_FIND_SUBID_CLIENTID =

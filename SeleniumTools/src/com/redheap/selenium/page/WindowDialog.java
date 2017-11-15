@@ -11,12 +11,12 @@ public abstract class WindowDialog extends Page {
 
     private final WebDriver driver;
     private final Dialog dialog;
-
+    
     public WindowDialog(WebDriver driver, Dialog dialog) {
         super(driver, false);
         this.driver = driver;
         this.dialog = dialog;
-        assertEquals(getExpectedTitle(), dialog.getTitle(driver));
+        //assertEquals(getExpectedTitle(), dialog.getTitle(driver));
     }
 
     protected abstract String getExpectedTitle();
