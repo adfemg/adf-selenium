@@ -27,7 +27,7 @@ public abstract class WindowDialog extends Page {
     }
 
     public boolean isAlive() {
-        return dialog.isAlive();
+        return dialog.isAlive(driver);
     }
 
     public void close() {
