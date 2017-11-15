@@ -2,10 +2,26 @@ package com.redheap.selenium.component;
 
 import com.redheap.selenium.component.uix.UixInput;
 
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class AdfInputDate extends UixInput {
+    
+    /**
+     * Overriden the clear method in de AdfInputDate.
+     * Getting the focus, does select all the chars allready, only need a delete/backspace here.
+     */
+    @Override
+    public void clear() {
+        if (isPlatform(Platform.MAC)) {
+            findContentNode().sendKeys(Keys.DELETE);
+        } else {
+            findContentNode().sendKeys(Keys.BACK_SPACE);
+        }
+
+    }
 
     // subid's at http://jdevadf.oracle.com/adf-richclient-demo/docs/js-subids.html
     private static final String SUBID_content = "content"; //
