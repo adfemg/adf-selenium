@@ -4,7 +4,7 @@
     <groupId>com.github.wvanderdeijl</groupId>
     <artifactId>selenium-tools-12-2</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
-    <version>3.0.3</version>
+    <version>3.0.4</version>
     <description>Project for SeleniumTools-12-2</description>
     <url>https://github.com/wvanderdeijl/adf-selenium</url>
     <properties>

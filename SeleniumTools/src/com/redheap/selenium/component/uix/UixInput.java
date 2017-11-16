@@ -6,6 +6,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
 
 public abstract class UixInput extends UixValue {
 
@@ -33,12 +34,26 @@ public abstract class UixInput extends UixValue {
         findContentNode().sendKeys(keys);
     }
 
+    /**
+     * Clear element value. Normally you would use {@code CTRL + A} to select all characters, but because this causes
+     * issues in (some?) ADF tables, we use the below key combination for Windows. Afterwards the {@code DEL} key is
+     * used to actually remove the value.
+     * <ul>
+     *  <li>{@code CTRL + SHIFT + HOME} to move cursor + select to the first character (multi-line is supported).
+     *  <li>{@code HOME} to lose select, but keep the cursor at the first character.
+     *  <li>{@code CTRL + SHIFT + END} to move cursor + select to the last character (multi-line is supported).
+     * </ul>
+     */
     public void clear() {
+        Actions actions = new Actions(getDriver());
         if (isPlatform(Platform.MAC)) {
-            findContentNode().sendKeys(Keys.chord(Keys.COMMAND, "a"), Keys.DELETE);
+            actions.sendKeys(findContentNode(), Keys.chord(Keys.COMMAND, "a"), Keys.DELETE);
         } else {
-            findContentNode().sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
+            actions.sendKeys(findContentNode(),
+                             new CharSequence[] { Keys.chord(Keys.CONTROL, Keys.SHIFT, Keys.HOME), Keys.HOME,
+                                                  Keys.chord(Keys.CONTROL, Keys.SHIFT, Keys.END), Keys.DELETE });
         }
+        actions.perform();
     }
 
     public void tabNext() {
