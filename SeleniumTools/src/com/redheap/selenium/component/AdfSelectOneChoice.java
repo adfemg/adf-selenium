@@ -22,12 +22,9 @@ public class AdfSelectOneChoice extends UixValue {
 
     public void clickItemByIndex(int index) {
         // expand list
-        WebElement dropdown = findDropdown();
-        if (dropdown != null) {
-            dropdown.click(); // mode=compact
-        } else {
-            click(); // click element itself when not in compact mode
-        }
+        if(isCompact()){
+            findDropdown().click();
+        }        
         findItem(index).click(); // click item within list
         waitForPpr();
     }

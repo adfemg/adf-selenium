@@ -54,6 +54,9 @@ public class SelectOneChoiceTest extends PageTestBase<SelectOneChoiceDemoPage> {
         choice.clickItemByLabel("fizz");
         assertEquals("fizz", choice.getValueLabel());
         assertEquals("3", choice.getValue());
+        choice.clickItemByIndex(0);
+        assertEquals("coffee", choice.getValueLabel());
+        assertEquals("0", choice.getValue());
     }
 
     @Test
@@ -64,7 +67,7 @@ public class SelectOneChoiceTest extends PageTestBase<SelectOneChoiceDemoPage> {
     }
 
     public static void main(String[] args) {
-        String[] args2 = { SelectOneChoiceTest.class.getName() };
+        String[] args2 = { SelectOneChoiceTest.class.getName() };        
         org.junit.runner.JUnitCore.main(args2);
     }
 
