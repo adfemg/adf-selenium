@@ -11,9 +11,12 @@ import org.openqa.selenium.WebDriver;
 
 public abstract class UixInputPopup extends UixInput {
 
+    // see http://jdevadf.oracle.com/adf-richclient-demo/docs/js-subids.html
     private static final String SUBID_content = "content"; // <input> element
     private static final String SUBID_label = "label"; // <label> element
+    // All list of inner SubIds of InputPopup's RichQuery section see in AdfQuery class
     private static final String SUBID_lovDialog_query = "lovDialog_query"; // RichQuery
+    //SubIds for components of InputPopup's search result Table
     private static final String SUBID_lovDialog_table = "lovDialog_table"; // Table
     private static final String SUBID_lovDialog_table_cellContainer = "lovDialog_table_cellContainer"; // <td> element
     private static final String SUBID_lovDialog_table_columnHeader_text =
@@ -26,9 +29,30 @@ public abstract class UixInputPopup extends UixInput {
         super(webDriver, clientid);
     }
 
+    public AdfPopup findSearchDialogPopup() {
+        return findSubIdComponent(SUBID_search_dialog_popup);
+    }
+
+    public boolean isPopupVisible() {
+        AdfPopup popup = findSearchDialogPopup();
+        return popup != null && popup.isPopupVisible();
+    }
+
+    public AdfDialog findSearchDialog() {
+        return findSubIdComponent(SUBID_search_dialog);
+    }
+
+    /*
+     * Methods for locating components of InputPopup's RichQuery section
+    */
+
     public AdfQuery findLovDialogQuery() {
         return findSubIdComponent(SUBID_lovDialog_query);
     }
+
+    /*
+     * Methods for locating components of InputPopup's search result Table
+    */
 
     public AdfTable findLovDialogTable() {
         return findSubIdComponent(SUBID_lovDialog_table);
@@ -40,19 +64,6 @@ public abstract class UixInputPopup extends UixInput {
 
     public AdfOutputText findLovDialogTableCell(int rowIndex, int colIndex) {
         return findSubIdComponent(SUBID_lovDialog_table + "[" + rowIndex + "][" + colIndex + "]");
-    }
-
-    public AdfDialog findSearchDialog() {
-        return findSubIdComponent(SUBID_search_dialog);
-    }
-
-    public boolean isPopupVisible() {
-        AdfPopup popup = findSearchDialogPopup();
-        return popup != null && popup.isPopupVisible();
-    }
-
-    public AdfPopup findSearchDialogPopup() {
-        return findSubIdComponent(SUBID_search_dialog_popup);
     }
 
 }
