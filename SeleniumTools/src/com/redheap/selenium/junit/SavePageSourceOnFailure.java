@@ -16,18 +16,28 @@ import org.openqa.selenium.WebDriverException;
 
 public class SavePageSourceOnFailure extends TestWatcher {
 
+    private static final String ERRORS_SCREENSHOT_FOLDER_PROP = "errors.screenshots.folder";
+    
     private final File basedir;
     private final WebDriver driver;
 
     private static final Logger logger = Logger.getLogger(SavePageSourceOnFailure.class.getName());
 
     public SavePageSourceOnFailure(WebDriver driver) {
-        this(driver, new File("."));
+        this(driver, new File(getErrorScreenShotFolderValue()));
     }
 
     public SavePageSourceOnFailure(WebDriver driver, File basedir) {
         this.driver = driver;
         this.basedir = basedir;
+    }
+
+    private static String getErrorScreenShotFolderValue() {
+        if (System.getProperty(ERRORS_SCREENSHOT_FOLDER_PROP) == null) {
+            throw new IllegalStateException("system property " + "'"+ ERRORS_SCREENSHOT_FOLDER_PROP + "'" + 
+                                            " should contain relative path to the folder for screenshots, for example 'errorsScreenshots'");
+        }
+        return System.getProperty(ERRORS_SCREENSHOT_FOLDER_PROP);
     }
 
     @Override
