@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.time.Duration;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -151,7 +153,7 @@ public class AdfCalendar extends AdfComponent {
     public void hoverActivityInView(int index) {
         WebElement element = findAllActivitiesInView().get(index);
         // we use pause to give javascript timer to detect hover and show popup
-        new Actions(getDriver()).moveToElement(element).pause(1000).perform();
+        new Actions(getDriver()).moveToElement(element).pause(Duration.ofMillis(1000)).perform();
         waitForPpr();
     }
 
