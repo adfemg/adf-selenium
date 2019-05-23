@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<library name="Adf-richclient-automation-lite" id="" xmlns="http://xmlns.oracle.com/jdeveloper/1013/manifest-libraries">
+  <description/>
+  <classpath>adf-richclient-automation-lite.jar</classpath>
+</library>
