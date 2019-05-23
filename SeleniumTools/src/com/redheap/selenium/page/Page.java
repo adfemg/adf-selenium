@@ -34,7 +34,11 @@ public abstract class Page /*implements TakesScreenshot*/ {
 
     private static final String JS_GET_REGIONS =
         "{ids=[]; AdfPage.PAGE.getComponentsByType('oracle.adf.RichRegion').forEach(function(r){ids.push(r.getClientId())}); return ids}";
-    private static final String JS_GET_DOCID = "return AdfPage.PAGE.getDocumentClientId()";
+    private static final String JS_GET_DOCID = "return AdfPage.PAGE.getDocumentClientId()"; // Here is used Internal function to retrieve the document component's client ID
+                                                                                            // ��. oracle.adfinternal.view.js.laf.dhtml.rich.AdfDhtmlPage.getDocumentClientId()
+                                                                                            // https://docs.oracle.com/middleware/1221/adf/api-reference-javascript-faces/oracle/adfinternal/view/js/laf/dhtml/rich/AdfDhtmlPage.html
+                                                                                            //
+    
     private static final Logger logger = Logger.getLogger(Page.class.getName());
 
     public Page(WebDriver driver) {
@@ -88,6 +92,10 @@ public abstract class Page /*implements TakesScreenshot*/ {
 
     protected <T extends AdfComponent> T findAdfComponent(String relativeClientId) {
         return findDocument().findAdfComponent(relativeClientId);
+    }
+
+    protected <T extends AdfComponent> T findAdfComponentByLocator(String relativeClientId) {
+        return findDocument().findAdfComponentByLocator(relativeClientId);
     }
 
     public <X extends Object> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
