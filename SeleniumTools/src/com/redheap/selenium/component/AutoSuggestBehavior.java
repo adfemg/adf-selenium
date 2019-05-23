@@ -1,12 +1,12 @@
 package com.redheap.selenium.component;
 
-import com.google.common.base.Predicate;
-
 import com.redheap.selenium.component.uix.UixInput;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import java.util.function.Function;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -79,9 +79,9 @@ public class AutoSuggestBehavior<C extends UixInput> {
         component.clear();
         component.sendKeys(Keys.BACK_SPACE, value);
         final AdfComponent comp = component;
-        new WebDriverWait(component.getDriver(), 10, 100).until(new Predicate<WebDriver>() {
+        new WebDriverWait(component.getDriver(), 10, 100).until(new Function<WebDriver, Boolean>() { //Refactor for using <V extends Object> V until(Function<? super T, V> p1) instead of deprected in 3.3.1 void until(Predicate<T> p1) 
             @Override
-            public boolean apply(WebDriver webDriver) {
+            public Boolean apply(WebDriver webDriver) {
                 if (isPopupVisible()) {
                     comp.waitForPpr();
                     return true;
