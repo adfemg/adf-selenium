@@ -58,7 +58,7 @@ public class SavePageSourceOnFailure extends TestWatcher {
                 logger.info("*************** dumping page source " + file.getCanonicalPath());
                 try {
                     driver.switchTo().window(guid);
-                    FileUtils.writeStringToFile(file, driver.getPageSource());
+                    FileUtils.writeStringToFile(file, driver.getPageSource(), "UTF-8");
                 } catch (RuntimeException e) {
                     // ignore and continue with next window
                     e.printStackTrace();
