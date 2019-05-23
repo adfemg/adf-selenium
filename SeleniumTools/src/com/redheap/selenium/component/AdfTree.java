@@ -8,8 +8,16 @@ import org.openqa.selenium.WebElement;
 
 public class AdfTree extends AdfComponent {
 
+    
     // see http://jdevadf.oracle.com/adf-richclient-demo/docs/js-subids.html
     private static final String SUBID_disclosureID = "disclosureID";
+
+    private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWKEY =
+        JS_FIND_COMPONENT +
+        "var child=comp.findComponent(arguments[1],arguments[2]); return child?child.getClientId():null";
+    private static final String JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWINDEX =
+        JS_FIND_PEER +
+        "var idx=peer.getRowKey(arguments[2]); if (!idx){return null}var child=comp.findComponent(arguments[1],idx); return child?child.getClientId():null";
 
     private static final String JS_EXPANDED_NODE_COUNT =
         JS_FIND_COMPONENT + "return Object.keys(comp.getDisclosedRowKeys()).length";
@@ -29,9 +37,41 @@ public class AdfTree extends AdfComponent {
         JS_FIND_PEER + "return peer._getDisclosureIconInCell(arguments[1]);";
     private static final String JS_GET_ROW_KEY =
         JS_FIND_PEER + "var rowkeyandrow=peer.GetRowKeyAndRow(arguments[1]); return rowkeyandrow&&rowkeyandrow[0];";
+    private static final String JS_SCROLLTO_ROWINDEX = JS_FIND_COMPONENT + "comp.scrollToRowIndex(arguments[1])";
+    
 
     public AdfTree(WebDriver driver, String clientid) {
         super(driver, clientid);
+    }
+
+    public <T extends AdfComponent> T findAdfComponent(String relativeClientId, String rowKey) {
+        String clientid =
+            (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWKEY, getClientId(), relativeClientId, rowKey);
+        if (clientid == null) {
+            return null;
+        }
+        return AdfComponent.forClientId(getDriver(), clientid);
+    }
+
+    public <T extends AdfComponent> T findAdfComponent(String relativeClientId, int rowIndex) {
+        scrollToRowIndex(rowIndex); // scroll to row (and possibly fetch additional data)
+        String clientid =
+            (String) executeScript(JS_FIND_RELATIVE_COMPONENT_CLIENTID_ROWINDEX, getClientId(), relativeClientId,
+                                   rowIndex);
+        if (clientid == null) {
+            return null;
+        }
+        T retval = AdfComponent.forClientId(getDriver(), clientid);
+        // TODO; would be niced to use TablePeer.scrollColumnIntoView but we haven't figured out a way to
+        // determine column index for a component
+        retval.scrollIntoView();
+        return retval;
+    }
+    
+    public void scrollToRowIndex(int rowIndex) {
+        // could also accept a callback function
+        executeScript(JS_SCROLLTO_ROWINDEX, getClientId(), rowIndex);
+        waitForPpr();
     }
 
     public int getExpandedNodeCount() {
