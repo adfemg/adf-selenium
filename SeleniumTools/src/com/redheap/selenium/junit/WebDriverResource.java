@@ -39,7 +39,7 @@ public abstract class WebDriverResource extends ExternalResource {
             logger.fine("running " + capabilities.getBrowserName() + " version " + capabilities.getVersion() + " on " +
                         capabilities.getPlatform());
         }
-        DialogManager.init(driver, 10000); // timeout of 10 seconds
+        DialogManager.init(driver, 10000, true); // timeout of 10 seconds
         driver.manage().window().maximize();
     }
 

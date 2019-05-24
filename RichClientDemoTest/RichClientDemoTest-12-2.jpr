@@ -172,7 +172,7 @@
       <hash n="runConfigurationDefinitions">
          <hash n="Default">
             <value n="custom" v="false"/>
-            <value n="javaOptions" v="-Djava.util.logging.config.file=logging.properties -Dphantomjs.binary.path=../libs/phantomjs-1.9.8/phantomjs.exe -Dadf.facesdemo.baseurl=http://localhost:1221/faces-12.2.1.0.0"/>
+            <value n="javaOptions" v="-Djava.util.logging.config.file=logging.properties -Dadf.facesdemo.baseurl=http://127.0.0.1:7101/adf-faces-demo-12.2.1.0.0/"/>
             <value n="name" v="Default"/>
             <url n="runDirectoryURL" path="."/>
             <value n="targetURL"/>
@@ -186,26 +186,16 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Adf-richclient-automation-12-2.jar"/>
+            <url n="id" path="../libs/Adf-richclient-automation-lite.library"/>
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <url n="id" path="../libs/Selenium Libs.library"/>
+            <url n="id" path="../libs/Selenium Libs-3-3-1.library"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>
       <hash n="internalDefinitions">
-         <list n="libraryDefinitions">
-            <hash>
-               <list n="classPath">
-                  <url path="../libs/adf-richclient-automation-12-2.jar" jar-entry=""/>
-               </list>
-               <value n="deployedByDefault" v="true"/>
-               <value n="description" v="Adf-richclient-automation-12-2.jar"/>
-               <value n="id" v="Adf-richclient-automation-12-2.jar"/>
-               <value n="locked" v="true"/>
-            </hash>
-         </list>
+         <list n="libraryDefinitions"/>
       </hash>
       <list n="libraryReferences">
          <hash>
@@ -213,11 +203,11 @@
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <value n="id" v="Adf-richclient-automation-12-2.jar"/>
+            <url n="id" path="../libs/Adf-richclient-automation-lite.library"/>
             <value n="isJDK" v="false"/>
          </hash>
          <hash>
-            <url n="id" path="../libs/Selenium Libs.library"/>
+            <url n="id" path="../libs/Selenium Libs-3-3-1.library"/>
             <value n="isJDK" v="false"/>
          </hash>
       </list>

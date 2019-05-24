@@ -39,7 +39,7 @@ public class SelectBooleanRadioTest extends PageTestBase<SelectBooleanRadioDemoP
         assertTrue(Boolean.FALSE.equals(radio.getValue()));
         radio.click();
         assertTrue(Boolean.TRUE.equals(radio.getValue()));
-        radio.findGroupItems().get(3).click();
+        radio.findGroupItems().get(radio.findGroupItems().size()-1).click();
         assertTrue(Boolean.FALSE.equals(radio.getValue()));
     }
 
