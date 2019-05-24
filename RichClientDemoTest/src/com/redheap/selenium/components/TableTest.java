@@ -66,6 +66,14 @@ public class TableTest extends PageTestBase<TableDetailStampDemoPage> {
         TableDetailStampDemoPage page = pages.goHome();
         assertEquals(5400, page.findTable().getRowCount());
     }
+    
+    @Test
+    public void testSelectRowByColumnCellValue() {
+        TableDetailStampDemoPage page = pages.goHome();
+        AdfTable table = page.findTable();
+        table.selectRow("dmoTpl:table1:c7", "admin.jar");
+        table.selectRow("dmoTpl:table1:c7", "connectors");
+    }
 
     public static void main(String[] args) {
         String[] args2 = { TableTest.class.getName() };

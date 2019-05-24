@@ -52,10 +52,12 @@ public class AdfTable extends AdfComponent {
             "        d && (d = AdfAgent.AGENT.getAttribute(d, \"_leafColClientIds\"),\n" + 
             "        d = eval(d))\n" + 
             "        if (d) {\n" + 
-            "            for (var h = 0; h < d.length && !retval; h++) {\n" + 
-            "                if (d[h].indexOf(cId) !== -1 ) {\n" + 
-            "                    retval = h;\n" + 
-            "                    break\n" + 
+            "            for (var h = 0; h < d.length && !retval; h++) {\n" +
+            "                if (d[h] !== null) {" +                      //this check covers header with joint columns
+            "                   if (d[h].indexOf(cId) !== -1 ) {\n" + 
+            "                        retval = h;\n" + 
+            "                        break\n" + 
+            "                   }\n" +
             "                }\n" + 
             "            }\n" + 
             "        }\n" + 
@@ -215,7 +217,7 @@ public class AdfTable extends AdfComponent {
     
     public void selectRow(String columnComponentId, String cellValue) {
         Map<?, ?> rowinfo = (Map<?, ?>) findRowWithInfo(columnComponentId, cellValue);
-        assertNotNull("задача отсутсвует в task list", rowinfo);
+        assertNotNull("Row with specified cellValue are not in the Table", rowinfo);
         Long index = (Long)rowinfo.get("index");
         scrollToRowIndex(index.intValue());
         WebElement row = (WebElement)rowinfo.get("tr");
@@ -254,12 +256,12 @@ public class AdfTable extends AdfComponent {
     }
 
     public WebElement findRow(int index) {
-        return (WebElement) executeScript(JS_GET_ROW_BY_INDEX, getClientId(), String.valueOf(index));
+        return (WebElement) executeScript(JS_GET_ROW_BY_INDEX, getClientId(), index);
     }
     
     public WebElement findRow(String columnComponentId, String cellValue){
         Map<?, ?> rowinfo = (Map<?, ?>) findRowWithInfo(columnComponentId, cellValue);
-        assertNotNull("задача отсутсвует в task list", rowinfo);
+        assertNotNull("Row with specified cellValue are not in the Table", rowinfo);
         return (WebElement) rowinfo.get("tr");
     }
     
