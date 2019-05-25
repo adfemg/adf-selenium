@@ -22,9 +22,15 @@ public class DvtSchedulingGantt extends AdfComponent {
     private static final String JS_GET_TASK_BAR_ELEMENT = 
         JS_FIND_PEER + 
         "var taskbarelem=peer.getTaskbarElement(arguments[1],arguments[2],\"bar\"); return taskbarelem?taskbarelem :null;";
+    private static final String JS_SCROLL_INTO_VIEW = 
+        JS_FIND_PEER + 
+        "peer.scrollInToView(peer.findElement(arguments[1],'tid'));";
+    
     private static final String JS_SELECT_TASK = 
         JS_FIND_PEER + 
         "var taskbarelem=peer.getTaskbarElement(arguments[1],arguments[2],\"bar\");" +
+        "var task=peer.findElement(taskbarelem,'tid');" +
+        "peer.scrollInToView(task);" +
         "peer.removeSelectedTasks();" +
         "peer.selectTask(taskbarelem);"; 
     /* SUBIDs
@@ -133,6 +139,7 @@ public class DvtSchedulingGantt extends AdfComponent {
         return taskBarElement;
     }
     
+    
     public void taskbarSelect (int rowIndex, String taskId) {
         executeScript(JS_SELECT_TASK, getClientId(), rowIndex, taskId);
         waitForPpr();
@@ -140,17 +147,18 @@ public class DvtSchedulingGantt extends AdfComponent {
 
     public void taskbarContextClick (int rowIndex, String taskId) {
         WebElement taskBarElement = findTaskbar (rowIndex, taskId);
+        executeScript(JS_SCROLL_INTO_VIEW,getClientId(), taskBarElement);
         new Actions(this.getDriver()).contextClick(taskBarElement).perform();
         waitForPpr();
     }    
     
     
     
-    private AdfButton findZoomInButton() {
+    public AdfButton findZoomInButton() {
         return findSubIdComponent(SUBID_zoom_in_button);
     }
 
-    private AdfButton findZoomOutButton() {
+    public AdfButton findZoomOutButton() {
         return findSubIdComponent(SUBID_zoom_out_button);
     }
 
