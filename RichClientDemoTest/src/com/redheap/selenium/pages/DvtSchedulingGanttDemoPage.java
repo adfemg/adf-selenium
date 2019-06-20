@@ -14,6 +14,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+/**
+ * Java representation of the adf-richclient-demo/faces/components/schedulingGantt.jspx page.
+ */
 public class DvtSchedulingGanttDemoPage extends Page {
 
     public DvtSchedulingGanttDemoPage(WebDriver webDriver) {
