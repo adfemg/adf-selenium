@@ -32,9 +32,9 @@ public class AdfInputComboboxListOfValues extends UixInputPopup {
         return findSubIdComponent(SUBID_dropdownTable);
     }
     
-    public List<String> getDropdownTableRows() {
+    public List<String> getClientSideDropdownTableRows() {
         AdfTable dropdownTable = findDropdownTable();
-        long ddRC = dropdownTable.getRowCount();
+        long ddRC = dropdownTable. getClientRowCount();
         List<String> dropdownTableRows = new ArrayList<String>();
         for (int i = 0; i < ddRC; i++) {
             dropdownTableRows.add(dropdownTable.findRow(i).getText());     

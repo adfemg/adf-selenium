@@ -91,6 +91,7 @@ public class AdfTable extends AdfComponent {
         "return FindRowByColumnValue(arguments[1],arguments[2]);";
     
     private static final String JS_GET_ROW_COUNT = JS_FIND_PEER + "return peer.GetRowCount();";
+    private static final String JS_GET_CLIENT_ROW_COUNT = JS_FIND_PEER + "return peer.getClientRowCount();";
     private static final String JS_IS_EMPTY = JS_FIND_COMPONENT + "return comp.isEmpty();";
 
     public AdfTable(WebDriver webDriver, String clientid) {
@@ -207,6 +208,10 @@ public class AdfTable extends AdfComponent {
     public long getRowCount() {
         return ((Number) executeScript(JS_GET_ROW_COUNT, getClientId())).longValue();
     }
+    
+    public long getClientRowCount() {
+        return ((Number) executeScript(JS_GET_CLIENT_ROW_COUNT, getClientId())).longValue();
+    }
 
     public void selectRow(int index) {
         scrollToRowIndex(index);
@@ -283,7 +288,4 @@ public class AdfTable extends AdfComponent {
         return ((Number) executeScript(JS_GET_COLUMN_INDEX_BY_ID, getClientId(), columnComponentId)).intValue();
     }
 
-
-    public void getRowCount(Integer contractNameRow) {
-    }
 }
