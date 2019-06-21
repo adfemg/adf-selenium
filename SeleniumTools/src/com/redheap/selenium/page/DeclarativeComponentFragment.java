@@ -1,7 +1,7 @@
 package com.redheap.selenium.page;
 
 import com.redheap.selenium.component.AdfComponent;
-import com.redheap.selenium.component.AdfDeclarativeComponent;
+import com.redheap.selenium.component.AdfDynamicDeclarativeComponent;
 import com.redheap.selenium.component.AdfRegion;
 import com.redheap.selenium.domain.PageMessageWrapper;
 
@@ -13,9 +13,9 @@ import org.openqa.selenium.WebDriverException;
 
 public class DeclarativeComponentFragment /*extends BaseObject*/ {
 
-    private final AdfDeclarativeComponent dclr;
+    private final AdfDynamicDeclarativeComponent dclr;
 
-    public DeclarativeComponentFragment(AdfDeclarativeComponent dclr) {
+    public DeclarativeComponentFragment(AdfDynamicDeclarativeComponent dclr) {
         this.dclr = dclr;
     }
 
@@ -28,7 +28,7 @@ public class DeclarativeComponentFragment /*extends BaseObject*/ {
     }
 
 
-    protected AdfDeclarativeComponent findDeclarativeComponent() {
+    protected AdfDynamicDeclarativeComponent findDeclarativeComponent() {
         return dclr;
     }
 
