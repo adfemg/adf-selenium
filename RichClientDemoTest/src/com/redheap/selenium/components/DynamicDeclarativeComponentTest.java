@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 
-public class DeclarativeComponentTest extends PageTestBase<DeclarativeComponentDemoPage> {
+public class DynamicDeclarativeComponentTest extends PageTestBase<DeclarativeComponentDemoPage> {
 
     @Test
     public void testInteractionWithDeclarativeComponent() {
@@ -38,7 +38,7 @@ public class DeclarativeComponentTest extends PageTestBase<DeclarativeComponentD
 
 
     public static void main(String[] args) {
-        String[] args2 = { DeclarativeComponentTest.class.getName() };
+        String[] args2 = { DynamicDeclarativeComponentTest.class.getName() };
         org.junit
            .runner
            .JUnitCore
