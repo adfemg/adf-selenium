@@ -16,14 +16,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 
 public class ScreenshotOnFailure extends TestWatcher {
-
+    
+    private static final String ERRORS_SCREENSHOT_FOLDER_PROP = "errors.screenshots.folder";
+    
     private final File basedir;
     private final WebDriver driver;
 
     private static final Logger logger = Logger.getLogger(ScreenshotOnFailure.class.getName());
 
     public ScreenshotOnFailure(WebDriver driver) {
-        this(driver, new File("."));
+        this(driver, new File(getErrorScreenShotFolderValue ()));
     }
 
     public ScreenshotOnFailure(WebDriver driver, File basedir) {
@@ -31,6 +33,14 @@ public class ScreenshotOnFailure extends TestWatcher {
         this.basedir = basedir;
     }
 
+    private static String getErrorScreenShotFolderValue () {
+        if (System.getProperty(ERRORS_SCREENSHOT_FOLDER_PROP) == null) {
+            throw new IllegalStateException("system property " + "'"+  ERRORS_SCREENSHOT_FOLDER_PROP + "'"+ 
+                                            " should contain relative path to the folder for screenshots, for example 'errorsScreenshots'");
+        }
+        return System.getProperty(ERRORS_SCREENSHOT_FOLDER_PROP);
+    }
+    
     @Override
     protected void failed(Throwable t, Description description) {
         String oldWindow = driver.getWindowHandle();

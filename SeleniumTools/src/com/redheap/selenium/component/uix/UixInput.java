@@ -67,6 +67,14 @@ public abstract class UixInput extends UixValue {
         tabNext();
     }
 
+    public void typeValueWithoutTab(String value) {
+        clear();
+        sendKeys(value);
+        
+    }
+
+
+
     /**
      * Private method that will give back the {@link com.redheap.selenium.domain.PageMessageWrapper PageMessageWrapper}.
      * @return The {@link com.redheap.selenium.domain.PageMessageWrapper PageMessageWrapper} with all facesmessages

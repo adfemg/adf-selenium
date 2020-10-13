@@ -82,21 +82,21 @@ public class ButtonTest extends PageTestBase<ButtonDemoPage> {
         ButtonDemoPage page = pages.goHome();
 
         DialogManager dialogManager = driver.getDialogManager();
-        assertEquals(0, dialogManager.totalNumberOfDialogsOpen());
+        assertEquals(0, dialogManager.totalNumberOfDialogsOpen(webdriver));
         assertNull(dialogManager.getCurrentDialog());
 
         // find an click af:button with useWindow='true'
         NewFileWindowDialog dialog = page.clickUseWindowButton(); // opens popup in new browser window
 
         // verify new dialog is opened and active
-        assertEquals(1, dialogManager.totalNumberOfDialogsOpen());
+        assertEquals(1, dialogManager.totalNumberOfDialogsOpen(webdriver));
         Dialog firstDialog = dialogManager.getCurrentDialog();
         assertNotNull(firstDialog);
         assertEquals("New File", firstDialog.getTitle(webdriver));
 
         // close dialog by clicking Save button in dialog
         dialog.findSaveButton().clickWithDialogDetect();
-        assertEquals(0, dialogManager.totalNumberOfDialogsOpen());
+        assertEquals(0, dialogManager.totalNumberOfDialogsOpen(webdriver));
     }
 
     @Test
@@ -105,14 +105,14 @@ public class ButtonTest extends PageTestBase<ButtonDemoPage> {
         ButtonDemoPage page = pages.goHome();
 
         DialogManager dialogManager = driver.getDialogManager();
-        assertEquals(0, dialogManager.totalNumberOfDialogsOpen());
+        assertEquals(0, dialogManager.totalNumberOfDialogsOpen(webdriver));
         assertNull(dialogManager.getCurrentDialog());
 
         // find an click af:button with useWindow='true'
         NewFileWindowDialog dialog = page.clickUseWindowInlineDocButton(); // opens popup in inline popup with iframe
 
         // verify new dialog is opened and active
-        assertEquals(1, dialogManager.totalNumberOfDialogsOpen());
+        assertEquals(1, dialogManager.totalNumberOfDialogsOpen(webdriver));
         Dialog firstDialog = dialogManager.getCurrentDialog();
         assertNotNull(firstDialog);
         assertEquals("New File", firstDialog.getTitle(webdriver));
@@ -120,7 +120,7 @@ public class ButtonTest extends PageTestBase<ButtonDemoPage> {
         // close dialog programatically (Save & Cancel buttons will throw error)
         assertFalse(dialog.findSaveButton().isDisabled());
         dialog.close();
-        assertEquals(0, dialogManager.totalNumberOfDialogsOpen());
+        assertEquals(0, dialogManager.totalNumberOfDialogsOpen(webdriver));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class ButtonTest extends PageTestBase<ButtonDemoPage> {
         ButtonDemoPage page = pages.goHome();
 
         DialogManager dialogManager = driver.getDialogManager();
-        assertEquals(0, dialogManager.totalNumberOfDialogsOpen());
+        assertEquals(0, dialogManager.totalNumberOfDialogsOpen(webdriver));
         assertNull(dialogManager.getCurrentDialog());
 
         String mainwindow = webdriver.getWindowHandle();

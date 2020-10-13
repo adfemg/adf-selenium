@@ -2,6 +2,7 @@ package com.redheap.selenium.component;
 
 import com.redheap.selenium.errors.SubIdNotFoundException;
 
+import java.time.Duration;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class AdfComponent /*extends BaseObject*/ {
     private static final String JS_SCROLLINTOVIEW_SUBTARGET = JS_FIND_COMPONENT + "comp.scrollIntoView(arguments[1]);";
     private static final String JS_SCROLLINTOVIEW = JS_FIND_COMPONENT + "comp.scrollIntoView();";
     private static final String JS_FIND_CONTENT_NODE =
-        JS_FIND_ELEMENT + "return AdfDhtmlEditableValuePeer.getContentNode(comp, elem);";
+        JS_FIND_ELEMENT + "return AdfDhtmlEditableValuePeer.GetContentNode(comp, elem);";
     private static final String JS_FIND_SUBID_ELEMENT =
         JS_FIND_PEER + "return peer.getSubIdDomElement(comp,arguments[1]);";
     private static final String JS_FIND_SUBID_CLIENTID =
@@ -86,6 +87,26 @@ public class AdfComponent /*extends BaseObject*/ {
         JS_FIND_COMPONENT + "return AdfUIComponent.__isNamingContainer(comp.constructor);";
 
     private static final Pattern RELATIVE_ID = Pattern.compile("(:*)(.+)");
+    
+    private static final String JS_CONTAINS_FOCUS = JS_FIND_ELEMENT + "return AdfFocusUtils.containsFocus(elem);";
+    private static final String JS_GET_FOCUS = JS_FIND_ELEMENT + "peer.Focus();";
+
+/**
+     *Method check focus of component
+     *
+     * @return Boolean
+     */
+        public boolean isInFocus(){
+            return (Boolean) executeScript(JS_CONTAINS_FOCUS, getClientId());
+        }
+    
+    /**
+     * Method to focus on component
+     */
+    public void takeFocus(){
+       executeScript(JS_GET_FOCUS, getClientId());
+    }
+    
 
     protected AdfComponent(WebDriver driver, String clientid) {
         this.driver = driver;
@@ -148,8 +169,22 @@ public class AdfComponent /*extends BaseObject*/ {
             // no class loaded yet for this type
             // determing java class from javascript type:
             // oracle.adf.RichInputText to com.redheap.selenium.component.AdfInputText
-            String simpleType = componentType.substring(componentType.lastIndexOf('.') + ".Rich".length()); // InputText
-            String className = AdfComponent.class.getPackage().getName() + ".Adf" + simpleType;
+            // oracle.dss.adf.gantt.SchedulingGantt to com.redheap.selenium.component.DvtSchedulingGantt
+            String tagType = componentType.split("\\.")[1]; //substring(componentType.indexOf('.'), componentType.indexOf('.') + 4); // dss or adf
+            String simpleType = null;
+            String className = null;
+            switch (tagType) {
+            case "adf": 
+                simpleType = componentType.substring(componentType.lastIndexOf('.') + ".Rich".length()); // InputText
+                className = AdfComponent.class.getPackage().getName() + ".Adf" + simpleType;
+                break;
+                
+            case "dss" : {
+                simpleType = componentType.substring(componentType.lastIndexOf('.')+1); // SchedulingGantt
+                className = AdfComponent.class.getPackage().getName() + ".Dvt" + simpleType;
+                break;
+                }
+            }
             final Class<? extends C> c;
             try {
                 c = (Class<? extends C>) ClassUtils.getClass(className);
@@ -288,6 +323,13 @@ public class AdfComponent /*extends BaseObject*/ {
         element.click();
         waitForPpr();
     }
+    
+    
+    public void clickWithoutWaitForPpr() {
+        WebElement element = getElement();
+        logger.fine("clicking " + element);
+        element.click();
+    }
 
     public void clickWithDialogDetect() {
         WebElement element = getElement();
@@ -415,7 +457,7 @@ public class AdfComponent /*extends BaseObject*/ {
     public void hover() {
         WebElement element = getElement();
         // we use pause to give javascript timer to detect hover and show popup
-        new Actions(getDriver()).moveToElement(element).pause(1000).perform();
+        new Actions(getDriver()).moveToElement(element).pause(Duration.ofMillis(1000)).perform(); //deprecated pause(long) has been substituted by pause(Duration)
         waitForPpr();
     }
 
