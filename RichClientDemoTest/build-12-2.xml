@@ -6,7 +6,7 @@
 
     <path id="classpath">
         <fileset dir="${basedir}/..">
-            <include name="libs/selenium-2.52.0/**/*.jar"/>
+            <include name="libs/selenium-3.0.1/**/*.jar"/>
             <include name="libs/adf-richclient-automation-12-2.jar"/>
             <include name="libs/junit*.jar"/>
         </fileset>

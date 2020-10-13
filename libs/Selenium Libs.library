@@ -1,0 +1,49 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<JLibraryNode nselem="JLibraryNode" class="oracle.jdeveloper.library.JLibraryNode" deployedByDefault="false" xmlns="http://xmlns.oracle.com/jdeveloper/110000jlibrarynode">
+   <classPath>
+      <entries>
+         <Item path="../../selenium-3.0.1/lib/cglib-nodep-3.2.4.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/commons-codec-1.10.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/commons-exec-1.3.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/commons-io-2.5.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/commons-lang3-3.4.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/commons-logging-1.2.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/cssparser-0.9.20.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/gson-2.3.1.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/guava-19.0.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/hamcrest-core-1.3.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/hamcrest-library-1.3.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/htmlunit-2.23.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/htmlunit-core-js-2.23.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/httpclient-4.5.2.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/httpcore-4.4.4.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/httpmime-4.5.2.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/javax.servlet-api-3.1.0.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/jetty-io-9.2.13.v20150730.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/jetty-util-9.2.13.v20150730.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/jna-4.1.0.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/jna-platform-4.1.0.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/junit-4.12.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/neko-htmlunit-2.23.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/netty-3.5.7.Final.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/phantomjsdriver-1.3.0.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/sac-1.3.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/serializer-2.7.2.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/websocket-api-9.2.15.v20160210.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/websocket-client-9.2.15.v20160210.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/websocket-common-9.2.15.v20160210.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/xalan-2.7.2.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/xercesImpl-2.11.0.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/lib/xml-apis-1.4.01.jar" jar-entry=""/>
+         <Item path="../../selenium-3.0.1/client-combined-3.0.1-nodeps.jar" jar-entry=""/>
+      </entries>
+   </classPath>
+   <docPath>
+      <entries class="[Ljava.net.URL;"/>
+   </docPath>
+   <locked>false</locked>
+   <name>Selenium Libs</name>
+   <sourcePath>
+      <entries class="[Ljava.net.URL;"/>
+   </sourcePath>
+</JLibraryNode>
