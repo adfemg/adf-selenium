@@ -382,6 +382,15 @@ public class AdfComponent /*extends BaseObject*/ {
         return ((RemoteWebDriver) driver).getCapabilities().getPlatform().is(p);
     }
 
+    /**
+     * Returns true if application runs on given BrowserType.
+     * @param b browsername as defined in @link{BrowserType}
+     * @return
+     */
+    protected boolean isBrowser(String b) {
+        return ((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals(b);
+    }
+
     public void hover() {
         WebElement element = getElement();
         // we use pause to give javascript timer to detect hover and show popup
